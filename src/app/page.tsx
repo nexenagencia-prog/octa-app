@@ -2,18 +2,19 @@ import Image from 'next/image';
 import Link from 'next/link';
 import {
   ArrowRight, CalendarDays, ChevronRight, MoreVertical,
-  Play, UsersRound
+  Play
 } from 'lucide-react';
-import { currentUser, demoParticipants } from '@/lib/demo/data';
+import { demoParticipants } from '@/lib/demo/data';
 import { AppShell } from '@/components/app-shell';
 import { HomeHeroOverlays } from '@/components/home-hero-overlays';
+import { ProfileGreeting } from '@/components/profile-greeting';
 
 const people = demoParticipants.slice(0,6);
 
 export default function HomePage(){
   return <AppShell><div className="octa-content-grid">
         <section className="home-left min-w-0 pt-1">
-          <p className="text-[21px] font-medium text-[#08758a]">Olá, {currentUser.displayName.split(' ')[0]}</p>
+          <ProfileGreeting className="text-[21px] font-medium text-[#08758a]"/>
           <h1 className="mt-1 text-[clamp(3rem,4.7vw,4.4rem)] font-medium leading-[.98] tracking-[-.055em] text-[#0a2238]">Seu dia<br/>começa aqui.</h1>
 
           <div className="mt-9" id="contatos">
@@ -33,15 +34,6 @@ export default function HomePage(){
               <div className="min-w-0"><h3 className="truncate text-[16px] font-semibold text-[#0b2238]">Planejamento de Marketing</h3><p className="mt-1 text-xs text-[#30485e]">Hoje&nbsp; • &nbsp;14:30 – 15:30&nbsp; • &nbsp;6 participantes</p></div>
               <Link href="/reunioes" className="ml-auto text-[#17314a]" aria-label="Mais opções"><MoreVertical size={20}/></Link>
               <div className="col-span-full mt-1 flex gap-3 pl-[60px]"><Link href="/room/strategy-room" className="octa-primary-button"><Play size={14} fill="currentColor"/> Entrar na reunião</Link><Link href="/agenda" className="octa-secondary-button">Ver agenda</Link></div>
-            </div>
-          </section>
-
-          <section className="mt-6">
-            <h2 className="text-[15px] font-medium text-[#17314a]">Resumo rápido</h2>
-            <div className="mt-3 grid grid-cols-3 gap-3">
-              <QuickStat value="08" label="Reuniões hoje" icon={<CalendarDays size={20}/>}/>
-              <QuickStat value="12" label="Contatos na equipe" icon={<UsersRound size={21}/>}/>
-              <Link href="/gravacoes"><QuickStat value="24" label="Gravações disponíveis" icon={<Play size={20}/>}/></Link>
             </div>
           </section>
 
@@ -76,5 +68,4 @@ export default function HomePage(){
   </div></AppShell>;
 }
 
-function QuickStat({value,label,icon}:{value:string;label:string;icon:React.ReactNode}){return <div className="octa-stat"><div className="flex items-start justify-between"><span className="text-[24px] font-medium tracking-[-.04em] text-[#14304b]">{value}</span><span className="text-[#14304b]">{icon}</span></div><p className="mt-3 text-xs leading-4 text-[#31495e]">{label}</p></div>}
 function MeetingRow({time,title,duration,count}:{time:string;title:string;duration:string;count:string}){return <div className="grid grid-cols-[56px_1fr_54px_auto] items-center gap-2 border-b border-[#0d2a44]/7 px-4 py-3 text-xs text-[#17314a]"><strong className="font-medium">{time}</strong><span className="truncate">{title}</span><span className="text-[#5f7486]">{duration}</span><div className="flex items-center -space-x-1.5">{people.slice(0,3).map(p=>p.avatarUrl&&<Image key={p.id} src={p.avatarUrl} alt="" width={22} height={22} className="size-[22px] rounded-full border-2 border-white object-cover"/>)}<span className="ml-1.5 text-[10px] text-[#536b7f]">{count}</span></div></div>}

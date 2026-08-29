@@ -1,0 +1,11 @@
+import fs from 'node:fs';
+const read=(p)=>fs.readFileSync(p,'utf8');
+const home=read('src/app/page.tsx');
+if(home.includes('Resumo rápido')) throw new Error('Home ainda contém Resumo rápido');
+if(!home.includes('<ProfileGreeting')) throw new Error('Home não usa saudação sincronizada com perfil');
+const greeting=read('src/components/profile-greeting.tsx');
+for(const token of ['PROFILE_UPDATED_EVENT','getProfile','Olá,']) if(!greeting.includes(token)) throw new Error(`Saudação sem ${token}`);
+const contacts=read('src/app/contatos/page.tsx');
+for(const token of ['type="email"','Adicionar por e-mail','Convidar por e-mail','Convidar por WhatsApp']) if(!contacts.includes(token)) throw new Error(`Contatos sem ${token}`);
+for(const route of ['src/app/api/invitations/email/route.ts','src/app/api/invitations/whatsapp/route.ts']) if(!fs.existsSync(route)) throw new Error(`Rota ausente: ${route}`);
+console.log('profile/contacts/invites contract: PASS');

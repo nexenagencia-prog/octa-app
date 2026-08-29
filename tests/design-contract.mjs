@@ -14,7 +14,7 @@ assert.match(css, /\.octa-space-card/, 'space hero card utility is required');
 assert.match(home, /Seu dia\s*<br\/>\s*começa aqui\./, 'home headline must match approved reference');
 assert.match(home, /Para reunião instantânea/, 'instant meeting people strip is required');
 assert.match(home, /Próxima reunião às 14:30/, 'next meeting block is required');
-assert.match(home, /Resumo rápido/, 'quick summary cards are required');
+assert.doesNotMatch(home, /Resumo rápido/, 'quick summary cards must stay removed');
 assert.match(home, /Reuniões de hoje/, 'today meeting list is required');
 assert.doesNotMatch(home, /octa-quick-actions/, 'space panel quick-action overlay must stay removed');
 assert.match(home, /Conecte\./, 'lower connect panel is required');
