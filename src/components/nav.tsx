@@ -22,7 +22,7 @@ const sideLinks=[
 export function OctaLogo(){return <Link href="/" className="flex items-center gap-3" aria-label="OCTA início"><span className="octa-mark" aria-hidden="true"><i/><i/><i/><i/><i/><i/></span><span className="text-[25px] font-semibold tracking-[-.035em] text-[#0b2238]">OCTA</span></Link>}
 
 export function DashboardSidebar({collapsed=false,onToggle}:{collapsed?:boolean;onToggle?:()=>void}){
-  const path=usePathname();const {openTool}=useToolOverlay();const [profile,setProfile]=useState<EditableProfile>(defaultEditableProfile);const [editing,setEditing]=useState(false);
+  const path=usePathname();const router=useRouter();const {openTool}=useToolOverlay();const [profile,setProfile]=useState<EditableProfile>(defaultEditableProfile);const [editing,setEditing]=useState(false);
   useEffect(()=>{setProfile(getProfile());const onUpdate=(e:Event)=>setProfile((e as CustomEvent<EditableProfile>).detail??getProfile());window.addEventListener(PROFILE_UPDATED_EVENT,onUpdate);return()=>window.removeEventListener(PROFILE_UPDATED_EVENT,onUpdate)},[]);
   const item=(href:string,label:string,Icon:any)=><Link key={`${href}-${label}`} href={href} title={collapsed?label:undefined} className={`octa-side-item ${path===href?'is-active':''}`}><Icon size={19}/><span className="octa-side-label">{label}</span></Link>;
   const tool=(label:string,Icon:any,kind:'calculator'|'filters'|'notes')=><button key={kind} onClick={()=>kind==='filters'?router.push('/reunioes'):openTool(kind)} title={collapsed?label:undefined} className="octa-side-item w-full text-left"><Icon size={19}/><span className="octa-side-label">{label}</span></button>;
