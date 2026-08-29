@@ -10,8 +10,7 @@ const room = read('src/features/meeting/meeting-client.tsx');
 const overlay = read('src/components/tool-overlay.tsx');
 const nav = read('src/components/nav.tsx');
 
-assert.ok(!home.includes('octa-next-card'), 'home hero must not render the next-meeting overlay card');
-assert.ok(!home.includes('octa-quick-actions'), 'home hero must not render quick-action overlay cards');
+assert.ok(home.includes('HomeHeroOverlays'), 'home hero must keep the real overlay cards above the cleaned image');
 assert.ok(home.includes('/octa-space-clean.png') && home.includes('octa-space-image'), 'hero must use the cleaned high-resolution astronaut asset');
 assert.ok(home.includes('octa-connect-media'), 'connect card must render a dedicated image layer for framing control');
 

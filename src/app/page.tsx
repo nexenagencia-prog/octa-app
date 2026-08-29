@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { currentUser, demoParticipants } from '@/lib/demo/data';
 import { AppShell } from '@/components/app-shell';
+import { HomeHeroOverlays } from '@/components/home-hero-overlays';
 
 const people = demoParticipants.slice(0,6);
 
@@ -58,6 +59,7 @@ export default function HomePage(){
           <div className="octa-space-card min-h-[610px]">
             <Image src="/octa-space-clean.png" alt="Ambiente futurista OCTA" fill priority sizes="(min-width: 1280px) 52vw, 100vw" quality={100} className="octa-space-image"/>
             <div className="absolute inset-0 bg-gradient-to-r from-[#001c2b]/12 via-transparent to-transparent"/>
+            <HomeHeroOverlays/>
           </div>
 
           <div className="octa-connect-card octa-connect-clean">
