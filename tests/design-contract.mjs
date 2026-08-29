@@ -16,7 +16,7 @@ assert.match(home, /Para reunião instantânea/, 'instant meeting people strip i
 assert.match(home, /Próxima reunião às 14:30/, 'next meeting block is required');
 assert.match(home, /Resumo rápido/, 'quick summary cards are required');
 assert.match(home, /Reuniões de hoje/, 'today meeting list is required');
-assert.match(home, /Ações rápidas/, 'space panel quick actions are required');
+assert.doesNotMatch(home, /octa-quick-actions/, 'space panel quick-action overlay must stay removed');
 assert.match(home, /Conecte\./, 'lower connect panel is required');
 assert.match(nav, /Calculadora/, 'sidebar must include calculator');
 assert.match(nav, /Compartilhar Tela/, 'sidebar must include screen sharing');
