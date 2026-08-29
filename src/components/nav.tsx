@@ -15,7 +15,7 @@ const topItems=[{href:'/',label:'Início'},{href:'/reunioes',label:'Reuniões'},
 const sidePrimary=[{href:'/',label:'Início',icon:Home},{href:'/agenda',label:'Agenda',icon:CalendarDays},{href:'/reunioes',label:'Reuniões',icon:VideoIcon},{href:'/contatos',label:'Contatos',icon:UsersRound},{href:'/gravacoes',label:'Gravações',icon:VideoIcon}];
 const sideLinks=[
   {href:'/compartilhar-tela',label:'Compartilhar Tela',icon:MonitorUp},{href:'/gravar',label:'Gravar',icon:CircleDot},
-  {href:'/room/strategy-room',label:'Entrar em reunião',icon:Video},{href:'/feed',label:'Feed',icon:MessageCircle},
+  {href:'/reunioes?modo=entrar',label:'Entrar em reunião',icon:Video},{href:'/feed',label:'Feed',icon:MessageCircle},
   {href:'/minhas-anotacoes',label:'Minhas Anotações',icon:BookOpenText},{href:'/skills',label:'OCTA SKILLS',icon:Sparkles},
 ];
 
