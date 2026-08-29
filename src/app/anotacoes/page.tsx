@@ -1,0 +1,6 @@
+'use client';
+import { useEffect, useState } from 'react';
+import { CheckCircle2, NotebookPen } from 'lucide-react';
+import { PageShell } from '@/components/page-shell';
+const KEY='octa-notes';
+export default function Page(){const [text,setText]=useState('');const [saved,setSaved]=useState(true);useEffect(()=>{try{setText(localStorage.getItem(KEY)??'')}catch{}},[]);useEffect(()=>{const t=setTimeout(()=>{try{localStorage.setItem(KEY,text);setSaved(true)}catch{}},350);return()=>clearTimeout(t)},[text]);return <PageShell title="Anotações" kicker="Notas rápidas" actions={<span className="flex items-center gap-2 text-xs text-[#557084]"><CheckCircle2 size={15}/>{saved?'Salvo localmente':'Salvando...'}</span>}><div className="octa-panel grid h-full grid-rows-[auto_1fr] p-5"><div className="flex items-center gap-2"><NotebookPen size={19}/><h2 className="font-semibold">Anotações da reunião</h2></div><textarea value={text} onChange={e=>{setSaved(false);setText(e.target.value)}} className="mt-4 min-h-0 resize-none rounded-[22px] border border-[#0a2238]/8 bg-white/60 p-5 text-[15px] leading-7 outline-none focus:border-[#0b7285]" placeholder="Escreva decisões, próximos passos, ideias e pontos importantes..."/></div></PageShell>}

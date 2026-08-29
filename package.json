@@ -1,0 +1,41 @@
+{
+  "name": "okta-meet",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:contracts": "node tests/architectural-update-contract.mjs && node tests/navigation-contract.mjs && node tests/home-contract.mjs && node tests/route-contract.mjs && node tests/tool-pages-contract.mjs && node tests/calculator.mjs && node tests/design-contract.mjs && node tests/refinement-skills-contract.mjs && node tests/refinement-round2-contract.mjs"
+  },
+  "dependencies": {
+    "@livekit/components-react": "^2.9.14",
+    "@supabase/ssr": "^0.6.1",
+    "@supabase/supabase-js": "^2.49.4",
+    "framer-motion": "^12.6.3",
+    "livekit-client": "^2.11.3",
+    "livekit-server-sdk": "^2.10.2",
+    "lucide-react": "^0.468.0",
+    "next": "^15.2.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.2.0",
+    "@types/node": "^22.13.10",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "autoprefixer": "^10.4.21",
+    "jsdom": "^26.0.0",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.9"
+  }
+}
