@@ -21,3 +21,13 @@ assert.match(css,/\.octa-connect-card[^}]*border-radius:/s,'lower card must rema
 assert.match(css,/\.octa-connect-card[^}]*overflow:hidden/s,'lower card must clip image inside rounded corners');
 assert.match(meeting,/OCTA SKILLS|skills/i,'meeting should expose OCTA SKILLS entry point');
 console.log('refinement + skills contract: PASS');
+
+const skills = read('src/app/skills/page.tsx');
+assert.match(skills,/skills-reference-overview/,'skills overview must use the approved reference layout');
+assert.match(skills,/Visão geral/,'skills must preserve Visão geral');
+assert.match(skills,/Transcrição/,'skills must preserve Transcrição');
+assert.match(skills,/Treino/,'skills must preserve Treino');
+assert.match(skills,/Evolução/,'skills must preserve Evolução');
+assert.match(skills,/Análise privada/,'skills must preserve Análise privada');
+assert.match(skills,/Ver reuniões/,'skills must preserve Ver reuniões');
+assert.match(css,/\.skills-reference-overview/,'skills reference styling must exist');
