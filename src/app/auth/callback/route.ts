@@ -21,6 +21,9 @@ export async function GET(request: NextRequest) {
 
   const { error } = await supabase.auth.exchangeCodeForSession(code);
   if (error) {
+    if (next === '/reset-password') {
+      return NextResponse.redirect(new URL('/login?reset=expired', url.origin));
+    }
     return NextResponse.redirect(new URL(`/login?error=${encodeURIComponent(error.message)}`, url.origin));
   }
 
