@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import {
-  Bell, BookOpenText, Calculator, CalendarDays, ChevronRight,
+  Bell, BookOpenText, Calculator, CalendarDays, ChevronRight, Moon, Sun,
   CircleDot, CircleUserRound, Filter, Home, Menu, MonitorUp,
   MessageCircle, NotebookPen, Pencil, Search, Settings, Sparkles, UsersRound, Video, VideoIcon
 } from 'lucide-react';
@@ -16,10 +16,17 @@ const sidePrimary=[{href:'/',label:'Início',icon:Home},{href:'/agenda',label:'A
 const sideLinks=[
   {href:'/compartilhar-tela',label:'Compartilhar Tela',icon:MonitorUp},{href:'/gravar',label:'Gravar',icon:CircleDot},
   {href:'/reunioes?modo=entrar',label:'Entrar em reunião',icon:Video},{href:'/feed',label:'Feed',icon:MessageCircle},
-  {href:'/minhas-anotacoes',label:'Minhas Anotações',icon:BookOpenText},{href:'/skills',label:'OCTA SKILLS',icon:Sparkles},
+  {href:'/minhas-anotacoes',label:'Minhas Anotações',icon:BookOpenText},{href:'/skills',label:'Octa skills',icon:Sparkles},
 ];
 
-export function OctaLogo(){return <Link href="/" className="flex items-center gap-3" aria-label="OCTA início"><span className="octa-mark" aria-hidden="true"><i/><i/><i/><i/><i/><i/></span><span className="text-[25px] font-semibold tracking-[-.035em] text-[#0b2238]">OCTA</span></Link>}
+export function OctaLogo(){return <Link href="/" className="octa-wordmark" aria-label="OCTA início">OCTA</Link>}
+
+function ThemeToggle(){
+  const [theme,setTheme]=useState<'light'|'dark'>('light');
+  useEffect(()=>{try{const saved=(localStorage.getItem('octa-theme') as 'light'|'dark'|null)??'light';setTheme(saved);document.documentElement.dataset.theme=saved}catch{}},[]);
+  const toggle=()=>setTheme(current=>{const next=current==='dark'?'light':'dark';try{localStorage.setItem('octa-theme',next);document.documentElement.dataset.theme=next}catch{}return next});
+  return <button onClick={toggle} className="octa-theme-toggle" aria-label={theme==='dark'?'Ativar tema claro':'Ativar tema escuro'} title={theme==='dark'?'Tema claro':'Tema escuro'}>{theme==='dark'?<Sun size={18}/>:<Moon size={18}/>}<span>{theme==='dark'?'Claro':'Escuro'}</span></button>
+}
 
 export function DashboardSidebar({collapsed=false,onToggle}:{collapsed?:boolean;onToggle?:()=>void}){
   const path=usePathname();const router=useRouter();const {openTool}=useToolOverlay();const [profile,setProfile]=useState<EditableProfile>(defaultEditableProfile);const [editing,setEditing]=useState(false);
@@ -37,6 +44,6 @@ export function DashboardSidebar({collapsed=false,onToggle}:{collapsed?:boolean;
   </aside>{editing&&<ProfileEditor profile={profile} onClose={()=>setEditing(false)} onSaved={setProfile}/>}</>;
 }
 
-export function TopNav(){const path=usePathname();const router=useRouter();const[query,setQuery]=useState('');const runSearch=(e:React.FormEvent)=>{e.preventDefault();if(query.trim())router.push(`/reunioes?q=${encodeURIComponent(query.trim())}`)};return <header className="octa-topbar"><OctaLogo/><nav className="hidden items-center gap-8 lg:flex">{topItems.map(({href,label})=><Link key={label} href={href} className={`octa-toplink ${path===href?'is-active':''}`}>{label}</Link>)}</nav><div className="ml-auto flex min-w-0 items-center gap-4"><form onSubmit={runSearch} className="octa-search hidden min-w-[340px] xl:flex"><Search size={21}/><input value={query} onChange={e=>setQuery(e.target.value)} aria-label="Buscar" placeholder="Buscar reunião, pessoa ou gravação"/></form><Link href="/agenda" className="relative grid size-11 place-items-center rounded-full text-[#102944] hover:bg-white/60" aria-label="Notificações"><Bell size={22}/><span className="absolute right-0 top-0 grid size-5 place-items-center rounded-full bg-[#0b7285] text-[10px] font-semibold text-white">2</span></Link><Link href="/profile" className="grid size-10 place-items-center rounded-full bg-white/70 text-[#102944] lg:hidden"><CircleUserRound size={18}/></Link></div></header>}
+export function TopNav(){const path=usePathname();const router=useRouter();const[query,setQuery]=useState('');const runSearch=(e:React.FormEvent)=>{e.preventDefault();if(query.trim())router.push(`/reunioes?q=${encodeURIComponent(query.trim())}`)};return <header className="octa-topbar"><OctaLogo/><nav className="hidden items-center gap-8 lg:flex">{topItems.map(({href,label})=><Link key={label} href={href} className={`octa-toplink ${path===href?'is-active':''}`}>{label}</Link>)}</nav><div className="ml-auto flex min-w-0 items-center gap-4"><ThemeToggle/><form onSubmit={runSearch} className="octa-search hidden min-w-[340px] xl:flex"><Search size={21}/><input value={query} onChange={e=>setQuery(e.target.value)} aria-label="Buscar" placeholder="Buscar reunião, pessoa ou gravação"/></form><Link href="/agenda" className="relative grid size-11 place-items-center rounded-full text-[#102944] hover:bg-white/60" aria-label="Notificações"><Bell size={22}/><span className="absolute right-0 top-0 grid size-5 place-items-center rounded-full bg-[#0b7285] text-[10px] font-semibold text-white">2</span></Link><Link href="/profile" className="grid size-10 place-items-center rounded-full bg-white/70 text-[#102944] lg:hidden"><CircleUserRound size={18}/></Link></div></header>}
 
 export function MobileNav(){const path=usePathname();return <nav className="fixed bottom-4 left-1/2 z-50 flex -translate-x-1/2 gap-1 rounded-full border border-black/10 bg-white/90 p-1.5 shadow-[0_18px_50px_rgba(0,0,0,.15)] backdrop-blur-2xl xl:hidden">{sidePrimary.slice(0,4).map(({href,label,icon:Icon})=><Link key={label} aria-label={label} href={href} className={`grid size-11 place-items-center rounded-full ${path===href?'bg-[#092638] text-white':'text-[#0f2b45]/55'}`}><Icon size={18}/></Link>)}<Link href="/configuracoes" aria-label="Menu" className="grid size-11 place-items-center rounded-full text-[#0f2b45]/55"><Menu size={18}/></Link></nav>}

@@ -12,7 +12,7 @@ assert.doesNotMatch(nav,/label:'Mutar'/,'sidebar must not include Mutar');
 assert.doesNotMatch(nav,/label:'Desativar Chat'/,'sidebar must not include Desativar Chat');
 assert.doesNotMatch(nav,/\{href:'\/contatos',label:'Contatos'\}/,'top nav must not include Contatos');
 assert.doesNotMatch(nav,/\{href:'\/gravacoes',label:'Gravações'\}/,'top nav must not include Gravações');
-assert.match(nav,/OCTA SKILLS/,'sidebar must expose OCTA SKILLS');
+assert.match(nav,/Octa skills/,'sidebar must expose Octa skills');
 assert.ok(fs.existsSync('src/app/skills/page.tsx'),'missing /skills');
 assert.match(overlay,/onPointerDown/,'floating calculator must be draggable');
 assert.match(overlay,/setPosition/,'floating calculator must track position');
