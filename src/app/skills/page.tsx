@@ -3,7 +3,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight, ChevronRight, Play, Search, Sparkles, TrendingUp } from 'lucide-react';
 import { PageShell } from '@/components/page-shell';
-import { octaSkillsSnapshot } from '@/lib/octa-ai-context';
+import { octaSkillsSnapshot } from '@/lib/octa-skills-snapshot';
 type Tab='visao'|'transcricao'|'treino'|'evolucao';
 const meetings=[['Planejamento de Marketing','88'],['Reunião Semanal da Diretoria','84'],['Laboratório de Marca','79']];
 const transcript=[['14:32','Você','Precisamos entender primeiro qual resultado vocês querem alcançar.'],['14:34','Amanda','Nosso problema hoje é principalmente aquisição.'],['14:35','Você','Quanto isso representa atualmente para vocês?']];
