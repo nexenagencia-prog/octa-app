@@ -1,5 +1,5 @@
 'use client';
-import { LiveKitRoom, RoomAudioRenderer, VideoTrack, useTracks } from '@livekit/components-react';
+import { LiveKitRoom, RoomAudioRenderer, VideoTrack, useRoomContext, useTracks } from '@livekit/components-react';
 import { Track } from 'livekit-client';
 import { useEffect, useState } from 'react';
 import { liveKitUrl } from '@/lib/livekit/config';
@@ -10,11 +10,12 @@ function CameraStage(){
  if(!camera) return <div className="grid size-full place-items-center bg-gradient-to-b from-[#201c2c] to-[#08090c] text-sm text-white/35">Câmera pronta para conectar</div>;
  return <VideoTrack trackRef={camera} className="size-full object-cover"/>;
 }
+function ScreenShareSync({enabled,onError}:{enabled:boolean;onError?:(message:string)=>void}){const room=useRoomContext();useEffect(()=>{let active=true;room.localParticipant.setScreenShareEnabled(enabled).catch(error=>{if(active)onError?.(error instanceof Error?error.message:'Não foi possível compartilhar a tela')});return()=>{active=false}},[room,enabled,onError]);return null}
 
-export function LiveKitStage({room,identity,name}:{room:string;identity:string;name:string}){
+export function LiveKitStage({room,identity,name,screenShare=false,onScreenShareError}:{room:string;identity:string;name:string;screenShare?:boolean;onScreenShareError?:(message:string)=>void}){
  const [token,setToken]=useState<string|null>(null); const [error,setError]=useState('');
  useEffect(()=>{let alive=true; fetch(`/api/livekit/token?room=${encodeURIComponent(room)}&identity=${encodeURIComponent(identity)}&name=${encodeURIComponent(name)}`).then(async r=>{if(!r.ok)throw new Error(await r.text()); return r.json()}).then(d=>alive&&setToken(d.token)).catch(e=>alive&&setError(e.message)); return()=>{alive=false}},[room,identity,name]);
  if(error) return <div className="grid size-full place-items-center bg-[#111217] p-6 text-center text-xs text-rose-300">LiveKit: {error}</div>;
  if(!token) return <div className="grid size-full place-items-center bg-[#111217] text-xs text-white/35">Conectando vídeo seguro…</div>;
- return <LiveKitRoom token={token} serverUrl={liveKitUrl} connect audio video className="size-full"><CameraStage/><RoomAudioRenderer/></LiveKitRoom>
+ return <LiveKitRoom token={token} serverUrl={liveKitUrl} connect audio video className="size-full"><ScreenShareSync enabled={screenShare} onError={onScreenShareError}/><CameraStage/><RoomAudioRenderer/></LiveKitRoom>
 }

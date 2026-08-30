@@ -4,17 +4,18 @@ import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   Bell, BookOpenText, Brush, Calculator, CalendarDays, ChevronRight, Moon, Sun,
-  CircleDot, CircleUserRound, Home, Menu, MonitorUp,
+  CircleUserRound, Home, Menu,
   NotebookPen, Pencil, Search, Settings, Sparkles, UsersRound, Video, VideoIcon
 } from 'lucide-react';
 import { useToolOverlay } from '@/components/tool-overlay-context';
 import { ProfileEditor } from '@/components/profile-editor';
 import { defaultEditableProfile, EditableProfile, getProfile, PROFILE_UPDATED_EVENT } from '@/lib/profile-store';
+import { NotificationsCenter } from '@/components/notifications-center';
 
 const topItems=[{href:'/',label:'Início'},{href:'/reunioes',label:'Reuniões'},{href:'/agenda',label:'Agenda'},{href:'/planos',label:'Planos e preços'}];
 const sidePrimary=[{href:'/',label:'Início',icon:Home},{href:'/agenda',label:'Agenda',icon:CalendarDays},{href:'/reunioes',label:'Reuniões',icon:VideoIcon},{href:'/reuniao-instantanea',label:'Reunião instantânea',icon:Video},{href:'/contatos',label:'Contatos',icon:UsersRound},{href:'/gravacoes',label:'Gravações',icon:VideoIcon}];
 const sideLinks=[
-  {href:'/anotacoes',label:'Anotar',icon:NotebookPen},{href:'/lousa',label:'Lousa',icon:Brush},{href:'/compartilhar-tela',label:'Compartilhar Tela',icon:MonitorUp},{href:'/gravar',label:'Gravar',icon:CircleDot},
+  {href:'/anotacoes',label:'Anotar',icon:NotebookPen},{href:'/lousa',label:'Lousa',icon:Brush},
   {href:'/reunioes?modo=entrar',label:'Entrar em reunião',icon:Video},
   {href:'/minhas-anotacoes',label:'Minhas Anotações',icon:BookOpenText},{href:'/skills',label:'Octa skills',icon:Sparkles},
 ];
@@ -44,6 +45,6 @@ export function DashboardSidebar({collapsed=false,onToggle}:{collapsed?:boolean;
   </aside>{editing&&<ProfileEditor profile={profile} onClose={()=>setEditing(false)} onSaved={setProfile}/>}</>;
 }
 
-export function TopNav(){const path=usePathname();const router=useRouter();const[query,setQuery]=useState('');const runSearch=(e:React.FormEvent)=>{e.preventDefault();if(query.trim())router.push(`/reunioes?q=${encodeURIComponent(query.trim())}`)};return <header className="octa-topbar"><OctaLogo/><nav className="hidden items-center gap-8 lg:flex">{topItems.map(({href,label})=><Link key={label} href={href} data-cms-id={`global.top.link.${label.toLowerCase().replace(/[^a-z0-9]+/g,'-')}`} data-cms-type="text" className={`octa-toplink ${path===href?'is-active':''}`}>{label}</Link>)}</nav><div className="ml-auto flex min-w-0 items-center gap-4"><ThemeToggle/><form onSubmit={runSearch} className="octa-search hidden min-w-[340px] xl:flex" data-cms-id="global.top.search" data-cms-type="container"><Search size={21}/><input value={query} onChange={e=>setQuery(e.target.value)} aria-label="Buscar" placeholder="Buscar reunião, pessoa ou gravação"/></form><Link href="/agenda" className="relative grid size-11 place-items-center rounded-full text-[#102944] hover:bg-white/60" aria-label="Notificações"><Bell size={22}/><span className="absolute right-0 top-0 grid size-5 place-items-center rounded-full bg-[#0b7285] text-[10px] font-semibold text-white">2</span></Link><Link href="/profile" className="grid size-10 place-items-center rounded-full bg-white/70 text-[#102944] lg:hidden"><CircleUserRound size={18}/></Link></div></header>}
+export function TopNav(){const path=usePathname();const router=useRouter();const[query,setQuery]=useState('');const runSearch=(e:React.FormEvent)=>{e.preventDefault();if(query.trim())router.push(`/reunioes?q=${encodeURIComponent(query.trim())}`)};return <header className="octa-topbar"><OctaLogo/><nav className="hidden items-center gap-8 lg:flex">{topItems.map(({href,label})=><Link key={label} href={href} data-cms-id={`global.top.link.${label.toLowerCase().replace(/[^a-z0-9]+/g,'-')}`} data-cms-type="text" className={`octa-toplink ${path===href?'is-active':''}`}>{label}</Link>)}</nav><div className="ml-auto flex min-w-0 items-center gap-4"><ThemeToggle/><form onSubmit={runSearch} className="octa-search hidden min-w-[340px] xl:flex" data-cms-id="global.top.search" data-cms-type="container"><Search size={21}/><input value={query} onChange={e=>setQuery(e.target.value)} aria-label="Buscar" placeholder="Buscar reunião, pessoa ou gravação"/></form><NotificationsCenter/><Link href="/profile" className="grid size-10 place-items-center rounded-full bg-white/70 text-[#102944] lg:hidden"><CircleUserRound size={18}/></Link></div></header>}
 
 export function MobileNav(){const path=usePathname();return <nav className="fixed bottom-4 left-1/2 z-50 flex -translate-x-1/2 gap-1 rounded-full border border-black/10 bg-white/90 p-1.5 shadow-[0_18px_50px_rgba(0,0,0,.15)] backdrop-blur-2xl xl:hidden">{sidePrimary.slice(0,4).map(({href,label,icon:Icon})=><Link key={label} aria-label={label} href={href} className={`grid size-11 place-items-center rounded-full ${path===href?'bg-[#092638] text-white':'text-[#0f2b45]/55'}`}><Icon size={18}/></Link>)}<Link href="/configuracoes" aria-label="Menu" className="grid size-11 place-items-center rounded-full text-[#0f2b45]/55"><Menu size={18}/></Link></nav>}
