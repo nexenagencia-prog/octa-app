@@ -68,9 +68,18 @@ export function CmsRuntime(){
   useEffect(()=>{
     let alive=true;
     const preview=new URLSearchParams(location.search).get('cmsPreview')==='1';
-    const apply=()=>{ensureCmsIds();applyDocument(docRef.current)};
+    let mo:MutationObserver|null=null;
+    const observe=()=>mo?.observe(document.body,{childList:true,subtree:true});
+    const apply=()=>{
+      // CMS text/style mutations can themselves create child-list mutations.
+      // Suspend the observer while applying overrides to avoid a restore/apply feedback loop.
+      mo?.disconnect();
+      ensureCmsIds();
+      applyDocument(docRef.current);
+      observe();
+    };
     if(!preview) fetch('/api/cms/published',{cache:'no-store'}).then(r=>r.ok?r.json():EMPTY_CMS_DOCUMENT).then(data=>{if(!alive)return;docRef.current=sanitizeCmsDocument(data);apply()}).catch(()=>{}); else apply();
-    const mo=new MutationObserver(()=>apply()); mo.observe(document.body,{childList:true,subtree:true});
+    mo=new MutationObserver(()=>apply()); observe();
     const themeObserver=new MutationObserver(()=>apply()); themeObserver.observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
     const resize=()=>apply(); addEventListener('resize',resize);
     if(preview){
