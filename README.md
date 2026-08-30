@@ -64,3 +64,14 @@ The main application shell uses `100dvh` and avoids document-level vertical scro
 ## Deploy with the existing GitHub + Vercel project
 
 Replace the files in the existing GitHub repository and commit them. Vercel will detect the new commit and deploy automatically. Do not create another Vercel project.
+
+
+## OCTA Visual CMS
+
+O painel visual fica em `/admin` e usa a mesma autenticação Supabase do app. Para liberar somente a conta administradora, depois de criar/entrar com a conta, adicione o UUID desse usuário à tabela `public.cms_admins`:
+
+```sql
+insert into public.cms_admins(user_id) values ('UUID_DO_ADMIN') on conflict do nothing;
+```
+
+O CMS salva rascunhos e versões publicadas em `public.cms_revisions` e envia fotos/vídeos para o bucket `cms-assets`. Usuários normais leem somente a última versão publicada e não têm permissão para criar ou publicar revisões.
