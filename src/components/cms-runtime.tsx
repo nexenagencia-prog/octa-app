@@ -18,7 +18,7 @@ function restore(el:HTMLElement){
   if(el instanceof HTMLImageElement){ if(base.src) el.setAttribute('src',base.src); if(base.alt!==undefined) el.alt=base.alt; }
 }
 function directText(el:HTMLElement){return [...el.childNodes].find(n=>n.nodeType===Node.TEXT_NODE&&n.textContent?.trim()) as Text|undefined}
-function apply(el:HTMLElement, patch:CmsElementOverride){
+function applyOverride(el:HTMLElement, patch:CmsElementOverride){
   remember(el); restore(el);
   if(patch.text!==undefined){if(el.dataset.cmsType==='text'&&el.textContent!==patch.text)el.textContent=patch.text;else if((el instanceof HTMLAnchorElement||el instanceof HTMLButtonElement)){const node=directText(el);if(node&&node.textContent?.trim()!==patch.text)node.textContent=` ${patch.text} `}}
   if(patch.href!==undefined && el instanceof HTMLAnchorElement) el.setAttribute('href',patch.href);
@@ -52,7 +52,7 @@ function applyDocument(doc:CmsDocument){
   const scope=scopeFor(doc);
   document.querySelectorAll<HTMLElement>('[data-cms-id]').forEach(el=>{
     const id=el.dataset.cmsId!; const patch=scope[id];
-    if(patch) apply(el,patch); else restore(el);
+    if(patch) applyOverride(el,patch); else restore(el);
   });
 }
 function snapshot(el:HTMLElement){
@@ -97,7 +97,7 @@ export function CmsRuntime(){
       document.addEventListener('pointerdown',down,true);
       const message=(event:MessageEvent)=>{if(event.origin!==location.origin||!event.data?.type?.startsWith(MSG))return;const data=event.data;
         if(data.type===`${MSG}document`){docRef.current=sanitizeCmsDocument(data.document);apply();place();}
-        if(data.type===`${MSG}patch`&&selectedRef.current){const patch=sanitizeCmsPatch(data.patch);apply(selectedRef.current,patch);place();post('select',{element:snapshot(selectedRef.current)});}
+        if(data.type===`${MSG}patch`&&selectedRef.current){const patch=sanitizeCmsPatch(data.patch);applyOverride(selectedRef.current,patch);place();post('select',{element:snapshot(selectedRef.current)});}
         if(data.type===`${MSG}theme`){document.documentElement.dataset.theme=data.theme==='dark'?'dark':'light';apply();place();}
         if(data.type===`${MSG}selectById`){const el=document.querySelector<HTMLElement>(`[data-cms-id="${CSS.escape(String(data.id))}"]`);if(el){selectedRef.current=el;place();post('select',{element:snapshot(el)})}}
         if(data.type===`${MSG}requestLayers`){ensureCmsIds();post('layers',{layers:[...document.querySelectorAll<HTMLElement>('[data-cms-id]')].map(el=>({id:el.dataset.cmsId,type:el.dataset.cmsType||'element',label:el.getAttribute('aria-label')||el.textContent?.trim().slice(0,60)||el.dataset.cmsId}))});}
