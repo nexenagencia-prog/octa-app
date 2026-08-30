@@ -75,3 +75,6 @@ insert into public.cms_admins(user_id) values ('UUID_DO_ADMIN') on conflict do n
 ```
 
 O CMS salva rascunhos e versões publicadas em `public.cms_revisions` e envia fotos/vídeos para o bucket `cms-assets`. Usuários normais leem somente a última versão publicada e não têm permissão para criar ou publicar revisões.
+
+## OCTA AI Coach
+O coach global usa OpenAI exclusivamente pelo servidor. Configure `OPENAI_API_KEY` na Vercel para ativar respostas reais, transcrição e voz. Sem a chave, a interface entra em modo demonstração com os resultados atuais do OCTA Skills. Variáveis opcionais: `OPENAI_CHAT_MODEL`, `OPENAI_TRANSCRIBE_MODEL`, `OPENAI_TTS_MODEL` e `OPENAI_TTS_VOICE`.
