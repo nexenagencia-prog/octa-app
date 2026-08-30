@@ -48,3 +48,15 @@ export interface WhiteboardStroke {
   width: number;
   points: Array<{ x: number; y: number }>;
 }
+
+export type WhiteboardTool = 'pen' | 'rectangle' | 'circle' | 'triangle' | 'eraser';
+
+export interface WhiteboardShape {
+  id: string;
+  kind: Exclude<WhiteboardTool, 'eraser'>;
+  color: string;
+  width: number;
+  start: { x: number; y: number };
+  end: { x: number; y: number };
+  points?: Array<{ x: number; y: number }>;
+}
