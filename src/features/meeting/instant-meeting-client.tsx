@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import {
-  ArrowLeft, BookOpenText, Calculator, CalendarDays, Camera, CameraOff, ChevronDown, Copy,
+  ArrowLeft, BookOpenText, Brush, Calculator, CalendarDays, Camera, CameraOff, ChevronDown, Copy,
   Filter, Heart, Home, MessageCircle, Mic, MicOff, MoreHorizontal, NotebookPen, PhoneOff,
   ScreenShare, Send, Settings, Sparkles, SquarePen, UserPlus, UsersRound, Video, Volume2,
   WandSparkles, X, CircleDot, ContactRound, Play, Plus, Search
@@ -20,7 +20,7 @@ import { filterCss } from '@/lib/video-filters';
 const leftLinks=[
   {href:'/',label:'Início',icon:Home},{href:'/agenda',label:'Agenda',icon:CalendarDays},{href:'/reunioes',label:'Reuniões',icon:Video},
   {href:'/contatos',label:'Contatos',icon:ContactRound},{href:'/gravacoes',label:'Gravações',icon:Video},{href:'/calculadora',label:'Calculadora',icon:Calculator},
-  {href:'/anotacoes',label:'Anotar',icon:NotebookPen},{href:'/compartilhar-tela',label:'Compartilhar Tela',icon:ScreenShare},
+  {href:'/anotacoes',label:'Anotar',icon:NotebookPen},{href:'/lousa',label:'Lousa',icon:Brush},{href:'/compartilhar-tela',label:'Compartilhar Tela',icon:ScreenShare},
   {href:'/gravar',label:'Gravar',icon:CircleDot},{href:'/gravacoes',label:'Gravações',icon:Play},{href:'/minhas-anotacoes',label:'Minhas Anotações',icon:BookOpenText},
 ];
 

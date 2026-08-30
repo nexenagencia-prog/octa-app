@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import {
-  Bell, BookOpenText, Calculator, CalendarDays, ChevronRight, Moon, Sun,
+  Bell, BookOpenText, Brush, Calculator, CalendarDays, ChevronRight, Moon, Sun,
   CircleDot, CircleUserRound, Home, Menu, MonitorUp,
   NotebookPen, Pencil, Search, Settings, Sparkles, UsersRound, Video, VideoIcon
 } from 'lucide-react';
@@ -14,7 +14,7 @@ import { defaultEditableProfile, EditableProfile, getProfile, PROFILE_UPDATED_EV
 const topItems=[{href:'/',label:'Início'},{href:'/reunioes',label:'Reuniões'},{href:'/agenda',label:'Agenda'},{href:'/planos',label:'Planos e preços'}];
 const sidePrimary=[{href:'/',label:'Início',icon:Home},{href:'/agenda',label:'Agenda',icon:CalendarDays},{href:'/reunioes',label:'Reuniões',icon:VideoIcon},{href:'/reuniao-instantanea',label:'Reunião instantânea',icon:Video},{href:'/contatos',label:'Contatos',icon:UsersRound},{href:'/gravacoes',label:'Gravações',icon:VideoIcon}];
 const sideLinks=[
-  {href:'/anotacoes',label:'Anotar',icon:NotebookPen},{href:'/compartilhar-tela',label:'Compartilhar Tela',icon:MonitorUp},{href:'/gravar',label:'Gravar',icon:CircleDot},
+  {href:'/anotacoes',label:'Anotar',icon:NotebookPen},{href:'/lousa',label:'Lousa',icon:Brush},{href:'/compartilhar-tela',label:'Compartilhar Tela',icon:MonitorUp},{href:'/gravar',label:'Gravar',icon:CircleDot},
   {href:'/reunioes?modo=entrar',label:'Entrar em reunião',icon:Video},
   {href:'/minhas-anotacoes',label:'Minhas Anotações',icon:BookOpenText},{href:'/skills',label:'Octa skills',icon:Sparkles},
 ];
