@@ -3,7 +3,7 @@ import { PointerEvent, useEffect, useMemo, useRef, useState, type ReactNode } fr
 import {
   Circle, Eraser, GripHorizontal, Highlighter, Maximize2, Minus, MousePointer2, PenLine,
   Redo2, RotateCcw, ScreenShare, Sparkles, Square, TextCursorInput, Triangle, Undo2, X,
-  ZoomIn, ZoomOut
+  ZoomIn, ZoomOut, Eye, EyeOff
 } from 'lucide-react';
 import type { WhiteboardShape, WhiteboardTool } from '@/types/domain';
 
@@ -25,7 +25,7 @@ function renderShape(shape:WhiteboardShape){
   return <polygon key={shape.id} points={`${x+w/2},${y} ${x},${y+h} ${x+w},${y+h}`} {...common}/>;
 }
 
-export function WhiteboardPanel({onClose,mode='overlay'}:{onClose?:()=>void;mode?:'overlay'|'page'}){
+export function WhiteboardPanel({onClose,mode='overlay',visibleToParticipants=false,onVisibleToParticipantsChange}:{onClose?:()=>void;mode?:'overlay'|'page'|'inline';visibleToParticipants?:boolean;onVisibleToParticipantsChange?:(value:boolean)=>void}){
   const [history,setHistory]=useState<HistoryState>({past:[],present:[],future:[]});
   const [tool,setTool]=useState<WhiteboardTool>('pen');
   const [color,setColor]=useState(colors[1]);
@@ -80,15 +80,16 @@ export function WhiteboardPanel({onClose,mode='overlay'}:{onClose?:()=>void;mode
   ];
   const style=mode==='overlay'?{left:position.x,top:position.y,width:size.w,height:size.h}:undefined;
 
-  return <div ref={panel} style={style} className={`${mode==='page'?'absolute inset-0':'fixed'} z-[80] overflow-hidden rounded-[30px] border border-white/10 bg-[#070b10] shadow-[0_34px_120px_rgba(0,0,0,.65)]`}>
+  return <div ref={panel} style={style} className={`${mode==='page'?'absolute inset-0':mode==='inline'?'relative size-full min-h-[520px]':'fixed'} z-[80] overflow-hidden rounded-[30px] border border-white/10 bg-[#070b10] shadow-[0_34px_120px_rgba(0,0,0,.65)]`}>
     <div className="absolute inset-0 soft-grid opacity-90"/><div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_10%,rgba(55,181,205,.08),transparent_34%)]"/>
     <svg className="pointer-events-none absolute inset-0 size-full"><g transform={`scale(${zoom})`}>{rendered.map(renderShape)}</g></svg>
     <div ref={board} onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up} className={`absolute inset-0 touch-none ${tool==='eraser'?'cursor-cell':'cursor-crosshair'}`} aria-label="Lousa escura interativa"/>
     <div className="pointer-events-none absolute left-4 right-4 top-4 z-10 flex items-center justify-between gap-3">
       <div className={`pointer-events-auto flex min-w-0 items-center gap-2 rounded-full border border-white/10 bg-[#0c131b]/88 px-4 py-2.5 text-white shadow-xl backdrop-blur-2xl ${mode==='overlay'?'cursor-grab active:cursor-grabbing':''}`} onPointerDown={e=>{if(mode!=='overlay')return;drag.current={x:e.clientX,y:e.clientY,left:position.x,top:position.y}}}>
-        <GripHorizontal size={15} className="text-white/35"/><Sparkles size={15} className="text-cyan-300"/><span className="text-sm font-semibold">Lousa OCTA</span><span className="hidden text-xs text-white/35 md:inline">{mode==='overlay'?'arraste para mover':'desenho, texto, formas e marcação'}</span>
+        <GripHorizontal size={15} className="text-white/35"/><Sparkles size={15} className="text-cyan-300"/><span className="text-sm font-semibold">Lousa OCTA</span><span className="hidden text-xs text-white/35 md:inline">{mode==='overlay'?'arraste para mover':mode==='inline'?'ao lado da reunião':'desenho, texto, formas e marcação'}</span>
       </div>
       <div className="pointer-events-auto flex items-center gap-2">
+        {mode==='inline'&&<button onClick={()=>onVisibleToParticipantsChange?.(!visibleToParticipants)} className={`flex h-10 items-center gap-2 rounded-full border px-3 text-[10px] backdrop-blur-2xl ${visibleToParticipants?'border-emerald-300/30 bg-emerald-300/10 text-emerald-100':'border-white/10 bg-[#0c131b]/88 text-white/55'}`}>{visibleToParticipants?<Eye size={14}/>:<EyeOff size={14}/>} {visibleToParticipants?'Visível para participantes':'Privada'}</button>}
         <div className="flex h-10 items-center rounded-full border border-white/10 bg-[#0c131b]/88 px-1 backdrop-blur-2xl">
           <button onClick={()=>setZoom(z=>Math.max(.7,Math.round((z-.1)*10)/10))} className="grid size-8 place-items-center text-white/55" aria-label="Diminuir zoom"><ZoomOut size={14}/></button>
           <span className="min-w-10 text-center text-[9px] text-white/45">{Math.round(zoom*100)}%</span>
