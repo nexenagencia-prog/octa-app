@@ -1,71 +1,86 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import {
-  ArrowRight, CalendarDays, ChevronRight, MoreVertical,
-  Play
-} from 'lucide-react';
-import { demoParticipants } from '@/lib/demo/data';
+import { ArrowRight, CalendarDays, Mic2, Play, Plus, Search, Sparkles, UsersRound, Video } from 'lucide-react';
 import { AppShell } from '@/components/app-shell';
-import { HomeHeroOverlays } from '@/components/home-hero-overlays';
+import { demoParticipants } from '@/lib/demo/data';
 import { ProfileGreeting } from '@/components/profile-greeting';
 
-const people = demoParticipants.slice(0,6);
+const people=demoParticipants.slice(0,6);
 
 export default function HomePage(){
-  return <AppShell><div className="octa-content-grid">
-        <section className="home-left min-w-0 pt-1">
-          <ProfileGreeting className="text-[21px] font-medium text-[#08758a]"/>
-          <h1 className="mt-1 text-[clamp(3rem,4.7vw,4.4rem)] font-medium leading-[.98] tracking-[-.055em] text-[#0a2238]">Seu dia<br/>começa aqui.</h1>
+  return <AppShell><section className="octa-v2-home">
+    <div className="octa-v2-home-hero">
+      <div className="octa-v2-home-copy">
+        <ProfileGreeting className="octa-v2-greeting"/>
+        <h1>Suas reuniões.<br/>Seu tempo.<br/><span>Tudo conectado.</span></h1>
+        <p className="octa-v2-lead">A OCTA reúne reuniões, agenda, contatos e gravações em uma única experiência para você chegar mais preparado em cada conversa.</p>
+        <div className="octa-v2-actions"><Link href="/reuniao-instantanea" className="octa-v2-primary"><Plus size={17}/> Nova reunião <ArrowRight size={15}/></Link><Link href="/agenda" className="octa-v2-secondary"><CalendarDays size={16}/> Agendar reunião</Link></div>
+      </div>
 
-          <div className="mt-9" id="contatos">
-            <h2 className="text-[15px] font-medium text-[#15314b]">Para reunião instantânea</h2>
-            <div className="mt-3 flex items-center gap-3">
-              <div className="flex items-center gap-2">{people.map((p)=><Link href={`/contatos?person=${p.id}`} key={p.id} className="group relative size-10 overflow-hidden rounded-full bg-white shadow-[0_2px_8px_rgba(7,31,45,.14)] ring-2 ring-white" aria-label={`Iniciar reunião com ${p.displayName}`}>
-                {p.avatarUrl&&<Image src={p.avatarUrl} alt={p.displayName} fill className="object-cover transition duration-300 group-hover:scale-105"/>}
-              </Link>)}</div>
-              <Link href="/contatos" aria-label="Ver mais pessoas" className="grid size-11 place-items-center rounded-full border border-[#0a2238]/8 bg-white/60 text-[#17314a] shadow-sm"><ChevronRight size={20}/></Link>
-            </div>
+      <div className="octa-v2-visual">
+        <Image src="/octa-space-clean.png" alt="OCTA meetings" fill priority sizes="60vw" className="object-cover"/>
+        <div className="octa-v2-visual-shade"/>
+        <div className="octa-v2-profile-pill"><span className="size-2 rounded-full bg-[#8ef0d2]"/><span>Ambiente OCTA</span></div>
+        <article className="octa-v2-next-dark">
+          <div className="flex items-center justify-between"><span>Próxima reunião</span><span>•••</span></div>
+          <strong>14:30 <small>Hoje</small></strong>
+          <h3>Planejamento de Marketing</h3>
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex -space-x-2">{people.slice(0,5).map(p=>p.avatarUrl?<Image key={p.id} src={p.avatarUrl} alt="" width={32} height={32} className="size-8 rounded-full border-2 border-[#0b0c0c] object-cover"/>:null)}<span className="grid size-8 place-items-center rounded-full border-2 border-[#0b0c0c] bg-white/10 text-[10px]">+5</span></div>
+            <Link href="/room/strategy-room" className="octa-v2-round-link" aria-label="Entrar"><ArrowRight size={18}/></Link>
           </div>
+        </article>
+        <div className="octa-v2-quote">“Grandes ideias acontecem em boas conversas.”</div>
+      </div>
+    </div>
 
-          <section className="mt-8" id="agenda">
-            <h2 className="text-[15px] font-medium text-[#17314a]">Próxima reunião às 14:30</h2>
-            <div className="octa-meeting-card mt-3">
-              <div className="grid size-12 place-items-center rounded-[16px] bg-gradient-to-br from-[#0b879a] to-[#005f72] text-white shadow-[0_12px_30px_rgba(7,119,139,.2)]"><CalendarDays size={21}/></div>
-              <div className="min-w-0"><h3 className="truncate text-[16px] font-semibold text-[#0b2238]">Planejamento de Marketing</h3><p className="mt-1 text-xs text-[#30485e]">Hoje&nbsp; • &nbsp;14:30 – 15:30&nbsp; • &nbsp;6 participantes</p></div>
-              <Link href="/reunioes" className="ml-auto text-[#17314a]" aria-label="Mais opções"><MoreVertical size={20}/></Link>
-              <div className="col-span-full mt-1 flex gap-3 pl-[60px]"><Link href="/room/strategy-room" className="octa-primary-button"><Play size={14} fill="currentColor"/> Entrar na reunião</Link><Link href="/agenda" className="octa-secondary-button">Ver agenda</Link></div>
-            </div>
-          </section>
+    <div className="octa-v2-stats">
+      <Stat icon={<Video size={17}/>} value="08" label="Reuniões hoje"/>
+      <Stat icon={<UsersRound size={17}/>} value="12" label="Contatos recentes"/>
+      <Stat icon={<Play size={17}/>} value="24" label="Gravações"/>
+      <Stat icon={<Sparkles size={17}/>} value="82%" label="Performance"/>
+    </div>
 
-          <section className="mt-6 pb-10" id="reunioes">
-            <h2 className="text-[15px] font-medium text-[#17314a]">Reuniões de hoje</h2>
-            <div className="mt-3 overflow-hidden rounded-[22px] border border-[#0d2a44]/7 bg-white/58 shadow-[0_8px_30px_rgba(10,34,55,.045)]">
-              <MeetingRow time="16:00" title="Kickoff Campanha Q2" duration="45 min" count="+3"/>
-              <MeetingRow time="17:30" title="Alinhamento de Conteúdo" duration="30 min" count="+2"/>
-              <Link href="/agenda" className="flex items-center justify-between px-4 py-4 text-sm text-[#17314a] hover:bg-white/55"><span>Ver agenda completa</span><ChevronRight size={18}/></Link>
-            </div>
-          </section>
-        </section>
+    <div className="octa-v2-dashboard-grid">
+      <section className="octa-hybrid-card octa-v2-quick">
+        <header><div><span className="octa-v2-eyebrow">Ações rápidas</span><h2>Comece em segundos.</h2></div></header>
+        <div className="octa-v2-quick-grid">
+          <Quick href="/reuniao-instantanea" icon={<Video size={18}/>} title="Iniciar reunião" text="Começar agora"/>
+          <Quick href="/agenda" icon={<CalendarDays size={18}/>} title="Agendar" text="Criar evento"/>
+          <Quick href="/contatos" icon={<UsersRound size={18}/>} title="Convidar pessoas" text="Adicionar participantes"/>
+          <Quick href="/gravar" icon={<Mic2 size={18}/>} title="Gravar reunião" text="Iniciar gravação"/>
+        </div>
+      </section>
 
-        <section className="home-right min-w-0">
-          <div className="octa-space-card min-h-[610px]">
-            <Image src="/octa-space-clean.png" alt="Ambiente futurista OCTA" fill priority sizes="(min-width: 1280px) 52vw, 100vw" quality={100} className="octa-space-image"/>
-            <div className="absolute inset-0 bg-gradient-to-r from-[#001c2b]/12 via-transparent to-transparent"/>
-            <HomeHeroOverlays/>
-          </div>
+      <section className="octa-hybrid-card octa-v2-ai-card">
+        <div className="octa-v2-ai-orb"/><div className="relative z-10"><span className="octa-v2-eyebrow text-white/50">OCTA AI</span><h2>Inteligência para cada conversa.</h2><p>Resumo, decisões, tarefas e contexto em um só lugar.</p><Link href="/chat">Abrir OCTA AI <ArrowRight size={14}/></Link></div>
+      </section>
 
-          <div className="octa-connect-card octa-connect-clean">
-            <Image src="/octa-space-clean.png" alt="Ambiente OCTA" fill sizes="(min-width: 1280px) 52vw, 100vw" quality={100} className="octa-connect-media"/>
-            <div className="absolute inset-0 bg-gradient-to-r from-[#03293a]/96 via-[#07364a]/72 to-[#0a2238]/36"/>
-            <div className="relative z-10 grid h-full grid-cols-[.7fr_1fr_auto] items-center gap-7 p-7 text-white">
-              <h2 className="text-[26px] font-medium leading-[1.02] tracking-[-.035em]">Conecte.<br/>Colabore.<br/>Evolua.</h2>
-              <p className="max-w-[250px] text-[13px] leading-5 text-white/84">Todas as suas reuniões, contatos e gravações em um só lugar. Mais tempo para o que importa.</p>
-              <Link href="/reunioes" className="grid size-14 place-items-center rounded-full border border-white/40 bg-white/5 backdrop-blur-lg" aria-label="Saiba mais"><Play size={19} fill="white"/></Link>
-              <Link href="/reunioes" className="col-start-2 -mt-2 inline-flex w-fit items-center gap-5 rounded-full border border-white/30 px-4 py-2 text-xs">Saiba mais <ArrowRight size={14}/></Link>
-            </div>
-          </div>
-        </section>
-  </div></AppShell>;
+      <section className="octa-hybrid-card octa-v2-skill-card">
+        <div><span className="octa-v2-eyebrow">OCTA Skills</span><h2>Sua evolução, visível.</h2><p>Clareza, escuta, objetividade e condução com evidência.</p><Link href="/skills">Ver análise <ArrowRight size={14}/></Link></div>
+        <div className="octa-v2-score"><strong>82</strong><span>/100</span></div>
+      </section>
+
+      <section className="octa-hybrid-card octa-v2-list-card">
+        <header><div><span className="octa-v2-eyebrow">Reuniões recentes</span><h2>Continue de onde parou.</h2></div><Link href="/reunioes">Ver todas <ArrowRight size={13}/></Link></header>
+        <HomeRow title="Briefing Campanha" meta="Hoje · 10:30" action="Entrar"/>
+        <HomeRow title="Alinhamento Comercial" meta="Hoje · 15:00" action="Entrar"/>
+        <HomeRow title="Reunião com Cliente" meta="Ontem · 16:20" action="Abrir"/>
+      </section>
+
+      <section className="octa-hybrid-card octa-v2-recordings-card">
+        <header><div><span className="octa-v2-eyebrow">Gravações</span><h2>Momentos importantes.</h2></div><Link href="/gravacoes">Ver todas <ArrowRight size={13}/></Link></header>
+        {['Planejamento de Marketing','Reunião com João Silva','Alinhamento Comercial'].map((title,i)=><div className="octa-v2-recording-row" key={title}><div className="octa-v2-recording-thumb"><Image src="/octa-space-clean.png" alt="" fill className="object-cover"/><span>{['48:12','32:46','26:10'][i]}</span></div><div className="min-w-0"><strong>{title}</strong><small>{i===0?'Hoje · 14:30':'Ontem · 15:00'}</small></div><Play size={15}/></div>)}
+      </section>
+
+      <section className="octa-hybrid-card octa-v2-agenda-card">
+        <header><div><span className="octa-v2-eyebrow">Agenda da semana</span><h2>Seu ritmo, organizado.</h2></div><Link href="/agenda">Ver agenda <ArrowRight size={13}/></Link></header>
+        <div className="octa-v2-mini-agenda"><div className="octa-v2-agenda-hours">{['08','10','12','14','16'].map(x=><span key={x}>{x}:00</span>)}</div><div className="octa-v2-agenda-body"><div className="octa-v2-event e1">Reunião com Cliente</div><div className="octa-v2-event e2">Planejamento de Marketing</div><div className="octa-v2-event e3">Revisão de Campanha</div></div></div>
+      </section>
+    </div>
+  </section></AppShell>
 }
 
-function MeetingRow({time,title,duration,count}:{time:string;title:string;duration:string;count:string}){return <div className="grid grid-cols-[56px_1fr_54px_auto] items-center gap-2 border-b border-[#0d2a44]/7 px-4 py-3 text-xs text-[#17314a]"><strong className="font-medium">{time}</strong><span className="truncate">{title}</span><span className="text-[#5f7486]">{duration}</span><div className="flex items-center -space-x-1.5">{people.slice(0,3).map(p=>p.avatarUrl&&<Image key={p.id} src={p.avatarUrl} alt="" width={22} height={22} className="size-[22px] rounded-full border-2 border-white object-cover"/>)}<span className="ml-1.5 text-[10px] text-[#536b7f]">{count}</span></div></div>}
+function Stat({icon,value,label}:{icon:React.ReactNode;value:string;label:string}){return <div className="octa-v2-stat"><span>{icon}</span><strong>{value}</strong><small>{label}</small></div>}
+function Quick({href,icon,title,text}:{href:string;icon:React.ReactNode;title:string;text:string}){return <Link href={href} className="octa-v2-quick-item"><span>{icon}</span><strong>{title}</strong><small>{text}</small></Link>}
+function HomeRow({title,meta,action}:{title:string;meta:string;action:string}){return <div className="octa-v2-home-row"><div className="size-9 rounded-full bg-[linear-gradient(145deg,#202323,#727777)]"/><div className="min-w-0 flex-1"><strong>{title}</strong><small>{meta}</small></div><button>{action}</button></div>}

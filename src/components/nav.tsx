@@ -15,9 +15,11 @@ import { NotificationsCenter } from '@/components/notifications-center';
 const topItems=[{href:'/',label:'Início'},{href:'/reunioes',label:'Reuniões'},{href:'/agenda',label:'Agenda'},{href:'/planos',label:'Planos e preços'}];
 const sidePrimary=[{href:'/',label:'Início',icon:Home},{href:'/agenda',label:'Agenda',icon:CalendarDays},{href:'/reunioes',label:'Reuniões',icon:VideoIcon},{href:'/reuniao-instantanea',label:'Reunião instantânea',icon:Video},{href:'/contatos',label:'Contatos',icon:UsersRound},{href:'/gravacoes',label:'Gravações',icon:VideoIcon}];
 const sideLinks=[
+  {href:'/chat',label:'OCTA AI',icon:Sparkles},
+  {href:'/skills',label:'OCTA Skills',icon:Sparkles},
   {href:'/lousa',label:'Lousa',icon:Brush},
   {href:'/reunioes?modo=entrar',label:'Entrar em reunião',icon:Video},
-  {href:'/minhas-anotacoes',label:'Minhas Anotações',icon:BookOpenText},{href:'/skills',label:'Octa skills',icon:Sparkles},
+  {href:'/minhas-anotacoes',label:'Minhas Anotações',icon:BookOpenText},
 ];
 
 export function OctaLogo(){return <Link href="/" className="octa-wordmark" aria-label="OCTA início" data-cms-id="global.wordmark" data-cms-type="text">OCTA</Link>}
