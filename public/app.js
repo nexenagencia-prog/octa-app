@@ -40,9 +40,11 @@ function updateProfileUI(){
 function avatars(n=4){return `<div class="mini-avatars">${Array.from({length:n},(_,i)=>`<span class="avatar avatar-small" style="background:${['linear-gradient(145deg,#d7f5ff,#244b60)','linear-gradient(145deg,#f2d7c9,#60382f)','linear-gradient(145deg,#d7d2ff,#34305e)','linear-gradient(145deg,#ffe0ef,#653349)'][i%4]}">${['D','M','A','J'][i%4]}</span>`).join('')}</div>`}
 function dashboard(){return `
 <section class="hero">
- <div class="hero-copy"><h1>Suas reuniões.<br>Seu tempo.<br><span>Tudo conectado.</span></h1><p>A OCTA reúne reuniões, agenda, contatos e gravações em uma única experiência — para você ir além em cada conversa.</p><div class="button-row"><button class="btn btn-primary" data-action="new-meeting">＋ Nova reunião　→</button><button class="btn" data-action="schedule">▣　Agendar reunião</button></div></div>
- <aside class="next-meeting glass"><div class="card-title">▣　Próxima reunião <span style="float:right">•••</span></div><div class="meeting-time">14:30 <span class="small muted">Hoje</span></div><div>Planejamento de Marketing</div>${avatars(5)}</aside>
- <div class="quote">⚡ “Grandes ideias acontecem em boas conversas.”</div>
+ <div class="hero-copy"><div class="hero-eyebrow">Seu espaço de trabalho</div><h1>Suas reuniões.<br>Seu tempo.<br><span>Tudo conectado.</span></h1><p>A OCTA reúne reuniões, agenda, contatos e gravações em uma única experiência — para você ir além em cada conversa.</p><div class="button-row"><button class="btn btn-primary" data-action="new-meeting">＋ Nova reunião　→</button><button class="btn" data-action="schedule">▣　Agendar reunião</button></div></div>
+ <div class="hero-rail">
+  <aside class="next-meeting"><div class="next-top"><div><span class="card-kicker">Próxima reunião</span><div class="meeting-time">14:30 <span class="small muted">Hoje</span></div></div><button class="more-btn" aria-label="Mais opções">•••</button></div><div class="meeting-name">Planejamento de Marketing</div><div class="meeting-meta"><span>5 participantes</span><span>45 min</span></div><div class="next-footer">${avatars(5)}<button class="row-action" data-route="agenda">Ver agenda →</button></div></aside>
+  <div class="hero-note"><span class="hero-note-dot"></span><div><strong>Agenda organizada</strong><small>Sem conflitos nas próximas reuniões.</small></div></div>
+ </div>
 </section>
 <div class="stats glass">${[['▣','08','Reuniões hoje'],['♙','12','Contatos recentes'],['◉','24','Gravações'],['▥','82%','Performance']].map(x=>`<div class="stat"><div class="stat-icon">${x[0]}</div><div><b>${x[1]}</b><span>${x[2]}</span></div></div>`).join('')}</div>
 <div class="dashboard-grid">
