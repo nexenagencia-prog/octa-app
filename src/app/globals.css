@@ -1950,3 +1950,172 @@ html[data-theme="dark"] .octa-hybrid-heading h1{color:#f5f4f1}
   .octa-live-top-grid,.octa-live-bottom-grid{grid-template-columns:1fr}
   .octa-live-actions,.octa-live-agenda{grid-column:auto}
 }
+
+/* OCTA HOME RENDER GEOMETRY FIX */
+.octa-page.is-live-home{
+  display:grid!important;
+  grid-template-columns:118px minmax(0,1fr)!important;
+  gap:0!important;
+  width:100%!important;
+  max-width:none!important;
+  min-height:100dvh!important;
+  height:auto!important;
+  margin:0!important;
+  padding:0!important;
+  overflow:visible!important;
+  position:relative!important;
+  background:#f4f4f1!important;
+  align-items:stretch!important;
+}
+.octa-page.is-live-home>.octa-sidebar{
+  position:relative!important;
+  left:auto!important;
+  top:auto!important;
+  width:118px!important;
+  height:calc(100dvh - 16px)!important;
+  min-height:680px!important;
+  margin:8px 0!important;
+  padding:0 9px!important;
+  border-radius:0 28px 28px 0!important;
+  overflow:hidden!important;
+  z-index:40!important;
+  flex:0 0 auto!important;
+  background:
+    radial-gradient(circle at 40% 88%,rgba(129,168,158,.10),transparent 28%),
+    linear-gradient(180deg,#111416 0%,#090b0c 100%)!important;
+  box-shadow:18px 0 46px rgba(9,11,12,.08)!important;
+}
+.octa-page.is-live-home>.octa-sidebar::before{
+  content:""!important;
+  position:absolute!important;
+  inset:auto -35px -60px -35px!important;
+  height:230px!important;
+  background:radial-gradient(ellipse at 50% 45%,rgba(98,132,124,.12),transparent 58%)!important;
+  opacity:1!important;
+  pointer-events:none!important;
+}
+.octa-page.is-live-home>.octa-main{
+  position:relative!important;
+  display:flex!important;
+  min-width:0!important;
+  width:100%!important;
+  max-width:none!important;
+  min-height:100dvh!important;
+  height:auto!important;
+  flex-direction:column!important;
+  overflow:visible!important;
+  border:0!important;
+  border-radius:0!important;
+  background:#f7f7f4!important;
+  box-shadow:none!important;
+}
+.octa-page.is-live-home .octa-app-body{
+  display:block!important;
+  flex:1 1 auto!important;
+  min-width:0!important;
+  width:100%!important;
+  max-width:none!important;
+  min-height:100dvh!important;
+  height:auto!important;
+  padding:0!important;
+  overflow:visible!important;
+}
+.octa-page.is-live-home .octa-topbar{
+  position:absolute!important;
+  z-index:50!important;
+  top:14px!important;
+  right:22px!important;
+  left:auto!important;
+  width:min(720px,52vw)!important;
+  height:46px!important;
+  min-height:46px!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+  pointer-events:none!important;
+}
+.octa-page.is-live-home .octa-topbar>div{
+  width:100%!important;
+  margin-left:0!important;
+  justify-content:flex-end!important;
+  pointer-events:auto!important;
+}
+.octa-page.is-live-home .octa-topbar .octa-search{
+  position:relative!important;
+  left:auto!important;
+  top:auto!important;
+  flex:1 1 430px!important;
+  width:auto!important;
+  min-width:260px!important;
+  max-width:430px!important;
+  height:44px!important;
+}
+.octa-page.is-live-home .octa-live-home{
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+  width:100%!important;
+  max-width:none!important;
+  min-height:100dvh!important;
+  margin:0!important;
+  padding:0 18px 20px!important;
+  overflow:visible!important;
+}
+.octa-page.is-live-home .octa-side-nav{
+  position:relative!important;
+  z-index:2!important;
+  margin-top:12px!important;
+  padding:0!important;
+  gap:1px!important;
+  max-height:calc(100dvh - 230px)!important;
+  overflow-y:auto!important;
+}
+.octa-page.is-live-home .octa-side-item{
+  min-height:34px!important;
+  height:34px!important;
+  padding:0 6px!important;
+  gap:7px!important;
+  border-radius:10px!important;
+  font-size:9px!important;
+}
+.octa-page.is-live-home .octa-sidebar .octa-profile{
+  position:absolute!important;
+  left:12px!important;
+  right:10px!important;
+  bottom:44px!important;
+  display:grid!important;
+  grid-template-columns:38px 1fr!important;
+  gap:7px!important;
+  padding:0!important;
+  align-items:center!important;
+  overflow:hidden!important;
+}
+.octa-page.is-live-home .octa-sidebar .octa-profile>div:first-child{
+  width:38px!important;
+  height:38px!important;
+}
+.octa-page.is-live-home .octa-profile-copy{
+  display:block!important;
+  min-width:0!important;
+}
+.octa-page.is-live-home .octa-profile-copy>div:first-child{font-size:9.5px!important}
+.octa-page.is-live-home .octa-profile-copy>div:last-child{font-size:8px!important}
+.octa-page.is-live-home .octa-sidebar-footer{
+  position:absolute!important;
+  left:10px!important;
+  right:10px!important;
+  bottom:8px!important;
+  padding:0!important;
+}
+@media(max-width:1279px){
+  .octa-page.is-live-home{
+    grid-template-columns:96px minmax(0,1fr)!important;
+  }
+  .octa-page.is-live-home>.octa-sidebar{width:96px!important}
+  .octa-page.is-live-home .octa-side-label,
+  .octa-page.is-live-home .octa-profile-copy{display:none!important}
+  .octa-page.is-live-home .octa-sidebar .octa-profile{
+    left:29px!important;right:auto!important;display:block!important;width:38px!important;
+  }
+  .octa-page.is-live-home .octa-topbar{width:min(650px,60vw)!important}
+}
