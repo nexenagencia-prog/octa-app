@@ -683,3 +683,82 @@ body:has(.octa-third-home) .meeting-calculator-overlay{
   .octa-third-middle,.octa-third-bottom{height:auto;grid-template-columns:1fr;padding:14px 16px}.octa-third-middle>*{min-height:155px}.octa-third-bottom>*{min-height:280px}
 }
 @media(prefers-reduced-motion:reduce){.octa-third-ai-orb i{animation:none!important}}
+
+/* OCTA HERO FINAL — APPROVED REFERENCE */
+.octa-third-photo{
+  background:#d9dcda!important;
+}
+.octa-third-photo:before{
+  content:""!important;
+  position:absolute!important;
+  inset:-3%!important;
+  z-index:0!important;
+  background:url('/octa-hero-reference.webp') 58% center/cover no-repeat!important;
+  filter:blur(22px) saturate(.82) brightness(.96)!important;
+  transform:scale(1.09)!important;
+  opacity:.78!important;
+}
+.octa-third-hero-image{
+  z-index:1!important;
+  object-fit:contain!important;
+  object-position:58% center!important;
+  transform:scale(.90)!important;
+}
+.octa-third-photo-shade{
+  z-index:2!important;
+  background:
+    linear-gradient(90deg,rgba(250,250,248,.63) 0%,rgba(250,250,248,.28) 10%,rgba(250,250,248,.05) 25%,transparent 37%,rgba(0,0,0,.02) 72%,rgba(0,0,0,.13) 100%),
+    linear-gradient(180deg,rgba(255,255,255,.03),transparent 64%,rgba(0,0,0,.15))!important;
+}
+.octa-third-next{
+  right:3.0%!important;
+  top:9.9%!important;
+  width:25.8%!important;
+  min-width:330px!important;
+  min-height:210px!important;
+  padding:15px 17px!important;
+  border-radius:22px!important;
+  background:
+    linear-gradient(145deg,rgba(15,17,18,.96),rgba(2,3,3,.95))!important;
+  border:1px solid rgba(255,255,255,.14)!important;
+  box-shadow:
+    0 22px 56px rgba(0,0,0,.31),
+    inset 0 1px 0 rgba(255,255,255,.07)!important;
+}
+.octa-third-next-head{
+  grid-template-columns:36px 1fr auto!important;
+  gap:10px!important;
+}
+.octa-third-next-head>span{
+  width:36px!important;
+  height:36px!important;
+  border-radius:11px!important;
+}
+.octa-third-next-head small{
+  font-size:10px!important;
+}
+.octa-third-time{
+  margin-top:15px!important;
+  font-size:36px!important;
+}
+.octa-third-time>a{
+  height:34px!important;
+  padding:0 13px!important;
+}
+.octa-third-next h2{
+  margin:18px 0 13px!important;
+  font-size:14px!important;
+}
+.octa-third-avatars img,.octa-third-avatars b{
+  width:30px!important;
+  height:30px!important;
+}
+.octa-third-quote{
+  right:3.0%!important;
+  bottom:8.0%!important;
+  font-size:10px!important;
+}
+@media(max-width:1450px){
+  .octa-third-hero-image{object-position:57% center!important;transform:scale(.92)!important}
+  .octa-third-next{width:27.5%!important;min-width:300px!important;min-height:195px!important}
+}
