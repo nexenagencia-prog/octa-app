@@ -18,7 +18,7 @@ export function FloatingNotesCard({roomSlug,meetingTitle,onClose}:{roomSlug?:str
     <button onClick={onClose} aria-label="Fechar anotações" className="octa-note-close"><X size={16}/></button>
     <div className="flex items-center gap-2"><span className="grid size-9 place-items-center rounded-xl bg-cyan-400/10 text-cyan-300"><StickyNote size={17}/></span><div><strong className="text-sm">Anotar</strong><p className="text-[10px] text-white/40">Título, assunto e texto formatado</p></div></div>
     <div className="mt-3 grid grid-cols-2 gap-2"><label className="block text-[9px] font-medium uppercase tracking-[.12em] text-white/38">Título<input value={title} onChange={e=>setTitle(e.target.value)} className="octa-note-input" placeholder="Próximos passos"/></label><label className="block text-[9px] font-medium uppercase tracking-[.12em] text-white/38">Assunto<input value={subject} onChange={e=>setSubject(e.target.value)} className="octa-note-input" placeholder="Branding"/></label></div>
-    <div className="mt-3"><RichNoteEditor value={message} onChange={setMessage} compact/></div>
+    <div className="mt-3"><label className="mb-2 block text-[9px] font-medium uppercase tracking-[.12em] text-white/38">Mensagem</label><RichNoteEditor value={message} onChange={setMessage} compact/></div>
     <button onClick={persist} className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-white px-4 py-3 text-xs font-semibold text-[#0a2238]"><Save size={14}/>{saved?<><Check size={14}/> Salvo</>:'Salvar anotação'}</button>
   </div>;
 }
