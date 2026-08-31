@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { RecoveryRedirect } from '@/components/recovery-redirect';
 import { CmsRuntime } from '@/components/cms-runtime';
 import { OctaAICoach } from '@/components/octa-ai-coach';
 
