@@ -23,7 +23,7 @@ export default function HomePage(){
       <div className="octa-ref-photo">
         <Image src="/octa-v2-hero.jpg" alt="Profissional trabalhando em uma reunião OCTA" fill priority className="object-cover"/>
         <div className="octa-ref-photo-fade"/>
-        <div className="octa-ref-lightwash"/>
+        <div className="octa-ref-lightwash"/><div className="octa-ref-hero-glow"/>
         <article className="octa-ref-next">
           <div className="octa-ref-next-top"><span><CalendarDays size={15}/></span><small>Próxima reunião</small><b>•••</b></div>
           <div className="octa-ref-time">14:30 <small>Hoje</small></div>

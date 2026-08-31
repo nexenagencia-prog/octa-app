@@ -1148,3 +1148,130 @@ html[data-theme="dark"] .octa-hybrid-heading h1{color:#f5f4f1}
 .octa-global-surface select{
   border-color:rgba(15,17,17,.08)!important;
 }
+
+/* OCTA PIXEL GEOMETRY PASS — reference 1536×1024 */
+:root{
+  --octa-ref-sidebar:144px;
+  --octa-ref-hero-h:464px;
+  --octa-ref-copy-w:468px;
+}
+.octa-page{
+  grid-template-columns:var(--octa-ref-sidebar) minmax(0,1fr)!important;
+  background:#0d1011!important;
+}
+.octa-sidebar{width:var(--octa-ref-sidebar)!important}
+.octa-main{background:#f7f7f5!important}
+.octa-app-body{overflow-x:hidden!important}
+.octa-ref-home{min-height:1024px!important}
+.octa-ref-hero{
+  grid-template-columns:var(--octa-ref-copy-w) minmax(0,1fr)!important;
+  height:var(--octa-ref-hero-h)!important;
+  min-height:var(--octa-ref-hero-h)!important;
+}
+.octa-ref-copy{padding:39px 34px 28px 40px!important}
+.octa-ref-greeting{margin-bottom:22px!important;font-size:12px!important}
+.octa-ref-copy h1{font-size:41px!important;line-height:1.045!important;letter-spacing:-.052em!important}
+.octa-ref-copy>p{width:310px!important;margin-top:16px!important;font-size:12.5px!important;line-height:1.42!important}
+.octa-ref-cta-row{margin-top:24px!important;gap:12px!important}
+.octa-ref-primary{min-width:202px!important;min-height:48px!important}
+.octa-ref-secondary{min-width:194px!important;min-height:48px!important}
+.octa-ref-photo>img{object-position:54% 34%!important;transform:scale(1.015)}
+.octa-ref-photo-fade{
+  z-index:2!important;
+  background:
+    linear-gradient(90deg,rgba(249,249,247,.98) 0%,rgba(249,249,247,.72) 8%,rgba(249,249,247,.22) 20%,transparent 38%),
+    linear-gradient(180deg,transparent 0 66%,rgba(9,11,12,.10) 82%,rgba(9,11,12,.34) 100%)!important;
+}
+.octa-ref-lightwash{
+  inset:-12% 44% -8% -10%!important;
+  opacity:.92!important;
+  filter:blur(25px)!important;
+}
+.octa-ref-hero-glow{
+  position:absolute;
+  z-index:2;
+  pointer-events:none;
+  left:-3%;top:-18%;width:54%;height:125%;
+  background:radial-gradient(ellipse at 28% 48%,rgba(255,255,255,.98) 0%,rgba(255,255,255,.88) 27%,rgba(255,255,255,.42) 50%,rgba(255,255,255,.08) 67%,transparent 78%);
+  filter:blur(18px);
+  mix-blend-mode:screen;
+}
+.octa-ref-next{right:25px!important;top:88px!important;width:330px!important;padding:16px 18px!important;border-radius:21px!important}
+.octa-ref-quote{right:28px!important;bottom:71px!important;font-size:11px!important}
+.octa-ref-hero:after{left:300px!important;height:112px!important}
+.octa-ref-metrics{
+  width:calc(100% - 50px)!important;
+  margin:-90px 25px 0!important;
+  border-radius:18px!important;
+  min-height:82px!important;
+}
+.octa-ref-metric{min-height:82px!important;padding:0 18px!important}
+.octa-ref-topgrid{grid-template-columns:1.47fr .73fr .82fr!important;gap:14px!important;padding:15px 24px 0!important}
+.octa-ref-bottomgrid{grid-template-columns:.98fr .94fr 1.15fr!important;gap:14px!important;padding:14px 24px 28px!important}
+.octa-ref-actions{min-height:166px!important}
+.octa-ref-ai,.octa-ref-skills{min-height:166px!important}
+.octa-ref-recent,.octa-ref-recordings,.octa-ref-agenda{min-height:342px!important}
+.octa-ref-calendar{height:245px!important}
+.octa-ref-action-grid{gap:9px!important}
+.octa-ref-action{min-height:105px!important}
+
+/* top bar geometry from reference: search centered over hero, actions on right */
+.octa-topbar{
+  left:var(--octa-ref-sidebar)!important;
+  right:0!important;
+  top:0!important;
+  height:82px!important;
+  padding:0 26px!important;
+  display:block!important;
+}
+.octa-top-actions{position:relative!important;width:100%!important;height:82px!important;display:block!important;pointer-events:none}
+.octa-topbar .octa-theme-toggle{display:none!important}
+.octa-topbar .octa-search{
+  position:absolute!important;
+  left:352px!important;
+  top:16px!important;
+  width:442px!important;
+  min-width:442px!important;
+  height:46px!important;
+  pointer-events:auto!important;
+  background:rgba(246,247,245,.66)!important;
+  border:1px solid rgba(255,255,255,.42)!important;
+  box-shadow:0 8px 28px rgba(0,0,0,.07),inset 0 1px 0 rgba(255,255,255,.48)!important;
+  backdrop-filter:blur(28px) saturate(125%)!important;
+}
+.octa-top-right{position:absolute;right:0;top:16px;display:flex;align-items:center;gap:10px;pointer-events:auto}
+.octa-profile-pill{
+  height:44px;min-width:168px;align-items:center;gap:9px;padding:4px 12px 4px 5px;border-radius:999px;
+  background:rgba(246,247,245,.80);border:1px solid rgba(255,255,255,.50);color:#111313;
+  box-shadow:0 8px 25px rgba(0,0,0,.06);backdrop-filter:blur(24px);
+  font-size:11px;font-weight:560;
+}
+.octa-profile-pill img{width:34px;height:34px;border-radius:50%;object-fit:cover}
+.octa-profile-pill svg{margin-left:auto;transform:rotate(90deg);opacity:.55}
+
+/* liquid-glass OCTA AI object: brighter rim and moving refraction */
+.octa-ai-visual{right:10px!important;bottom:7px!important;width:116px!important;height:116px!important}
+.octa-ai-orb-core{
+  inset:9px!important;
+  background:
+    radial-gradient(circle at 31% 22%,rgba(255,255,255,1) 0 2%,rgba(233,245,248,.98) 3%,rgba(134,165,180,.86) 8%,rgba(34,49,57,.36) 15%,transparent 24%),
+    radial-gradient(circle at 73% 76%,rgba(205,225,233,.30),transparent 27%),
+    radial-gradient(circle at 46% 44%,rgba(31,43,50,.92),rgba(9,14,17,.96) 51%,#020405 74%)!important;
+  box-shadow:inset 8px 7px 16px rgba(255,255,255,.22),inset -13px -16px 24px rgba(0,0,0,.74),inset 0 0 0 1px rgba(235,248,251,.48),0 0 25px rgba(170,207,220,.18)!important;
+  animation:octaAiGlassSpin 12s linear infinite;
+}
+.octa-ai-orbit{inset:1px!important;border-color:rgba(223,241,247,.26)!important;border-left-color:rgba(255,255,255,.90)!important;box-shadow:inset 0 0 13px rgba(255,255,255,.10),0 0 9px rgba(210,235,242,.08)!important}
+.octa-ai-caustic{inset:14px!important;background:conic-gradient(from 208deg,transparent 0 18%,rgba(226,241,246,.19) 27%,transparent 39% 64%,rgba(255,255,255,.16) 73%,transparent 87%)!important}
+@keyframes octaAiGlassSpin{0%{transform:rotate(0deg) scale(1)}50%{transform:rotate(180deg) scale(1.018)}100%{transform:rotate(360deg) scale(1)}}
+
+/* keep the reference proportions on very wide desktop instead of flattening vertically */
+@media(min-width:1537px){
+  .octa-ref-hero{height:464px!important;min-height:464px!important}
+  .octa-ref-copy{padding-left:40px!important}
+  .octa-ref-topgrid,.octa-ref-bottomgrid{max-width:none!important}
+}
+@media(max-width:1280px){
+  .octa-ref-hero{height:430px!important;min-height:430px!important;grid-template-columns:410px minmax(0,1fr)!important}
+  .octa-ref-metrics{margin-top:-72px!important}
+  .octa-topbar .octa-search{left:300px!important;width:390px!important;min-width:390px!important}
+}
