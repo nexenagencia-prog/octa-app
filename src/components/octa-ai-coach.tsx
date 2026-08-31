@@ -62,7 +62,7 @@ export function OctaAICoach(){
     }catch{try{browserSpeak(text)}catch(error){setStatus(error instanceof Error?error.message:'Voz indisponível')}}
   }
 
-  if(pathname.startsWith('/login')||pathname.startsWith('/reset-password')||pathname.startsWith('/auth')||pathname.startsWith('/admin')) return null;
+  if(pathname==='/'||pathname.startsWith('/login')||pathname.startsWith('/reset-password')||pathname.startsWith('/auth')||pathname.startsWith('/admin')) return null;
   return <div className={`octa-ai ${open?'is-open':''}`} style={{transform:`translate(${position.x}px,${position.y}px)`}}>
     {open&&<section className="octa-ai-panel" aria-label="OCTA AI Coach">
       <header className="octa-ai-head"><div><span><Sparkles size={12}/> OCTA AI</span><strong>Performance Coach</strong></div><button onClick={()=>setOpen(false)} aria-label="Fechar OCTA AI"><X size={16}/></button></header>

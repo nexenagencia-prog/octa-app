@@ -35,8 +35,9 @@ function cmsPath(el:Element, root:Element){
   while(node&&node!==root){const tag=node.tagName.toLowerCase();const siblings=node.parentElement?[...node.parentElement.children].filter(x=>x.tagName===node!.tagName):[];parts.unshift(`${tag}.${Math.max(1,siblings.indexOf(node)+1)}`);node=node.parentElement}
   return parts.join('>');
 }
-export function ensureCmsIds(){
+export function ensureCmsIds(allowAuto=true){
   const root=document.querySelector('.octa-page')||document.querySelector('.octa-app-body')||document.body;
+  if(!allowAuto)return;
   const selector='main,header,aside,nav,section,article,div,h1,h2,h3,h4,h5,p,span,a,button,img,video,input,textarea,label,form';
   root.querySelectorAll<HTMLElement>(selector).forEach(el=>{
     if(el.closest('.cms-preview-selection'))return;
@@ -74,7 +75,7 @@ export function CmsRuntime(){
       // CMS text/style mutations can themselves create child-list mutations.
       // Suspend the observer while applying overrides to avoid a restore/apply feedback loop.
       mo?.disconnect();
-      ensureCmsIds();
+      ensureCmsIds(preview);
       applyDocument(docRef.current);
       observe();
     };
@@ -109,7 +110,7 @@ export function CmsRuntime(){
         if(data.type===`${MSG}patch`&&selectedRef.current){const patch=sanitizeCmsPatch(data.patch);applyOverride(selectedRef.current,patch);place();post('select',{element:snapshot(selectedRef.current)});}
         if(data.type===`${MSG}theme`){document.documentElement.dataset.theme=data.theme==='dark'?'dark':'light';apply();place();}
         if(data.type===`${MSG}selectById`){const el=document.querySelector<HTMLElement>(`[data-cms-id="${CSS.escape(String(data.id))}"]`);if(el){selectedRef.current=el;place();post('select',{element:snapshot(el)})}}
-        if(data.type===`${MSG}requestLayers`){ensureCmsIds();post('layers',{layers:[...document.querySelectorAll<HTMLElement>('[data-cms-id]')].map(el=>({id:el.dataset.cmsId,type:el.dataset.cmsType||'element',label:el.getAttribute('aria-label')||el.textContent?.trim().slice(0,60)||el.dataset.cmsId}))});}
+        if(data.type===`${MSG}requestLayers`){ensureCmsIds(true);post('layers',{layers:[...document.querySelectorAll<HTMLElement>('[data-cms-id]')].map(el=>({id:el.dataset.cmsId,type:el.dataset.cmsType||'element',label:el.getAttribute('aria-label')||el.textContent?.trim().slice(0,60)||el.dataset.cmsId}))});}
       };
       addEventListener('message',message); post('ready',{route:location.pathname});
       return ()=>{alive=false;mo.disconnect();themeObserver.disconnect();removeEventListener('resize',resize);document.removeEventListener('click',click,true);document.removeEventListener('pointerdown',down,true);removeEventListener('message',message);overlay.remove();document.documentElement.classList.remove('cms-preview-mode')};
