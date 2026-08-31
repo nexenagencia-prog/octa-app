@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   Bell, BookOpenText, Brush, Calculator, CalendarDays, ChevronRight, Moon, Sun,
-  CircleDot, CircleUserRound, Home, Menu, MonitorUp,
+  CircleDot, CircleUserRound, Filter, Home, Menu, MonitorUp,
   NotebookPen, Pencil, Search, Settings, Sparkles, UsersRound, Video, VideoIcon
 } from 'lucide-react';
 import { useToolOverlay } from '@/components/tool-overlay-context';
@@ -14,9 +14,9 @@ import { defaultEditableProfile, EditableProfile, getProfile, PROFILE_UPDATED_EV
 const topItems=[{href:'/',label:'Início'},{href:'/reunioes',label:'Reuniões'},{href:'/agenda',label:'Agenda'},{href:'/planos',label:'Planos e preços'}];
 const sidePrimary=[{href:'/',label:'Início',icon:Home},{href:'/agenda',label:'Agenda',icon:CalendarDays},{href:'/reunioes',label:'Reuniões',icon:VideoIcon},{href:'/reuniao-instantanea',label:'Reunião instantânea',icon:Video},{href:'/contatos',label:'Contatos',icon:UsersRound},{href:'/gravacoes',label:'Gravações',icon:VideoIcon}];
 const sideLinks=[
-  {href:'/anotacoes',label:'Anotar',icon:NotebookPen},{href:'/lousa',label:'Lousa',icon:Brush},{href:'/compartilhar-tela',label:'Compartilhar Tela',icon:MonitorUp},{href:'/gravar',label:'Gravar',icon:CircleDot},
+  {href:'/lousa',label:'Lousa',icon:Brush},{href:'/compartilhar-tela',label:'Compartilhar Tela',icon:MonitorUp},{href:'/gravar',label:'Gravar',icon:CircleDot},
   {href:'/reunioes?modo=entrar',label:'Entrar em reunião',icon:Video},
-  {href:'/minhas-anotacoes',label:'Minhas Anotações',icon:BookOpenText},{href:'/skills',label:'Octa skills',icon:Sparkles},
+  {href:'/feed',label:'Feed',icon:UsersRound},{href:'/chat',label:'OCTA AI',icon:Sparkles},{href:'/minhas-anotacoes',label:'Minhas Anotações',icon:BookOpenText},{href:'/skills',label:'Octa skills',icon:Sparkles},
 ];
 
 export function OctaLogo(){return <Link href="/" className="octa-wordmark" aria-label="OCTA início" data-cms-id="global.wordmark" data-cms-type="text">OCTA</Link>}
@@ -29,17 +29,17 @@ function ThemeToggle(){
 }
 
 export function DashboardSidebar({collapsed=false,onToggle}:{collapsed?:boolean;onToggle?:()=>void}){
-  const path=usePathname();const {openTool}=useToolOverlay();const [profile,setProfile]=useState<EditableProfile>(defaultEditableProfile);const [editing,setEditing]=useState(false);
+  const path=usePathname();const router=useRouter();const {openTool}=useToolOverlay();const [profile,setProfile]=useState<EditableProfile>(defaultEditableProfile);const [editing,setEditing]=useState(false);
   useEffect(()=>{setProfile(getProfile());const onUpdate=(e:Event)=>setProfile((e as CustomEvent<EditableProfile>).detail??getProfile());window.addEventListener(PROFILE_UPDATED_EVENT,onUpdate);return()=>window.removeEventListener(PROFILE_UPDATED_EVENT,onUpdate)},[]);
   const item=(href:string,label:string,Icon:any)=><Link key={`${href}-${label}`} href={href} data-cms-id={`global.sidebar.${label.toLowerCase().replace(/[^a-z0-9]+/g,'-')}`} data-cms-type="container" title={collapsed?label:undefined} className={`octa-side-item ${path===href?'is-active':''}`}><Icon size={19}/><span className="octa-side-label" data-cms-id={`global.sidebar.label.${label.toLowerCase().replace(/[^a-z0-9]+/g,'-')}`} data-cms-type="text">{label}</span></Link>;
-  const tool=(label:string,Icon:any,kind:'calculator')=><button key={kind} onClick={()=>openTool(kind)} title={collapsed?label:undefined} className="octa-side-item w-full text-left"><Icon size={19}/><span className="octa-side-label" data-cms-id={`global.sidebar.tool.${kind}`} data-cms-type="text">{label}</span></button>;
+  const tool=(label:string,Icon:any,kind:'calculator'|'filters'|'notes')=><button key={kind} onClick={()=>kind==='filters'?router.push('/reunioes'):openTool(kind)} title={collapsed?label:undefined} className="octa-side-item w-full text-left"><Icon size={19}/><span className="octa-side-label" data-cms-id={`global.sidebar.tool.${kind}`} data-cms-type="text">{label}</span></button>;
   return <><aside className={`octa-sidebar hidden xl:flex ${collapsed?'is-collapsed':''}`}>
     <div className="octa-profile flex items-center gap-3 px-5 pt-6" data-cms-id="global.sidebar.profile" data-cms-type="container">
       <div className="relative size-12 shrink-0 overflow-hidden rounded-full border border-white/30 bg-white/15"><img src={profile.avatarUrl} alt={profile.displayName} className="h-full w-full object-cover"/><span className="absolute bottom-0 right-0 size-3 rounded-full border-2 border-[#092638] bg-emerald-400"/></div>
       <div className="octa-profile-copy min-w-0 flex-1"><div className="truncate text-[17px] font-medium text-white" data-cms-id="global.sidebar.profile.name" data-cms-type="text">{profile.displayName}</div><div className="mt-0.5 truncate text-xs text-white/55" data-cms-id="global.sidebar.profile.headline" data-cms-type="text">{profile.headline}</div></div>
       {!collapsed&&<button onClick={()=>setEditing(true)} className="grid size-8 shrink-0 place-items-center rounded-full bg-white/10 text-white/70 hover:bg-white/15" aria-label="Editar perfil"><Pencil size={14}/></button>}
     </div>
-    <nav className="octa-side-nav no-scrollbar overflow-y-auto">{sidePrimary.map(({href,label,icon})=>item(href,label,icon))}<div className="octa-side-divider"/>{tool('Calculadora',Calculator,'calculator')}{sideLinks.map(({href,label,icon})=>item(href,label,icon))}</nav>
+    <nav className="octa-side-nav no-scrollbar overflow-y-auto">{sidePrimary.map(({href,label,icon})=>item(href,label,icon))}<div className="octa-side-divider"/>{tool('Calculadora',Calculator,'calculator')}{tool('Filtros',Filter,'filters')}{tool('Anotar',NotebookPen,'notes')}{sideLinks.map(({href,label,icon})=>item(href,label,icon))}</nav>
     <div className="octa-sidebar-footer">{item('/configuracoes','Configurações',Settings)}<button onClick={onToggle} className="octa-expand-orb" aria-label={collapsed?'Expandir menu':'Recolher menu'}><ChevronRight size={19}/></button></div>
   </aside>{editing&&<ProfileEditor profile={profile} onClose={()=>setEditing(false)} onSaved={setProfile}/>}</>;
 }
