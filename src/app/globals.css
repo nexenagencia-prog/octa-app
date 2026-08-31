@@ -499,7 +499,7 @@ body:has(.octa-third-home) .meeting-calculator-overlay{
 .octa-third-profile-side>div{position:relative;grid-row:1/3;width:50px;height:50px;border-radius:50%;overflow:visible}
 .octa-third-profile-side img{border-radius:50%}
 .octa-third-profile-side i{position:absolute;right:0;bottom:1px;width:11px;height:11px;border:2px solid #0a0d0e;border-radius:50%;background:#52d28d}
-.octa-third-profile-side strong{font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.octa-third-profile-side strong{font-size:11px;font-weight:600;white-space:normal;overflow:visible;text-overflow:clip}
 .octa-third-profile-side small{font-size:9px;color:rgba(255,255,255,.56);white-space:nowrap}
 .octa-third-collapse{
   position:absolute;z-index:3;left:28px;bottom:14px;
@@ -802,7 +802,7 @@ body{background:var(--octa-bg);color:var(--octa-text);font-family:-apple-system,
 }
 .octa-global-sidebar .octa-profile>div:first-child{grid-row:1/3;width:46px!important;height:46px!important}
 .octa-global-profile-copy{display:block!important;min-width:0!important;overflow:visible!important}
-.octa-global-profile-copy>div{overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+.octa-global-profile-copy>div{overflow:visible!important;text-overflow:clip!important;white-space:normal!important}
 .octa-global-profile-copy>div:first-child{font-size:11px!important;line-height:1.2!important}
 .octa-global-profile-copy>div:last-child{font-size:9px!important;line-height:1.2!important}
 .octa-global-sidebar .octa-side-nav{margin-top:22px!important;padding:0!important;gap:2px!important;max-height:calc(100dvh - 190px)!important}
@@ -850,4 +850,27 @@ body{background:var(--octa-bg);color:var(--octa-text);font-family:-apple-system,
 .octa-third-ai-static i{animation:none!important}
 @media(max-width:1279px){
   .octa-global-shell{display:block!important}.octa-global-sidebar{display:none!important}.octa-global-topbar{padding:0 18px!important}.octa-design-page{padding:22px 18px 90px!important}
+}
+
+
+/* OCTA WHITE WORKSPACE — approved Home visual language */
+.octa-sidebar-brand{padding:22px 18px 6px!important}
+.octa-sidebar-brand .octa-wordmark{display:inline-flex!important;color:#fff!important;font-size:18px!important;font-weight:650!important;letter-spacing:-.045em!important;text-decoration:none!important}
+.octa-global-profile{padding-top:12px!important}
+.octa-global-profile-copy{min-width:0!important;overflow:visible!important}
+.octa-global-profile-copy>div{overflow:visible!important;text-overflow:clip!important;white-space:normal!important;line-height:1.15!important;word-break:normal!important}
+.octa-global-shell>.octa-main{background:var(--octa-bg)!important;color:var(--octa-text)!important}
+.octa-global-shell .octa-app-body{background:var(--octa-bg)!important;color:var(--octa-text)!important}
+.octa-design-page{background:var(--octa-bg)!important;color:var(--octa-text)!important;min-height:calc(100vh - 76px)!important}
+.octa-design-page .octa-inner-content{background:transparent!important}
+.octa-design-page .apple-shell,
+.octa-design-page .octa-global-surface,
+.octa-design-page section:not(.octa-call-stage):not(.octa-video-stage):not(.room-stage){
+  border-color:var(--octa-line)!important;
+}
+html[data-theme="dark"] .octa-global-shell>.octa-main,
+html[data-theme="dark"] .octa-global-shell .octa-app-body,
+html[data-theme="dark"] .octa-design-page{
+  background:var(--octa-bg)!important;
+  color:var(--octa-text)!important;
 }

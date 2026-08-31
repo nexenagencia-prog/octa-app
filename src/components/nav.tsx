@@ -17,7 +17,7 @@ const sidePrimary=[{href:'/',label:'Início',icon:Home},{href:'/agenda',label:'A
 const sideLinks=[
   {href:'/lousa',label:'Lousa',icon:Brush},
   {href:'/reunioes?modo=entrar',label:'Entrar em reunião',icon:Video},
-  {href:'/minhas-anotacoes',label:'Minhas Anotações',icon:BookOpenText},{href:'/skills',label:'Octa skills',icon:Sparkles},
+  {href:'/minhas-anotacoes',label:'Minhas Anotações',icon:BookOpenText},{href:'/chat',label:'OCTA AI',icon:Sparkles},{href:'/skills',label:'OCTA Skills',icon:Sparkles},
 ];
 
 export function OctaLogo(){return <Link href="/" className="octa-wordmark" aria-label="OCTA início" data-cms-id="global.wordmark" data-cms-type="text">OCTA</Link>}
@@ -32,12 +32,13 @@ function ThemeToggle(){
 export function DashboardSidebar({collapsed=false,onToggle}:{collapsed?:boolean;onToggle?:()=>void}){
   const path=usePathname();const {openTool}=useToolOverlay();const [profile,setProfile]=useState<EditableProfile>(defaultEditableProfile);const [editing,setEditing]=useState(false);
   useEffect(()=>{setProfile(getProfile());const onUpdate=(e:Event)=>setProfile((e as CustomEvent<EditableProfile>).detail??getProfile());window.addEventListener(PROFILE_UPDATED_EVENT,onUpdate);return()=>window.removeEventListener(PROFILE_UPDATED_EVENT,onUpdate)},[]);
-  const item=(href:string,label:string,Icon:any)=><Link key={`${href}-${label}`} href={href} data-cms-id={`global.sidebar.${label.toLowerCase().replace(/[^a-z0-9]+/g,'-')}`} data-cms-type="container" title={collapsed?label:undefined} className={`octa-side-item ${path===href?'is-active':''}`}><Icon size={19}/><span className="octa-side-label" data-cms-id={`global.sidebar.label.${label.toLowerCase().replace(/[^a-z0-9]+/g,'-')}`} data-cms-type="text">{label}</span></Link>;
+  const item=(href:string,label:string,Icon:any)=><Link key={`${href}-${label}`} href={href} data-cms-id={`global.sidebar.${label.toLowerCase().replace(/[^a-z0-9]+/g,'-')}`} data-cms-type="container" title={collapsed?label:undefined} className={`octa-side-item ${path===href.split('?')[0]?'is-active':''}`}><Icon size={19}/><span className="octa-side-label" data-cms-id={`global.sidebar.label.${label.toLowerCase().replace(/[^a-z0-9]+/g,'-')}`} data-cms-type="text">{label}</span></Link>;
   const tool=(label:string,Icon:any,kind:'calculator'|'notes')=><button key={kind} onClick={()=>openTool(kind)} title={collapsed?label:undefined} className="octa-side-item w-full text-left"><Icon size={19}/><span className="octa-side-label" data-cms-id={`global.sidebar.tool.${kind}`} data-cms-type="text">{label}</span></button>;
   return <><aside className={`octa-sidebar octa-global-sidebar hidden xl:flex ${collapsed?'is-collapsed':''}`}>
+    <div className="octa-sidebar-brand"><OctaLogo/></div>
     <div className="octa-profile octa-global-profile flex items-center gap-3 px-5 pt-6" data-cms-id="global.sidebar.profile" data-cms-type="container">
       <div className="relative size-12 shrink-0 overflow-hidden rounded-full border border-white/30 bg-white/15"><img src={profile.avatarUrl} alt={profile.displayName} className="h-full w-full object-cover"/><span className="absolute bottom-0 right-0 size-3 rounded-full border-2 border-[#092638] bg-emerald-400"/></div>
-      <div className="octa-profile-copy octa-global-profile-copy min-w-0 flex-1"><div className="truncate text-[17px] font-medium text-white" data-cms-id="global.sidebar.profile.name" data-cms-type="text">{profile.displayName}</div><div className="mt-0.5 truncate text-xs text-white/55" data-cms-id="global.sidebar.profile.headline" data-cms-type="text">{profile.headline}</div></div>
+      <div className="octa-profile-copy octa-global-profile-copy min-w-0 flex-1"><div className="text-[17px] font-medium text-white" data-cms-id="global.sidebar.profile.name" data-cms-type="text">{profile.displayName}</div><div className="mt-0.5 text-xs text-white/55" data-cms-id="global.sidebar.profile.headline" data-cms-type="text">{profile.headline}</div></div>
       {!collapsed&&<button onClick={()=>setEditing(true)} className="grid size-8 shrink-0 place-items-center rounded-full bg-white/10 text-white/70 hover:bg-white/15" aria-label="Editar perfil"><Pencil size={14}/></button>}
     </div>
     <nav className="octa-side-nav no-scrollbar overflow-y-auto">{sidePrimary.map(({href,label,icon})=>item(href,label,icon))}<div className="octa-side-divider"/>{tool('Calculadora',Calculator,'calculator')}{tool('Anotar',NotebookPen,'notes')}{sideLinks.map(({href,label,icon})=>item(href,label,icon))}</nav>
