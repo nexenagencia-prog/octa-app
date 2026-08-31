@@ -15,7 +15,7 @@ export async function GET(request: NextRequest){
     const {data:{user}}=await supabase.auth.getUser();
     if(!user) return new NextResponse('Authentication required',{status:401});
     identity=user.id;
-    name=(user.user_metadata?.full_name as string | undefined) ?? user.email ?? 'OKTA user';
+    name=(user.user_metadata?.full_name as string | undefined) ?? user.email ?? 'OCTA user';
   }
   if(!identity) return new NextResponse('identity is required in demo mode',{status:400});
 

@@ -21,7 +21,6 @@ export default function HomePage(){
   return <main className="octa-third-home">
     <aside className="octa-third-sidebar">
       <div className="octa-third-brand">
-        <div className="octa-third-logo" aria-hidden="true"><i/><i/><i/></div>
         <strong>OCTA</strong>
       </div>
 

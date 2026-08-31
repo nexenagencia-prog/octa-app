@@ -469,11 +469,6 @@ body:has(.octa-third-home) .meeting-calculator-overlay{
   border-bottom:1px solid rgba(255,255,255,.045);
 }
 .octa-third-brand>strong{font-size:17px;letter-spacing:.03em;font-weight:700}
-.octa-third-logo{position:relative;width:42px;height:35px}
-.octa-third-logo i{position:absolute;display:block;background:linear-gradient(145deg,#fff,#dfe3e0);box-shadow:inset 0 1px 0 #fff,0 2px 8px rgba(0,0,0,.26)}
-.octa-third-logo i:nth-child(1){left:4px;top:3px;width:21px;height:18px;border-radius:8px 14px 10px 14px;transform:rotate(35deg)}
-.octa-third-logo i:nth-child(2){left:20px;top:11px;width:19px;height:18px;border-radius:12px 8px 14px 10px;transform:rotate(35deg)}
-.octa-third-logo i:nth-child(3){left:10px;top:20px;width:17px;height:12px;border-radius:10px;transform:rotate(35deg)}
 .octa-third-side-search{
   display:grid;width:110px;height:44px;margin:22px auto 19px;place-items:center;
   border:1px solid rgba(255,255,255,.13);border-radius:999px;background:rgba(255,255,255,.018);color:#fff;
@@ -764,7 +759,7 @@ body:has(.octa-third-home) .meeting-calculator-overlay{
 
 /* OCTA GLOBAL APPLE DESIGN SYSTEM */
 :root{
-  --octa-bg:#f3f3f0;
+  --octa-bg:#fafaf8;
   --octa-paper:#fafaf8;
   --octa-card:#ffffff;
   --octa-sidebar:#0b0e0f;
@@ -874,3 +869,16 @@ html[data-theme="dark"] .octa-design-page{
   background:var(--octa-bg)!important;
   color:var(--octa-text)!important;
 }
+
+
+/* FINAL OCTA SURFACE NORMALIZATION — Home white language everywhere */
+.octa-global-shell>.octa-main,
+.octa-global-shell .octa-app-body,
+.octa-design-page{background:#fafaf8!important;color:#101211!important}
+.octa-design-page .octa-panel,
+.octa-design-page .octa-plan-card,
+.octa-design-page .octa-card{background:#fff!important;border-color:rgba(14,17,16,.075)!important;box-shadow:0 16px 48px rgba(15,18,17,.055)!important}
+html[data-theme="dark"] .octa-design-page .octa-panel,
+html[data-theme="dark"] .octa-design-page .octa-plan-card,
+html[data-theme="dark"] .octa-design-page .octa-card{background:#fff!important;color:#101211!important}
+.octa-global-profile-copy>div{overflow:visible!important;text-overflow:clip!important;white-space:normal!important}

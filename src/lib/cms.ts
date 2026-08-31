@@ -107,6 +107,16 @@ export function sanitizeCmsDocument(input: unknown): CmsDocument {
   return { version: 1, scopes, updatedAt: parsed.data.updatedAt };
 }
 
+
+export function stripAutoCmsOverrides(document: CmsDocument): CmsDocument {
+  const scopes: CmsDocument['scopes'] = {};
+  for (const [scope, entries] of Object.entries(document.scopes)) {
+    const clean = Object.fromEntries(Object.entries(entries).filter(([id]) => !id.startsWith('auto:')));
+    if (Object.keys(clean).length) scopes[scope] = clean;
+  }
+  return { version: 1, scopes, updatedAt: document.updatedAt };
+}
+
 export function getCmsBreakpoint(width: number): CmsBreakpoint {
   if (width < 768) return 'mobile';
   if (width < 1024) return 'tablet';

@@ -5,7 +5,7 @@ import { CmsRuntime } from '@/components/cms-runtime';
 import { OctaAICoach } from '@/components/octa-ai-coach';
 
 export const metadata: Metadata = {
-  title: 'OKTA — Presence Platform',
+  title: 'OCTA — Presence Platform',
   description: 'Vertical-first intelligent videoconferencing.',
 };
 
