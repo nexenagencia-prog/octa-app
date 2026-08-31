@@ -73,6 +73,7 @@ export default function HomePage(){
           <CardHead title="Reuniões recentes" href="/reunioes"/>
           <MeetingItem title="Briefing Campanha" meta="Hoje · 10:30" action="Entrar"/>
           <MeetingItem title="Alinhamento Comercial" meta="Hoje · 15:00" action="Entrar"/>
+          <MeetingItem title="Reunião com Cliente" meta="Ontem · 16:20" action="Entrar"/>
         </div>
 
         <div className="octa-live-card octa-live-recordings">
@@ -80,6 +81,7 @@ export default function HomePage(){
           <RecordingItem title="Planejamento de Marketing" meta="Hoje · 14:30 · 48 min" time="48:12"/>
           <RecordingItem title="Reunião com João Silva" meta="Ontem · 15:00 · 32 min" time="32:46"/>
           <RecordingItem title="Alinhamento Comercial" meta="Ontem · 10:30 · 26 min" time="26:10"/>
+          <RecordingItem title="Briefing Campanha" meta="18 Mai · 11:00 · 52 min" time="52:33"/>
         </div>
 
         <div className="octa-live-card octa-live-agenda">

@@ -18,6 +18,6 @@ export function AppShell({children}:{children:React.ReactNode}){
     <DashboardSidebar collapsed={collapsed} onToggle={toggle}/>
     <div className="octa-main"><TopNav/><div className="octa-app-body">{children}</div></div>
     <MobileNav/>
-    <GlobalScreenshotButton/>
-  </main><ToolOverlay/></ToolOverlayProvider>;
+    {pathname!=='/'&&<GlobalScreenshotButton/>}
+  </main>{pathname!=='/'&&<ToolOverlay/>}</ToolOverlayProvider>;
 }

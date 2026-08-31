@@ -35,6 +35,7 @@ export function DashboardSidebar({collapsed=false,onToggle}:{collapsed?:boolean;
   const path=usePathname();const {openTool}=useToolOverlay();const [profile,setProfile]=useState<EditableProfile>(defaultEditableProfile);const [editing,setEditing]=useState(false);
   useEffect(()=>{setProfile(getProfile());const onUpdate=(e:Event)=>setProfile((e as CustomEvent<EditableProfile>).detail??getProfile());window.addEventListener(PROFILE_UPDATED_EVENT,onUpdate);return()=>window.removeEventListener(PROFILE_UPDATED_EVENT,onUpdate)},[]);
   const item=(href:string,label:string,Icon:any)=><Link key={`${href}-${label}`} href={href} data-cms-id={`global.sidebar.${label.toLowerCase().replace(/[^a-z0-9]+/g,'-')}`} data-cms-type="container" title={collapsed?label:undefined} className={`octa-side-item ${path===href?'is-active':''}`}><span className="octa-side-icon"><Icon size={16}/></span><span className="octa-side-label" data-cms-id={`global.sidebar.label.${label.toLowerCase().replace(/[^a-z0-9]+/g,'-')}`} data-cms-type="text">{label}</span></Link>;
+  if(path==='/') return <HomeReferenceSidebar profile={profile}/>;
   const tool=(label:string,Icon:any,kind:'calculator'|'notes')=><button key={kind} onClick={()=>openTool(kind)} title={collapsed?label:undefined} className="octa-side-item w-full text-left"><Icon size={19}/><span className="octa-side-label" data-cms-id={`global.sidebar.tool.${kind}`} data-cms-type="text">{label}</span></button>;
   return <><aside className={`octa-sidebar hidden xl:flex ${collapsed?'is-collapsed':''}`}>
     <div className="octa-side-brand"><div className="octa-side-symbol" aria-hidden="true"><i/><i/><i/></div><OctaLogo/></div>
@@ -46,6 +47,33 @@ export function DashboardSidebar({collapsed=false,onToggle}:{collapsed?:boolean;
     <nav className="octa-side-nav no-scrollbar overflow-y-auto">{sidePrimary.map(({href,label,icon})=>item(href,label,icon))}<div className="octa-side-divider"/>{tool('Calculadora',Calculator,'calculator')}{tool('Anotar',NotebookPen,'notes')}{sideLinks.map(({href,label,icon})=>item(href,label,icon))}</nav>
     <div className="octa-sidebar-footer">{item('/configuracoes','Configurações',Settings)}<button onClick={onToggle} className="octa-expand-orb" aria-label={collapsed?'Expandir menu':'Recolher menu'}><ChevronRight size={19}/></button></div>
   </aside>{editing&&<ProfileEditor profile={profile} onClose={()=>setEditing(false)} onSaved={setProfile}/>}</>;
+}
+
+
+function HomeReferenceSidebar({profile}:{profile:EditableProfile}){
+  const items=[
+    {href:'/reunioes',label:'Reuniões',icon:VideoIcon},
+    {href:'/agenda',label:'Agenda',icon:CalendarDays},
+    {href:'/contatos',label:'Contatos',icon:UsersRound},
+    {href:'/gravacoes',label:'Gravações',icon:CircleUserRound},
+    {href:'/chat',label:'OCTA AI',icon:Sparkles,badge:'Novo'},
+    {href:'/skills',label:'OCTA Skills',icon:BookOpenText},
+    {href:'/configuracoes#notificacoes',label:'Notificações',icon:Bell},
+    {href:'/configuracoes',label:'Configurações',icon:Settings},
+  ];
+  return <aside className="octa-sidebar octa-home-sidebar hidden xl:flex">
+    <div className="octa-home-brand"><div className="octa-side-symbol" aria-hidden="true"><i/><i/><i/></div><OctaLogo/></div>
+    <Link href="/reunioes" className="octa-home-side-search" aria-label="Buscar"><Search size={17}/></Link>
+    <Link href="/" className="octa-home-side-home" aria-label="Início"><Home size={18}/></Link>
+    <nav className="octa-home-side-links">
+      {items.map(({href,label,icon:Icon,badge})=><Link href={href} key={label} className="octa-home-side-link"><Icon size={16}/><span>{label}</span>{badge&&<b>{badge}</b>}</Link>)}
+    </nav>
+    <Link href="/profile" className="octa-home-side-profile">
+      <div className="octa-home-profile-photo"><img src={profile.avatarUrl} alt={profile.displayName}/><i/></div>
+      <strong>{profile.displayName}</strong><small>{profile.headline}</small>
+    </Link>
+    <button className="octa-home-side-collapse" aria-label="Recolher menu"><ChevronRight size={16}/></button>
+  </aside>;
 }
 
 export function TopNav(){
