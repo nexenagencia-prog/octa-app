@@ -35,6 +35,7 @@ export default function Page() {
       <div id="toastRoot" className="toast-root" />
       <input type="file" id="avatarInput" accept="image/*" hidden />
       <Script src="/app.js" strategy="afterInteractive" />
+      <Script src="/menu-restore.js" strategy="afterInteractive" />
     </>
   )
 }
