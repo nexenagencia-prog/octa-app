@@ -1,71 +1,68 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
-import {
-  ArrowRight, CalendarDays, ChevronRight, MoreVertical,
-  Play
-} from 'lucide-react';
+import { ArrowRight, CalendarDays, CirclePlay, MoreVertical, Play, Plus, Sparkles, UserRoundPlus, UsersRound, Video } from 'lucide-react';
 import { demoParticipants } from '@/lib/demo/data';
 import { AppShell } from '@/components/app-shell';
-import { HomeHeroOverlays } from '@/components/home-hero-overlays';
-import { ProfileGreeting } from '@/components/profile-greeting';
+import styles from './home-previous.module.css';
 
-const people = demoParticipants.slice(0,6);
+const people = demoParticipants.slice(0,5);
+const avatar=(i:number)=>people[i]?.avatarUrl || '/octa-hero-reference.webp';
 
 export default function HomePage(){
-  return <AppShell><div className="octa-content-grid">
-        <section className="home-left min-w-0 pt-1">
-          <ProfileGreeting className="text-[21px] font-medium text-[#08758a]"/>
-          <h1 className="mt-1 text-[clamp(3rem,4.7vw,4.4rem)] font-medium leading-[.98] tracking-[-.055em] text-[#0a2238]">Seu dia<br/>começa aqui.</h1>
+  return <AppShell><main className={`${styles.home} octa-previous-hero`}>
+    <section className={styles.hero}>
+      <div className={styles.copy}>
+        <p>Bem-vindo de volta, Denner 👋</p>
+        <h1>Suas reuniões.<br/>Seu tempo.<br/>Tudo conectado.</h1>
+        <div className={styles.lead}>A OCTA reúne reuniões, agenda, contatos e gravações em uma única experiência — para você ir além em cada conversa.</div>
+        <div className={styles.ctas}>
+          <Link href="/reuniao-instantanea" className={styles.primary}><Plus size={18}/>Nova reunião<ArrowRight size={16}/></Link>
+          <Link href="/agenda" className={styles.secondary}><CalendarDays size={17}/>Agendar reunião</Link>
+        </div>
+      </div>
+      <div className={styles.photo}>
+        <Image src="/octa-hero-reference.webp" alt="Profissional trabalhando no notebook" fill priority className={styles.heroImage}/>
+        <div className={styles.photoShade}/>
+        <article className={styles.next}>
+          <div className={styles.nextHead}><span><CalendarDays size={17}/></span><small>Próxima reunião</small><MoreVertical size={17}/></div>
+          <div className={styles.time}>14:30 <small>Hoje</small><Link href="/agenda">Ver agenda <ArrowRight size={12}/></Link></div>
+          <h2>Planejamento de Marketing</h2>
+          <div className={styles.avatars}>{[0,1,2,3].map(i=><Image key={i} src={avatar(i)} alt="" width={31} height={31}/>)}<b>+5</b></div>
+        </article>
+        <p className={styles.quote}>⚡ “Grandes ideias<br/>acontecem em boas conversas.”</p>
+      </div>
+    </section>
 
-          <div className="mt-9" id="contatos">
-            <h2 className="text-[15px] font-medium text-[#15314b]">Para reunião instantânea</h2>
-            <div className="mt-3 flex items-center gap-3">
-              <div className="flex items-center gap-2">{people.map((p)=><Link href={`/contatos?person=${p.id}`} key={p.id} className="group relative size-10 overflow-hidden rounded-full bg-white shadow-[0_2px_8px_rgba(7,31,45,.14)] ring-2 ring-white" aria-label={`Iniciar reunião com ${p.displayName}`}>
-                {p.avatarUrl&&<Image src={p.avatarUrl} alt={p.displayName} fill className="object-cover transition duration-300 group-hover:scale-105"/>}
-              </Link>)}</div>
-              <Link href="/contatos" aria-label="Ver mais pessoas" className="grid size-11 place-items-center rounded-full border border-[#0a2238]/8 bg-white/60 text-[#17314a] shadow-sm"><ChevronRight size={20}/></Link>
-            </div>
-          </div>
+    <section className={styles.metrics}>
+      <Metric icon={<Video/>} value="08" label="Reuniões hoje"/>
+      <Metric icon={<UsersRound/>} value="12" label="Contatos recentes"/>
+      <Metric icon={<CirclePlay/>} value="24" label="Gravações"/>
+      <Metric icon={<Sparkles/>} value="82%" label="Performance"/>
+    </section>
 
-          <section className="mt-8" id="agenda">
-            <h2 className="text-[15px] font-medium text-[#17314a]">Próxima reunião às 14:30</h2>
-            <div className="octa-meeting-card mt-3">
-              <div className="grid size-12 place-items-center rounded-[16px] bg-gradient-to-br from-[#0b879a] to-[#005f72] text-white shadow-[0_12px_30px_rgba(7,119,139,.2)]"><CalendarDays size={21}/></div>
-              <div className="min-w-0"><h3 className="truncate text-[16px] font-semibold text-[#0b2238]">Planejamento de Marketing</h3><p className="mt-1 text-xs text-[#30485e]">Hoje&nbsp; • &nbsp;14:30 – 15:30&nbsp; • &nbsp;6 participantes</p></div>
-              <Link href="/reunioes" className="ml-auto text-[#17314a]" aria-label="Mais opções"><MoreVertical size={20}/></Link>
-              <div className="col-span-full mt-1 flex gap-3 pl-[60px]"><Link href="/room/strategy-room" className="octa-primary-button"><Play size={14} fill="currentColor"/> Entrar na reunião</Link><Link href="/agenda" className="octa-secondary-button">Ver agenda</Link></div>
-            </div>
-          </section>
+    <section className={styles.middle}>
+      <article className={`${styles.card} ${styles.actions}`}><h2>Ações rápidas</h2><div>
+        <Action href="/reuniao-instantanea" icon={<Video/>} title="Iniciar reunião" sub="Agora, com um clique"/>
+        <Action href="/agenda" icon={<CalendarDays/>} title="Agendar" sub="Criar evento"/>
+        <Action href="/contatos" icon={<UserRoundPlus/>} title="Convidar pessoas" sub="Adicionar participantes"/>
+        <Action href="/gravacoes" icon={<CirclePlay/>} title="Gravar reunião" sub="Iniciar gravação"/>
+      </div></article>
+      <Link href="/chat" className={styles.ai}><div><h2>OCTA AI <b>Beta</b></h2><p>Sua IA de reuniões. Mais foco, mais resultados.</p><span>Abrir OCTA AI <ArrowRight size={12}/></span></div><div className={styles.orb}/></Link>
+      <Link href="/skills" className={`${styles.card} ${styles.skills}`}><div><h2>OCTA Skills</h2><p>Sua evolução em<br/>cada conversa.</p><span>Ver análise <ArrowRight size={12}/></span></div><div className={styles.ring}><strong>82</strong><small>/100</small></div></Link>
+    </section>
 
-          <section className="mt-6 pb-10" id="reunioes">
-            <h2 className="text-[15px] font-medium text-[#17314a]">Reuniões de hoje</h2>
-            <div className="mt-3 overflow-hidden rounded-[22px] border border-[#0d2a44]/7 bg-white/58 shadow-[0_8px_30px_rgba(10,34,55,.045)]">
-              <MeetingRow time="16:00" title="Kickoff Campanha Q2" duration="45 min" count="+3"/>
-              <MeetingRow time="17:30" title="Alinhamento de Conteúdo" duration="30 min" count="+2"/>
-              <Link href="/agenda" className="flex items-center justify-between px-4 py-4 text-sm text-[#17314a] hover:bg-white/55"><span>Ver agenda completa</span><ChevronRight size={18}/></Link>
-            </div>
-          </section>
-        </section>
-
-        <section className="home-right min-w-0">
-          <div className="octa-space-card min-h-[610px]">
-            <Image src="/octa-space-clean.png" alt="Ambiente futurista OCTA" fill priority sizes="(min-width: 1280px) 52vw, 100vw" quality={100} className="octa-space-image"/>
-            <div className="absolute inset-0 bg-gradient-to-r from-[#001c2b]/12 via-transparent to-transparent"/>
-            <HomeHeroOverlays/>
-          </div>
-
-          <div className="octa-connect-card octa-connect-clean">
-            <Image src="/octa-space-clean.png" alt="Ambiente OCTA" fill sizes="(min-width: 1280px) 52vw, 100vw" quality={100} className="octa-connect-media"/>
-            <div className="absolute inset-0 bg-gradient-to-r from-[#03293a]/96 via-[#07364a]/72 to-[#0a2238]/36"/>
-            <div className="relative z-10 grid h-full grid-cols-[.7fr_1fr_auto] items-center gap-7 p-7 text-white">
-              <h2 className="text-[26px] font-medium leading-[1.02] tracking-[-.035em]">Conecte.<br/>Colabore.<br/>Evolua.</h2>
-              <p className="max-w-[250px] text-[13px] leading-5 text-white/84">Todas as suas reuniões, contatos e gravações em um só lugar. Mais tempo para o que importa.</p>
-              <Link href="/reunioes" className="grid size-14 place-items-center rounded-full border border-white/40 bg-white/5 backdrop-blur-lg" aria-label="Saiba mais"><Play size={19} fill="white"/></Link>
-              <Link href="/reunioes" className="col-start-2 -mt-2 inline-flex w-fit items-center gap-5 rounded-full border border-white/30 px-4 py-2 text-xs">Saiba mais <ArrowRight size={14}/></Link>
-            </div>
-          </div>
-        </section>
-  </div></AppShell>;
+    <section className={styles.bottom}>
+      <article className={styles.card}><CardHead title="Reuniões recentes" href="/reunioes" label="Ver todas"/><Meeting title="Briefing Campanha" meta="Hoje · 10:30"/><Meeting title="Alinhamento Comercial" meta="Hoje · 15:00"/><Meeting title="Reunião com Cliente" meta="Ontem · 16:20"/></article>
+      <article className={styles.card}><CardHead title="Gravações" href="/gravacoes" label="Ver todas"/><Recording title="Planejamento de Marketing" meta="Hoje · 14:30 · 48 min"/><Recording title="Reunião com João Silva" meta="Ontem · 15:00 · 32 min"/><Recording title="Alinhamento Comercial" meta="Ontem · 10:30 · 26 min"/></article>
+      <article className={`${styles.card} ${styles.agenda}`}><CardHead title="Agenda da semana" href="/agenda" label="Ver agenda"/><div className={styles.days}><span>Seg 18</span><span>Ter 19</span><b>Qua 20</b><span>Qui 21</span><span>Sex 22</span></div><div className={styles.schedule}><i style={{top:'18%'}}>09:00 Reunião com Cliente</i><i style={{top:'52%'}}>14:30 Planejamento de Marketing</i><i style={{top:'72%'}}>16:00 Briefing Criativo</i></div></article>
+    </section>
+  </main></AppShell>;
 }
 
-function MeetingRow({time,title,duration,count}:{time:string;title:string;duration:string;count:string}){return <div className="grid grid-cols-[56px_1fr_54px_auto] items-center gap-2 border-b border-[#0d2a44]/7 px-4 py-3 text-xs text-[#17314a]"><strong className="font-medium">{time}</strong><span className="truncate">{title}</span><span className="text-[#5f7486]">{duration}</span><div className="flex items-center -space-x-1.5">{people.slice(0,3).map(p=>p.avatarUrl&&<Image key={p.id} src={p.avatarUrl} alt="" width={22} height={22} className="size-[22px] rounded-full border-2 border-white object-cover"/>)}<span className="ml-1.5 text-[10px] text-[#536b7f]">{count}</span></div></div>}
+function Metric({icon,value,label}:{icon:React.ReactNode;value:string;label:string}){return <div className={styles.metric}><span>{icon}</span><strong>{value}</strong><small>{label}</small></div>}
+function Action({href,icon,title,sub}:{href:string;icon:React.ReactNode;title:string;sub:string}){return <Link href={href} className={styles.action}><span>{icon}</span><strong>{title}</strong><small>{sub}</small></Link>}
+function CardHead({title,href,label}:{title:string;href:string;label:string}){return <header className={styles.cardHead}><h2>{title}</h2><Link href={href}>{label}<ArrowRight size={11}/></Link></header>}
+function Meeting({title,meta}:{title:string;meta:string}){return <div className={styles.row}><Image src={avatar(0)} alt="" width={30} height={30}/><div><strong>{title}</strong><small>{meta}</small></div><Link href="/reunioes">Entrar</Link></div>}
+function Recording({title,meta}:{title:string;meta:string}){return <div className={styles.row}><div className={styles.thumb}><Play size={11}/></div><div><strong>{title}</strong><small>{meta}</small></div><Link href="/gravacoes"><Play size={10}/></Link></div>}
