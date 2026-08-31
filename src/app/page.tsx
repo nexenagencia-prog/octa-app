@@ -109,7 +109,7 @@ export default function HomePage(){
 
         <Link href="/chat" className="octa-third-ai">
           <div className="octa-third-ai-copy"><h2>OCTA AI <b>Beta</b></h2><p>Sua IA de reuniões. Mais foco, mais resultados.</p><span>Abrir OCTA AI <ArrowRight size={12}/></span></div>
-          <div className="octa-third-ai-orb"><i/><i/><i/></div>
+          <div className="octa-third-ai-orb octa-third-ai-static"><i/><i/><i/></div>
         </Link>
 
         <Link href="/skills" className="octa-third-card octa-third-skills">

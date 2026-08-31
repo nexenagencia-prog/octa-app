@@ -12,7 +12,7 @@ export function AppShell({children}:{children:React.ReactNode}){
   useEffect(()=>{const sync=()=>{try{setCollapsed(localStorage.getItem(STORAGE_KEY)==='1');setCompact(localStorage.getItem('octa-compact-mode')==='1')}catch{}};sync();window.addEventListener('octa-preferences-updated',sync);return()=>window.removeEventListener('octa-preferences-updated',sync)},[]);
   useEffect(()=>{if(window.location.pathname==='/'){const params=new URLSearchParams(window.location.search);const hash=new URLSearchParams(window.location.hash.replace(/^#/,''));if(params.has('code')||hash.get('type')==='recovery'){window.location.replace('/reset-password'+window.location.search+window.location.hash);}}},[]);
   const toggle=()=>setCollapsed(value=>{const next=!value;try{localStorage.setItem(STORAGE_KEY,next?'1':'0')}catch{}return next});
-  return <ToolOverlayProvider><main className={`octa-page ${collapsed?'sidebar-collapsed':''} ${compact?'is-compact':''}`}>
+  return <ToolOverlayProvider><main className={`octa-page octa-global-shell ${collapsed?'sidebar-collapsed':''} ${compact?'is-compact':''}`}>
     <DashboardSidebar collapsed={collapsed} onToggle={toggle}/>
     <div className="octa-main"><TopNav/><div className="octa-app-body">{children}</div></div>
     <MobileNav/>
