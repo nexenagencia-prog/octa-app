@@ -23,6 +23,7 @@ export default function HomePage(){
       <div className="octa-ref-photo">
         <Image src="/octa-v2-hero.jpg" alt="Profissional trabalhando em uma reunião OCTA" fill priority className="object-cover"/>
         <div className="octa-ref-photo-fade"/>
+        <div className="octa-ref-lightwash"/>
         <article className="octa-ref-next">
           <div className="octa-ref-next-top"><span><CalendarDays size={15}/></span><small>Próxima reunião</small><b>•••</b></div>
           <div className="octa-ref-time">14:30 <small>Hoje</small></div>
@@ -56,7 +57,12 @@ export default function HomePage(){
 
       <div className="octa-ref-ai">
         <div><h2>OCTA AI <span>Beta</span></h2><p>Sua IA de reuniões. Mais foco, mais resultados.</p><Link href="/chat">Abrir OCTA AI <ArrowRight size={13}/></Link></div>
-        <div className="octa-ref-orb"/>
+        <div className="octa-ai-visual" aria-hidden="true">
+          <div className="octa-ai-orbit"/>
+          <div className="octa-ai-orb-core"/>
+          <div className="octa-ai-highlight"/>
+          <div className="octa-ai-caustic"/>
+        </div>
       </div>
 
       <div className="octa-ref-card octa-ref-skills">
