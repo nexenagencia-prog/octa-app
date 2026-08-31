@@ -15,9 +15,14 @@ import { NotificationsCenter } from '@/components/notifications-center';
 const topItems=[{href:'/',label:'Início'},{href:'/reunioes',label:'Reuniões'},{href:'/agenda',label:'Agenda'},{href:'/planos',label:'Planos e preços'}];
 const sidePrimary=[{href:'/',label:'Início',icon:Home},{href:'/agenda',label:'Agenda',icon:CalendarDays},{href:'/reunioes',label:'Reuniões',icon:VideoIcon},{href:'/reuniao-instantanea',label:'Reunião instantânea',icon:Video},{href:'/contatos',label:'Contatos',icon:UsersRound},{href:'/gravacoes',label:'Gravações',icon:VideoIcon}];
 const sideLinks=[
+  {href:'/filtros',label:'Filtros',icon:Brush},
+  {href:'/compartilhar-tela',label:'Compartilhar Tela',icon:Video},
+  {href:'/gravar',label:'Gravar',icon:VideoIcon},
   {href:'/lousa',label:'Lousa',icon:Brush},
   {href:'/reunioes?modo=entrar',label:'Entrar em reunião',icon:Video},
-  {href:'/minhas-anotacoes',label:'Minhas Anotações',icon:BookOpenText},{href:'/skills',label:'Octa skills',icon:Sparkles},
+  {href:'/minhas-anotacoes',label:'Minhas Anotações',icon:BookOpenText},
+  {href:'/chat',label:'OCTA AI',icon:Sparkles},
+  {href:'/skills',label:'Octa skills',icon:Sparkles},
 ];
 
 export function OctaLogo(){return <Link href="/" className="octa-wordmark" aria-label="OCTA início" data-cms-id="global.wordmark" data-cms-type="text">OCTA</Link>}
@@ -32,7 +37,7 @@ function ThemeToggle(){
 export function DashboardSidebar({collapsed=false,onToggle,dashboard=false}:{collapsed?:boolean;onToggle?:()=>void;dashboard?:boolean}){
   const path=usePathname();const {openTool}=useToolOverlay();const [profile,setProfile]=useState<EditableProfile>(defaultEditableProfile);const [editing,setEditing]=useState(false);
   useEffect(()=>{setProfile(getProfile());const onUpdate=(e:Event)=>setProfile((e as CustomEvent<EditableProfile>).detail??getProfile());window.addEventListener(PROFILE_UPDATED_EVENT,onUpdate);return()=>window.removeEventListener(PROFILE_UPDATED_EVENT,onUpdate)},[]);
-  const item=(href:string,label:string,Icon:any)=><Link key={`${href}-${label}`} href={href} data-cms-id={`global.sidebar.${label.toLowerCase().replace(/[^a-z0-9]+/g,'-')}`} data-cms-type="container" title={collapsed?label:undefined} className={`octa-side-item ${path===href?'is-active':''}`}><Icon size={19}/><span className="octa-side-label" data-cms-id={`global.sidebar.label.${label.toLowerCase().replace(/[^a-z0-9]+/g,'-')}`} data-cms-type="text">{label}</span></Link>;
+  const item=(href:string,label:string,Icon:any)=>{const cleanHref=href.split('?')[0];return <Link key={`${href}-${label}`} href={href} data-cms-id={`global.sidebar.${label.toLowerCase().replace(/[^a-z0-9]+/g,'-')}`} data-cms-type="container" title={collapsed?label:undefined} className={`octa-side-item ${path===cleanHref?'is-active':''}`}><Icon size={19}/><span className="octa-side-label" data-cms-id={`global.sidebar.label.${label.toLowerCase().replace(/[^a-z0-9]+/g,'-')}`} data-cms-type="text">{label}</span></Link>};
   const tool=(label:string,Icon:any,kind:'calculator'|'notes')=><button key={kind} onClick={()=>openTool(kind)} title={collapsed?label:undefined} className="octa-side-item w-full text-left"><Icon size={19}/><span className="octa-side-label" data-cms-id={`global.sidebar.tool.${kind}`} data-cms-type="text">{label}</span></button>;
   return <><aside className={`octa-sidebar hidden xl:flex ${collapsed?'is-collapsed':''} ${dashboard?'is-dashboard':''}`}>
     {dashboard&&<div className="octa-dashboard-brand"><div className="octa-logo-mark"><span/><span/></div><OctaLogo/></div>}
