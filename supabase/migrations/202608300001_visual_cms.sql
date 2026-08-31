@@ -55,16 +55,3 @@ create policy "cms asset objects admin delete" on storage.objects for delete to 
 using (bucket_id='cms-assets' and public.cms_is_admin());
 create policy "cms asset objects public read" on storage.objects for select to anon, authenticated
 using (bucket_id='cms-assets');
-
--- OCTA AI Coach memory (safe to re-run)
-create table if not exists public.octa_ai_memories (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid not null references auth.users(id) on delete cascade,
-  kind text not null default 'coach_exchange',
-  summary text not null check (char_length(summary) <= 4000),
-  created_at timestamptz not null default now()
-);
-alter table public.octa_ai_memories enable row level security;
-drop policy if exists "octa ai own memory" on public.octa_ai_memories;
-create policy "octa ai own memory" on public.octa_ai_memories for all to authenticated using (user_id=auth.uid()) with check (user_id=auth.uid());
-create index if not exists octa_ai_memories_user_created_idx on public.octa_ai_memories(user_id,created_at desc);

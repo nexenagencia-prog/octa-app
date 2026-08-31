@@ -77,8 +77,7 @@ export default function LoginPage(){
     }
     setLoading(true);
     try{
-      const configuredSite=(process.env.NEXT_PUBLIC_SITE_URL||window.location.origin).replace(/\/$/,'');
-      const redirectTo=`${configuredSite}/reset-password`;
+      const redirectTo=`${window.location.origin}/auth/callback?next=/reset-password`;
       const {error}=await supabase.auth.resetPasswordForEmail(email.trim(),{redirectTo});
       if(error){
         setStatus(error.message);

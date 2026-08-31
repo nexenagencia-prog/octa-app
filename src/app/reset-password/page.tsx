@@ -14,26 +14,22 @@ export default function ResetPasswordPage(){
 
   useEffect(()=>{
     const supabase=supabaseBrowser();
-    if(!supabase){setStatus('Não foi possível iniciar a redefinição de senha.');return;}
-    let active=true;
-    const validate=async()=>{
-      try{
-        const params=new URLSearchParams(window.location.search);
-        const code=params.get('code');
-        if(code){
-          const {error}=await supabase.auth.exchangeCodeForSession(code);
-          if(error)throw error;
-          window.history.replaceState({},'',window.location.pathname);
-        }
-        const {data,error}=await supabase.auth.getUser();
-        if(!active)return;
-        if(error||!data.user){setStatus('Este link não é mais válido ou já expirou. Solicite uma nova redefinição.');setReady(false);return;}
-        setStatus('');setReady(true);
-      }catch{if(active){setStatus('Este link não é mais válido ou já expirou. Solicite uma nova redefinição.');setReady(false);}}
-    };
-    const {data:listener}=supabase.auth.onAuthStateChange((event)=>{if(event==='PASSWORD_RECOVERY'&&active){setStatus('');setReady(true);}});
-    void validate();
-    return()=>{active=false;listener.subscription.unsubscribe();};
+    if(!supabase){
+      setStatus('Não foi possível iniciar a redefinição de senha.');
+      return;
+    }
+    supabase.auth.getUser().then(({data,error})=>{
+      if(error||!data.user){
+        setStatus('Este link não é mais válido ou já expirou. Solicite uma nova redefinição.');
+        setReady(false);
+        return;
+      }
+      setStatus('');
+      setReady(true);
+    }).catch(()=>{
+      setStatus('Este link não é mais válido ou já expirou. Solicite uma nova redefinição.');
+      setReady(false);
+    });
   },[]);
 
   async function submit(e:FormEvent){
