@@ -8,7 +8,7 @@ function demoReply(message: string) {
   const lower = message.toLowerCase();
   if (lower.includes('objetiv')) return 'Seu ponto com maior espaço de evolução agora é Objetividade (76/100). Tente responder em três etapas: conclusão, evidência e pergunta. Posso treinar uma resposta com você.';
   if (lower.includes('melhor') || lower.includes('forte')) return 'Sua maior força hoje é Clareza (91/100), seguida de Perguntas (89) e Comunicação (88). O próximo ganho vem de manter essa clareza com respostas mais curtas.';
-  return 'Estou em modo demonstração. Pelos seus Skills, você está em 82/100 e evoluiu 6,4% na semana. Seu melhor caminho agora é preservar Clareza e Perguntas enquanto melhora Objetividade. Configure a OPENAI_API_KEY para ativar minha análise completa.';
+  return 'Pelos seus Skills, você está em 82/100 e evoluiu 6,4% nesta semana. Seu melhor caminho agora é manter sua força em Clareza e Perguntas enquanto trabalha Objetividade. Posso te ajudar a montar um treino rápido para isso.';
 }
 
 function extractOutputText(payload: any) {

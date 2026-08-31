@@ -49,7 +49,7 @@ export interface WhiteboardStroke {
   points: Array<{ x: number; y: number }>;
 }
 
-export type WhiteboardTool = 'pen' | 'rectangle' | 'circle' | 'triangle' | 'eraser';
+export type WhiteboardTool = 'pen' | 'highlighter' | 'text' | 'rectangle' | 'circle' | 'triangle' | 'eraser';
 
 export interface WhiteboardShape {
   id: string;
@@ -59,4 +59,6 @@ export interface WhiteboardShape {
   start: { x: number; y: number };
   end: { x: number; y: number };
   points?: Array<{ x: number; y: number }>;
+  text?: string;
+  opacity?: number;
 }

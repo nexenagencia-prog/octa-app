@@ -1,6 +1,6 @@
 'use client';
 import { FormEvent, PointerEvent as ReactPointerEvent, useEffect, useRef, useState } from 'react';
-import { AudioLines, MessageCircle, Mic, Send, Sparkles, Volume2, X } from 'lucide-react';
+import { MessageCircle, Mic, Send, Sparkles, Volume2, X } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
 type Message={role:'user'|'assistant';content:string;demo?:boolean};
@@ -30,7 +30,7 @@ export function OctaAICoach(){
       const response=await fetch('/api/octa-ai/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:clean,history:next.slice(-8)})});
       const data=await response.json();if(!response.ok)throw new Error(data?.error||'Falha na IA');
       setMessages(items=>[...items,{role:'assistant',content:data.reply,demo:Boolean(data.demo)}]);
-      setStatus(data.demo?'Modo demonstração · conecte OpenAI para análise completa':'Análise baseada na sua performance');
+      setStatus(data.demo?'Análise demonstrativa baseada nos seus Skills':'Análise baseada na sua performance');
     }catch(error){setMessages(items=>[...items,{role:'assistant',content:error instanceof Error?error.message:'Não consegui responder agora.'}]);setStatus('Tente novamente')}
     finally{setBusy(false)}
   }
@@ -71,6 +71,6 @@ export function OctaAICoach(){
       <div className="octa-ai-suggestions">{suggestions.map(s=><button key={s} onClick={()=>void ask(s)}>{s}</button>)}</div>
       <form className="octa-ai-compose" onSubmit={submit}><button type="button" className={recording?'is-recording':''} onClick={toggleRecording} aria-label={recording?'Parar áudio':'Perguntar por áudio'}><Mic size={16}/></button><input value={input} onChange={e=>setInput(e.target.value)} placeholder="Pergunte sobre sua performance…" maxLength={4000}/><button type="submit" disabled={busy||!input.trim()} aria-label="Enviar"><Send size={16}/></button></form>
     </section>}
-    <button className="octa-ai-orb" onClick={()=>setOpen(v=>!v)} onPointerDown={pointerDown} onPointerMove={pointerMove} onPointerUp={pointerUp} aria-label="Abrir OCTA AI Coach"><span className="octa-ai-orb-core"><AudioLines size={21}/></span><i/><b/></button>
+    <button className="octa-ai-orb" onClick={()=>setOpen(v=>!v)} onPointerDown={pointerDown} onPointerMove={pointerMove} onPointerUp={pointerUp} aria-label="Abrir OCTA AI Coach"><i/><b/></button>
   </div>
 }
