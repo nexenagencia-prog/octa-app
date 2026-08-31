@@ -2,16 +2,15 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, CalendarDays, CircleUserRound, Mic2, Play, Plus, Sparkles, UsersRound, Video } from 'lucide-react';
 import { AppShell } from '@/components/app-shell';
-import { ProfileGreeting } from '@/components/profile-greeting';
 import { demoParticipants } from '@/lib/demo/data';
 
 const people=demoParticipants.slice(0,5);
 
 export default function HomePage(){
-  return <AppShell><div className="octa-ref-home">
+  return <AppShell><div className="octa-ref-home" data-search-shortcut="⌘ K" data-profile-name="Denner Biersack">
     <section className="octa-ref-hero">
       <div className="octa-ref-copy">
-        <ProfileGreeting className="octa-ref-greeting"/>
+        <div className="octa-ref-greeting">Bem-vindo de volta, Denner 👋</div>
         <h1>Suas reuniões.<br/>Seu tempo.<br/>Tudo conectado.</h1>
         <p>A OCTA reúne reuniões, agenda, contatos e gravações em uma única experiência — para você ir além em cada conversa.</p>
         <div className="octa-ref-cta-row">
@@ -21,7 +20,7 @@ export default function HomePage(){
       </div>
 
       <div className="octa-ref-photo">
-        <Image src="/octa-v2-hero.jpg" alt="Profissional trabalhando em uma reunião OCTA" fill priority className="object-cover"/>
+        <Image src="/octa-hero-photo.jpg" alt="Profissional trabalhando em uma reunião OCTA" fill priority className="object-cover"/>
         <div className="octa-ref-photo-fade"/>
         <div className="octa-ref-lightwash"/><div className="octa-ref-hero-glow"/>
         <article className="octa-ref-next">
@@ -57,7 +56,7 @@ export default function HomePage(){
 
       <div className="octa-ref-ai">
         <div><h2>OCTA AI <span>Beta</span></h2><p>Sua IA de reuniões. Mais foco, mais resultados.</p><Link href="/chat">Abrir OCTA AI <ArrowRight size={13}/></Link></div>
-        <div className="octa-ai-visual" aria-hidden="true">
+        <div className="octa-ai-visual octa-ai-glass-sphere" aria-hidden="true">
           <div className="octa-ai-orbit"/>
           <div className="octa-ai-orb-core"/>
           <div className="octa-ai-highlight"/>
@@ -110,4 +109,4 @@ function Metric({icon,value,label}:{icon:React.ReactNode;value:string;label:stri
 function Action({href,icon,title,sub}:{href:string;icon:React.ReactNode;title:string;sub:string}){return <Link href={href} className="octa-ref-action"><span>{icon}</span><strong>{title}</strong><small>{sub}</small></Link>}
 function CardHead({title,href}:{title:string;href:string}){return <div className="octa-ref-cardhead"><h2>{title}</h2><Link href={href}>Ver todas <ArrowRight size={12}/></Link></div>}
 function MeetingRow({title,meta,action}:{title:string;meta:string;action:string}){return <div className="octa-ref-meeting-row"><div className="octa-ref-person"/><div><strong>{title}</strong><small>{meta}</small></div><div className="octa-ref-mini-people"><i/><i/><i/></div><button>{action}<ArrowRight size={12}/></button></div>}
-function Recording({title,meta,time}:{title:string;meta:string;time:string}){return <div className="octa-ref-recording"><div className="octa-ref-thumb"><Image src="/octa-v2-hero.jpg" alt="" fill className="object-cover"/><span>{time}</span></div><div><strong>{title}</strong><small>{meta}</small></div><button aria-label="Reproduzir"><Play size={14}/></button></div>}
+function Recording({title,meta,time}:{title:string;meta:string;time:string}){return <div className="octa-ref-recording"><div className="octa-ref-thumb"><Image src="/octa-hero-photo.jpg" alt="" fill className="object-cover"/><span>{time}</span></div><div><strong>{title}</strong><small>{meta}</small></div><button aria-label="Reproduzir"><Play size={14}/></button></div>}
