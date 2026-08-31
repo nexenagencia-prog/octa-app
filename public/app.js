@@ -72,7 +72,7 @@ function generic(route){if(route==='reunioes')return meetingsPage();if(route==='
 function render(route='inicio'){$('#view').innerHTML=generic(route);$$('[data-route]',nav).forEach(b=>b.classList.toggle('active',b.dataset.route===route));bindView();}
 
 function bindView(){
- $$('[data-route]','#view').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.route)));
+ $$('[data-route]',$('#view')).forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.route)));
  const notes=$('#notesArea');if(notes)notes.addEventListener('input',()=>{initialState.notes=notes.value;save();$('#saveStatus').textContent='Salvo agora.'});
  $$('[data-calc]').forEach(b=>b.addEventListener('click',()=>calc(b.dataset.calc)));
 }
