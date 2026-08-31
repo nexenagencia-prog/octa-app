@@ -1732,3 +1732,163 @@ html[data-theme="dark"] .octa-hybrid-heading h1{color:#f5f4f1}
   .octa-ref-quote{right:22px!important}
   .octa-ref-metrics{width:min(660px,72%)!important}
 }
+
+/* OCTA REFERENCE STAGE — preserve the 1536×1024 composition on wide monitors */
+@media (min-width:1024px){
+  :root{--octa-stage-w:min(100vw,150vh)}
+  body{background:#e9e9e6!important}
+  .octa-page{
+    width:var(--octa-stage-w)!important;
+    max-width:none!important;
+    margin-inline:auto!important;
+    min-height:100dvh!important;
+    overflow:hidden!important;
+  }
+  .octa-main{min-width:0!important;overflow:hidden!important}
+  .octa-ref-home{width:100%!important;overflow:hidden!important}
+  .octa-ref-hero{
+    grid-template-columns:390px minmax(0,1fr)!important;
+    width:100%!important;
+  }
+  .octa-ref-photo>img{
+    object-fit:cover!important;
+    object-position:61% 0%!important;
+    transform:none!important;
+  }
+  .octa-ref-metrics{
+    width:760px!important;
+    max-width:calc(100% - 54px)!important;
+  }
+  .octa-ref-topgrid,.octa-ref-bottomgrid{max-width:100%!important}
+}
+
+@media (min-width:1024px){
+  .octa-page{position:relative!important}
+  .octa-sidebar{position:absolute!important;left:0!important;top:0!important}
+  .octa-topbar{position:absolute!important;right:26px!important;top:14px!important}
+}
+
+/* OCTA PIXEL REFERENCE HOME */
+.octa-page.is-reference-home{
+  display:block!important;
+  width:100vw!important;
+  max-width:none!important;
+  min-height:100dvh!important;
+  margin:0!important;
+  padding:0!important;
+  overflow:hidden!important;
+  background:#e9e9e6!important;
+}
+.octa-page.is-reference-home>.octa-sidebar,
+.octa-page.is-reference-home .octa-topbar,
+.octa-page.is-reference-home .octa-mobile-nav,
+.octa-page.is-reference-home .global-screenshot-button{
+  display:none!important;
+}
+.octa-page.is-reference-home>.octa-main{
+  width:100%!important;
+  height:100dvh!important;
+  min-height:100dvh!important;
+  border:0!important;
+  border-radius:0!important;
+  background:#e9e9e6!important;
+  overflow:hidden!important;
+}
+.octa-page.is-reference-home .octa-app-body{
+  display:grid!important;
+  place-items:center!important;
+  width:100%!important;
+  height:100dvh!important;
+  padding:0!important;
+  overflow:hidden!important;
+}
+.octa-reference-stage{
+  position:relative;
+  width:min(100vw,calc(100dvh * 1665 / 945));
+  aspect-ratio:1665/945;
+  margin-inline:auto!important;
+  overflow:hidden;
+  background:#f6f6f3;
+  box-shadow:0 0 0 1px rgba(0,0,0,.02),0 20px 70px rgba(0,0,0,.08);
+}
+.octa-reference-image{
+  object-fit:contain!important;
+  object-position:center!important;
+  user-select:none;
+  pointer-events:none;
+}
+.octa-reference-hotspot,
+.octa-reference-search{
+  position:absolute;
+  z-index:5;
+}
+.octa-reference-hotspot{
+  display:block;
+  background:transparent;
+  border:0;
+}
+.octa-reference-hotspot:focus-visible,
+.octa-reference-search:focus-within{
+  outline:2px solid rgba(32,117,255,.55);
+  outline-offset:2px;
+  border-radius:14px;
+}
+.octa-reference-search{
+  left:33.5%;
+  top:1.7%;
+  width:27.6%;
+  height:5.3%;
+  border-radius:999px;
+}
+.octa-reference-search input{
+  width:100%;
+  height:100%;
+  border:0!important;
+  outline:0!important;
+  border-radius:999px!important;
+  background:transparent!important;
+  padding:0 12% 0 13%!important;
+  color:transparent!important;
+  caret-color:#242827!important;
+  box-shadow:none!important;
+}
+.octa-reference-search:focus-within input{
+  color:#3f4542!important;
+  background:rgba(248,249,247,.84)!important;
+  backdrop-filter:blur(20px)!important;
+}
+
+/* Sidebar */
+.hs-home{left:1.1%;top:20.7%;width:7.4%;height:5.5%}
+.hs-reunioes{left:1.1%;top:27.1%;width:7.4%;height:4.9%}
+.hs-agenda{left:1.1%;top:32.6%;width:7.4%;height:4.9%}
+.hs-contatos{left:1.1%;top:38.1%;width:7.4%;height:4.9%}
+.hs-gravacoes{left:1.1%;top:43.7%;width:7.4%;height:4.9%}
+.hs-ai{left:1.1%;top:49.0%;width:7.4%;height:5.1%}
+.hs-skills{left:1.1%;top:55.8%;width:7.4%;height:5.1%}
+.hs-config{left:1.1%;top:66.4%;width:7.4%;height:5.0%}
+.hs-profile{left:1.2%;top:80.0%;width:7.4%;height:10.0%}
+
+/* Hero controls */
+.hs-new-meeting{left:11.6%;top:31.9%;width:12.6%;height:5.4%}
+.hs-schedule{left:24.9%;top:31.9%;width:12.8%;height:5.4%}
+.hs-next-meeting{left:75.0%;top:9.9%;width:20.3%;height:22.9%}
+.hs-profile{pointer-events:auto}
+
+/* Quick actions and modules */
+.hs-quick-meeting{left:12.5%;top:53.5%;width:9.7%;height:11.0%}
+.hs-quick-agenda{left:22.8%;top:53.5%;width:9.7%;height:11.0%}
+.hs-quick-invite{left:33.2%;top:53.5%;width:9.7%;height:11.0%}
+.hs-quick-record{left:43.5%;top:53.5%;width:9.7%;height:11.0%}
+.hs-ai-card{left:52.9%;top:49.2%;width:20.1%;height:16.7%}
+.hs-skills-card{left:73.6%;top:49.2%;width:21.4%;height:16.7%}
+.hs-recent{left:11.5%;top:66.8%;width:26.2%;height:30.0%}
+.hs-recordings{left:38.1%;top:66.8%;width:25.3%;height:30.0%}
+.hs-week{left:63.7%;top:66.8%;width:31.4%;height:30.0%}
+
+@media(max-width:900px){
+  .octa-reference-stage{
+    width:100vw;
+    height:auto;
+  }
+}
