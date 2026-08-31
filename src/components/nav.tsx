@@ -15,11 +15,9 @@ import { NotificationsCenter } from '@/components/notifications-center';
 const topItems=[{href:'/',label:'Início'},{href:'/reunioes',label:'Reuniões'},{href:'/agenda',label:'Agenda'},{href:'/planos',label:'Planos e preços'}];
 const sidePrimary=[{href:'/',label:'Início',icon:Home},{href:'/agenda',label:'Agenda',icon:CalendarDays},{href:'/reunioes',label:'Reuniões',icon:VideoIcon},{href:'/reuniao-instantanea',label:'Reunião instantânea',icon:Video},{href:'/contatos',label:'Contatos',icon:UsersRound},{href:'/gravacoes',label:'Gravações',icon:VideoIcon}];
 const sideLinks=[
-  {href:'/chat',label:'OCTA AI',icon:Sparkles},
-  {href:'/skills',label:'OCTA Skills',icon:Sparkles},
   {href:'/lousa',label:'Lousa',icon:Brush},
   {href:'/reunioes?modo=entrar',label:'Entrar em reunião',icon:Video},
-  {href:'/minhas-anotacoes',label:'Minhas Anotações',icon:BookOpenText},
+  {href:'/minhas-anotacoes',label:'Minhas Anotações',icon:BookOpenText},{href:'/skills',label:'Octa skills',icon:Sparkles},
 ];
 
 export function OctaLogo(){return <Link href="/" className="octa-wordmark" aria-label="OCTA início" data-cms-id="global.wordmark" data-cms-type="text">OCTA</Link>}
@@ -34,11 +32,9 @@ function ThemeToggle(){
 export function DashboardSidebar({collapsed=false,onToggle}:{collapsed?:boolean;onToggle?:()=>void}){
   const path=usePathname();const {openTool}=useToolOverlay();const [profile,setProfile]=useState<EditableProfile>(defaultEditableProfile);const [editing,setEditing]=useState(false);
   useEffect(()=>{setProfile(getProfile());const onUpdate=(e:Event)=>setProfile((e as CustomEvent<EditableProfile>).detail??getProfile());window.addEventListener(PROFILE_UPDATED_EVENT,onUpdate);return()=>window.removeEventListener(PROFILE_UPDATED_EVENT,onUpdate)},[]);
-  const item=(href:string,label:string,Icon:any)=><Link key={`${href}-${label}`} href={href} data-cms-id={`global.sidebar.${label.toLowerCase().replace(/[^a-z0-9]+/g,'-')}`} data-cms-type="container" title={collapsed?label:undefined} className={`octa-side-item ${path===href?'is-active':''}`}><span className="octa-side-icon"><Icon size={16}/></span><span className="octa-side-label" data-cms-id={`global.sidebar.label.${label.toLowerCase().replace(/[^a-z0-9]+/g,'-')}`} data-cms-type="text">{label}</span></Link>;
-  if(path==='/') return <HomeReferenceSidebar profile={profile}/>;
+  const item=(href:string,label:string,Icon:any)=><Link key={`${href}-${label}`} href={href} data-cms-id={`global.sidebar.${label.toLowerCase().replace(/[^a-z0-9]+/g,'-')}`} data-cms-type="container" title={collapsed?label:undefined} className={`octa-side-item ${path===href?'is-active':''}`}><Icon size={19}/><span className="octa-side-label" data-cms-id={`global.sidebar.label.${label.toLowerCase().replace(/[^a-z0-9]+/g,'-')}`} data-cms-type="text">{label}</span></Link>;
   const tool=(label:string,Icon:any,kind:'calculator'|'notes')=><button key={kind} onClick={()=>openTool(kind)} title={collapsed?label:undefined} className="octa-side-item w-full text-left"><Icon size={19}/><span className="octa-side-label" data-cms-id={`global.sidebar.tool.${kind}`} data-cms-type="text">{label}</span></button>;
   return <><aside className={`octa-sidebar hidden xl:flex ${collapsed?'is-collapsed':''}`}>
-    <div className="octa-side-brand"><div className="octa-side-symbol" aria-hidden="true"><i/><i/><i/></div><OctaLogo/></div>
     <div className="octa-profile flex items-center gap-3 px-5 pt-6" data-cms-id="global.sidebar.profile" data-cms-type="container">
       <div className="relative size-12 shrink-0 overflow-hidden rounded-full border border-white/30 bg-white/15"><img src={profile.avatarUrl} alt={profile.displayName} className="h-full w-full object-cover"/><span className="absolute bottom-0 right-0 size-3 rounded-full border-2 border-[#092638] bg-emerald-400"/></div>
       <div className="octa-profile-copy min-w-0 flex-1"><div className="truncate text-[17px] font-medium text-white" data-cms-id="global.sidebar.profile.name" data-cms-type="text">{profile.displayName}</div><div className="mt-0.5 truncate text-xs text-white/55" data-cms-id="global.sidebar.profile.headline" data-cms-type="text">{profile.headline}</div></div>
@@ -49,44 +45,6 @@ export function DashboardSidebar({collapsed=false,onToggle}:{collapsed?:boolean;
   </aside>{editing&&<ProfileEditor profile={profile} onClose={()=>setEditing(false)} onSaved={setProfile}/>}</>;
 }
 
-
-function HomeReferenceSidebar({profile}:{profile:EditableProfile}){
-  const items=[
-    {href:'/reunioes',label:'Reuniões',icon:VideoIcon},
-    {href:'/agenda',label:'Agenda',icon:CalendarDays},
-    {href:'/contatos',label:'Contatos',icon:UsersRound},
-    {href:'/gravacoes',label:'Gravações',icon:CircleUserRound},
-    {href:'/chat',label:'OCTA AI',icon:Sparkles,badge:'Novo'},
-    {href:'/skills',label:'OCTA Skills',icon:BookOpenText},
-    {href:'/configuracoes#notificacoes',label:'Notificações',icon:Bell},
-    {href:'/configuracoes',label:'Configurações',icon:Settings},
-  ];
-  return <aside className="octa-sidebar octa-home-sidebar hidden xl:flex">
-    <div className="octa-home-brand"><div className="octa-side-symbol" aria-hidden="true"><i/><i/><i/></div><OctaLogo/></div>
-    <Link href="/reunioes" className="octa-home-side-search" aria-label="Buscar"><Search size={17}/></Link>
-    <Link href="/" className="octa-home-side-home" aria-label="Início"><Home size={18}/></Link>
-    <nav className="octa-home-side-links">
-      {items.map(({href,label,icon:Icon,badge})=><Link href={href} key={label} className="octa-home-side-link"><Icon size={16}/><span>{label}</span>{badge&&<b>{badge}</b>}</Link>)}
-    </nav>
-    <Link href="/profile" className="octa-home-side-profile">
-      <div className="octa-home-profile-photo"><img src={profile.avatarUrl} alt={profile.displayName}/><i/></div>
-      <strong>{profile.displayName}</strong><small>{profile.headline}</small>
-    </Link>
-    <button className="octa-home-side-collapse" aria-label="Recolher menu"><ChevronRight size={16}/></button>
-  </aside>;
-}
-
-export function TopNav(){
-  const router=useRouter();const[query,setQuery]=useState('');const[profile,setProfile]=useState<EditableProfile>(defaultEditableProfile);
-  useEffect(()=>{setProfile(getProfile());const onUpdate=(e:Event)=>setProfile((e as CustomEvent<EditableProfile>).detail??getProfile());window.addEventListener(PROFILE_UPDATED_EVENT,onUpdate);return()=>window.removeEventListener(PROFILE_UPDATED_EVENT,onUpdate)},[]);
-  const runSearch=(e:React.FormEvent)=>{e.preventDefault();if(query.trim())router.push(`/reunioes?q=${encodeURIComponent(query.trim())}`)};
-  return <header className="octa-topbar">
-    <div className="ml-auto flex min-w-0 items-center gap-3">
-      <form onSubmit={runSearch} className="octa-search hidden xl:flex" data-cms-id="global.top.search" data-cms-type="container"><Search size={16}/><input value={query} onChange={e=>setQuery(e.target.value)} aria-label="Buscar" placeholder="Buscar reunião, pessoa ou gravação"/><kbd>⌘ K</kbd></form>
-      <NotificationsCenter/>
-      <Link href="/profile" className="octa-top-profile-pill"><img src={profile.avatarUrl} alt={profile.displayName}/><span>Denner Biersack</span><ChevronRight size={14}/></Link>
-    </div>
-  </header>
-}
+export function TopNav(){const path=usePathname();const router=useRouter();const[query,setQuery]=useState('');const runSearch=(e:React.FormEvent)=>{e.preventDefault();if(query.trim())router.push(`/reunioes?q=${encodeURIComponent(query.trim())}`)};return <header className="octa-topbar"><OctaLogo/><nav className="hidden items-center gap-8 lg:flex">{topItems.map(({href,label})=><Link key={label} href={href} data-cms-id={`global.top.link.${label.toLowerCase().replace(/[^a-z0-9]+/g,'-')}`} data-cms-type="text" className={`octa-toplink ${path===href?'is-active':''}`}>{label}</Link>)}</nav><div className="ml-auto flex min-w-0 items-center gap-4"><ThemeToggle/><form onSubmit={runSearch} className="octa-search hidden min-w-[340px] xl:flex" data-cms-id="global.top.search" data-cms-type="container"><Search size={21}/><input value={query} onChange={e=>setQuery(e.target.value)} aria-label="Buscar" placeholder="Buscar reunião, pessoa ou gravação"/></form><NotificationsCenter/><Link href="/profile" className="grid size-10 place-items-center rounded-full bg-white/70 text-[#102944] lg:hidden"><CircleUserRound size={18}/></Link></div></header>}
 
 export function MobileNav(){const path=usePathname();return <nav className="fixed bottom-4 left-1/2 z-50 flex -translate-x-1/2 gap-1 rounded-full border border-black/10 bg-white/90 p-1.5 shadow-[0_18px_50px_rgba(0,0,0,.15)] backdrop-blur-2xl xl:hidden">{sidePrimary.slice(0,4).map(({href,label,icon:Icon})=><Link key={label} aria-label={label} href={href} className={`grid size-11 place-items-center rounded-full ${path===href?'bg-[#092638] text-white':'text-[#0f2b45]/55'}`}><Icon size={18}/></Link>)}<Link href="/configuracoes" aria-label="Menu" className="grid size-11 place-items-center rounded-full text-[#0f2b45]/55"><Menu size={18}/></Link></nav>}
