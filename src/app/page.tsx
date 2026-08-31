@@ -75,7 +75,6 @@ export default function HomePage(){
         <CardHead title="Reuniões recentes" href="/reunioes"/>
         <MeetingRow title="Briefing Campanha" meta="Hoje · 10:30" action="Entrar"/>
         <MeetingRow title="Alinhamento Comercial" meta="Hoje · 15:00" action="Entrar"/>
-        <MeetingRow title="Reunião com Cliente" meta="Ontem · 16:20" action="Abrir"/>
       </div>
 
       <div className="octa-ref-card octa-ref-recordings">
@@ -83,7 +82,6 @@ export default function HomePage(){
         <Recording title="Planejamento de Marketing" meta="Hoje · 14:30 · 48 min" time="48:12"/>
         <Recording title="Reunião com João Silva" meta="Ontem · 15:00 · 32 min" time="32:46"/>
         <Recording title="Alinhamento Comercial" meta="Ontem · 10:30 · 26 min" time="26:10"/>
-        <Recording title="Briefing Campanha" meta="18 Mai · 11:00 · 52 min" time="52:33"/>
       </div>
 
       <div className="octa-ref-card octa-ref-agenda">
@@ -97,7 +95,6 @@ export default function HomePage(){
             <div className="octa-ref-event c">Planejamento de Marketing<small>14:30 – 16:00</small></div>
             <div className="octa-ref-event d">Apresentação<small>09:30 – 10:30</small></div>
             <div className="octa-ref-event e">Revisão de Campanha<small>15:00 – 16:00</small></div>
-            <div className="octa-ref-event f">Briefing Criativo<small>11:00 – 12:00</small></div>
           </div>
         </div>
       </div>

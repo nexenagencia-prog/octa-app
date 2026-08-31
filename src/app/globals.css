@@ -1666,3 +1666,69 @@ html[data-theme="dark"] .octa-hybrid-heading h1{color:#f5f4f1}
   .octa-ref-copy h1{font-size:35px!important}
   .octa-ref-next{width:290px!important}
 }
+
+/* OCTA HOME TIGHT FIX — reference corrections */
+.octa-ref-photo>img{
+  object-position:61% 24%!important;
+  transform:scale(1.01)!important;
+}
+.octa-top-profile-pill{
+  min-width:164px!important;
+  max-width:190px!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+}
+.octa-top-profile-pill span{
+  display:block!important;
+  min-width:0!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  line-height:1!important;
+}
+.octa-top-profile-pill svg{margin-left:auto!important;flex:0 0 auto!important}
+.octa-ref-next{
+  top:88px!important;
+  right:30px!important;
+  width:306px!important;
+  min-height:188px!important;
+  padding:15px 16px 14px!important;
+}
+.octa-ref-next-top{margin-bottom:10px!important}
+.octa-ref-next-top small{font-size:10px!important;color:rgba(255,255,255,.58)!important}
+.octa-ref-time{font-size:32px!important;line-height:1!important;margin:4px 0 16px!important}
+.octa-ref-time small{font-size:11px!important;margin-left:5px!important;color:rgba(255,255,255,.54)!important}
+.octa-ref-next h3{font-size:13px!important;line-height:1.25!important;margin-bottom:10px!important}
+.octa-ref-next-bottom{gap:10px!important}
+.octa-ref-next-bottom>a{white-space:nowrap!important;padding:8px 11px!important}
+.octa-ref-quote{
+  right:38px!important;
+  bottom:26px!important;
+  width:250px!important;
+  white-space:nowrap!important;
+  overflow:visible!important;
+  text-align:left!important;
+  z-index:8!important;
+}
+.octa-ref-metrics{
+  width:min(690px,64%)!important;
+  margin:-20px 0 0 26px!important;
+}
+.octa-ref-metric{
+  min-height:64px!important;
+  padding:0 10px!important;
+  gap:6px!important;
+}
+.octa-ref-metric strong{font-size:19px!important}
+.octa-ref-metric small{font-size:8px!important;white-space:nowrap!important}
+.octa-ref-bottomgrid{
+  padding-top:10px!important;
+}
+.octa-ref-recent,.octa-ref-recordings,.octa-ref-agenda{
+  min-height:230px!important;
+}
+.octa-ref-calendar{height:205px!important}
+@media(max-width:1200px){
+  .octa-ref-next{right:18px!important;width:286px!important}
+  .octa-ref-quote{right:22px!important}
+  .octa-ref-metrics{width:min(660px,72%)!important}
+}
