@@ -14,6 +14,7 @@ export const metadata: Metadata = {
   description: 'Vertical-first intelligent videoconferencing.',
 };
 
+// Keep global visual layers explicit so production builds include agenda and meeting-stage refinements.
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return <html lang="pt-BR"><body><CmsRuntime/>{children}</body></html>;
 }
