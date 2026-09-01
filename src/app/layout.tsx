@@ -5,9 +5,11 @@ import './octa-black-silver-v2.css';
 import './octa-reference-polish.css';
 import './octa-dark-icon-fixes.css';
 import './octa-ai-coach.css';
+import './octa-ai-global-voice.css';
 import './octa-live-strategic-ai.css';
 import './octa-agenda-stage.css';
 import { CmsRuntime } from '@/components/cms-runtime';
+import { GlobalOctaAI } from '@/components/ai/global-octa-ai';
 
 export const metadata: Metadata = {
   title: 'OCTA — Presence Platform',
@@ -16,5 +18,5 @@ export const metadata: Metadata = {
 
 // Keep global visual layers explicit so production builds include agenda and meeting-stage refinements.
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="pt-BR"><body><CmsRuntime/>{children}</body></html>;
+  return <html lang="pt-BR"><body><CmsRuntime/>{children}<GlobalOctaAI/></body></html>;
 }
