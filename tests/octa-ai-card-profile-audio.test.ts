@@ -1,0 +1,35 @@
+import { describe,expect,it } from 'vitest';
+import fs from 'node:fs';
+
+const read=(path:string)=>fs.readFileSync(path,'utf8');
+
+describe('OCTA AI reference card, profile greeting and audio playback',()=>{
+  it('uses the saved profile name and persists profile changes',()=>{
+    const profile=read('src/app/profile/page.tsx');
+    const coach=read('src/components/ai/octa-skill-coach.tsx');
+    expect(profile).toContain('octa-profile-name');
+    expect(profile).toContain("window.dispatchEvent(new CustomEvent('octa-profile:updated'" );
+    expect(coach).toContain('octa-profile-name');
+    expect(coach).toContain('Olá, ${profileName}');
+    expect(coach).toContain("'octa-profile:updated'");
+  });
+
+  it('offers listen controls for assistant messages without horizontal chat scrolling',()=>{
+    const coach=read('src/components/ai/octa-skill-coach.tsx');
+    const css=read('src/app/octa-ai-global-voice.css');
+    expect(coach).toContain('Ouvir resposta');
+    expect(coach).toContain('speechSynthesis');
+    expect(coach).toContain('Volume2');
+    expect(css).toContain('overflow-x:hidden');
+    expect(css).toContain('.octa-ai-message-listen');
+  });
+
+  it('matches the supplied dark reference card language and keeps launcher out of controls',()=>{
+    const css=read('src/app/octa-ai-global-voice.css');
+    expect(css).toContain('bottom:max(96px');
+    expect(css).toContain('border-radius:24px');
+    expect(css).toContain('linear-gradient(180deg,#1c1d1f');
+    expect(css).toContain('.octa-ai-reference-composer');
+    expect(css).toContain('.octa-ai-orb .octa-ai-mark');
+  });
+});
