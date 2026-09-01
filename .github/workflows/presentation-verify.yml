@@ -3,6 +3,7 @@ name: Verify presentation mode
 on:
   push:
     branches:
+      - main
       - feature/octa-presentation-mode
   workflow_dispatch:
 
