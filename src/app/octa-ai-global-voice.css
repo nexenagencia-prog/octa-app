@@ -8,4 +8,5 @@
 .octa-ai-voice-state.is-error{color:rgba(255,255,255,.5)}
 .octa-ai-panel form .octa-ai-voice-button{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.12)}
 .octa-ai-panel form .octa-ai-voice-button.is-active{background:linear-gradient(145deg,#f4f4f4,#aaa);color:#050505;box-shadow:0 0 18px rgba(255,255,255,.16)}
+button.skills-dark-link{font-size:0}button.skills-dark-link::before{content:'OCTA AI';font-size:11px}.skills-silver-button{font-size:0}.skills-silver-button::before{content:'Perguntar à OCTA AI';font-size:12px}
 @media(max-width:900px){.octa-ai-coach{right:14px;bottom:84px}.octa-ai-orb{width:56px;height:56px}.octa-ai-panel{width:min(390px,calc(100vw - 20px));height:min(620px,calc(100vh - 160px))}}
