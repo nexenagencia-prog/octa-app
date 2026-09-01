@@ -5,6 +5,7 @@ import './octa-black-silver-v2.css';
 import './octa-reference-polish.css';
 import './octa-dark-icon-fixes.css';
 import './octa-ai-coach.css';
+import './octa-live-strategic-ai.css';
 import { CmsRuntime } from '@/components/cms-runtime';
 
 export const metadata: Metadata = {
