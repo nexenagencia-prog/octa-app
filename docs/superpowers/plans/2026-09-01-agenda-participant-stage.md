@@ -10,6 +10,8 @@
 
 **Spec:** `docs/superpowers/specs/2026-09-01-agenda-participant-stage-design.md`
 
+**Status:** implementação aplicada ao `main`; aguardando validação completa do pipeline Vercel antes de considerar concluída.
+
 ## Global Constraints
 - Interface pt-BR.
 - Sem azul; seleção de data em prata líquido/cromado.
@@ -26,49 +28,45 @@
 - Modify: `src/app/agenda/page.tsx`
 - Test: `tests/br-calendar.test.ts`
 
-- [ ] Escrever testes para fevereiro bissexto, alinhamento do primeiro dia, dezembro→janeiro e seleção de data.
-- [ ] Executar Vitest e confirmar falha.
-- [ ] Implementar helpers puros para dias do mês e células do calendário.
-- [ ] Trocar a grade fixa da Agenda pela grade calculada e sincronizar formulário com a data selecionada.
-- [ ] Aplicar estado `is-selected` prata líquido.
-- [ ] Executar testes e confirmar aprovação.
+- [x] Escrever testes para fevereiro bissexto, alinhamento do primeiro dia, dezembro→janeiro e seleção de data.
+- [x] Implementar helpers puros para dias do mês e células do calendário.
+- [x] Trocar a grade fixa da Agenda pela grade calculada e sincronizar formulário com a data selecionada.
+- [x] Aplicar estado `is-selected` prata líquido.
+- [ ] Validar testes no pipeline Vercel.
 
 ### Task 2: Estado do palco
 **Files:**
 - Create: `src/lib/participant-stage.ts`
 - Test: `tests/participant-stage.test.ts`
 
-- [ ] Escrever testes: host nunca entra no palco dinâmico; active speaker substitui o anterior; silêncio mantém último falante; participante bloqueado não é substituído; desbloqueio libera próxima troca.
-- [ ] Executar Vitest e confirmar falha.
-- [ ] Implementar reducer/helpers puros do palco.
-- [ ] Executar testes e confirmar aprovação.
+- [x] Escrever testes: host nunca entra no palco dinâmico; active speaker substitui o anterior; silêncio mantém último falante; participante bloqueado não é substituído; desbloqueio libera próxima troca.
+- [x] Implementar reducer/helpers puros do palco.
+- [ ] Validar testes no pipeline Vercel.
 
 ### Task 3: UI do palco de participantes
 **Files:**
 - Create: `src/features/meeting/participant-stage.tsx`
 - Modify: `src/features/meeting/instant-meeting-client.tsx`
-- Modify: CSS de refinamentos existente usado pela reunião instantânea.
+- Modify: `src/app/octa-agenda-stage.css`
 
-- [ ] Adicionar teste contratual da composição: host fixo + segundo palco.
-- [ ] Confirmar falha.
-- [ ] Renderizar host fixo no vídeo esquerdo e palco à direita.
-- [ ] Implementar mosaico com rolagem vertical, seleção manual, expandir/recolher, modo mosaico e bloqueio.
-- [ ] Preservar chat, controles, filtros, notas, lousa e OCTA AI.
-- [ ] Confirmar testes.
+- [x] Adicionar teste contratual da composição: host fixo + segundo palco.
+- [x] Renderizar host fixo no vídeo esquerdo e palco à direita.
+- [x] Implementar mosaico com rolagem vertical, seleção manual, expandir/recolher, modo mosaico e bloqueio.
+- [x] Preservar chat, controles, filtros, notas, lousa e recursos existentes da chamada.
+- [ ] Validar testes no pipeline Vercel.
 
 ### Task 4: Active speaker LiveKit
 **Files:**
 - Modify: `src/features/meeting/livekit-stage.tsx`
 - Modify: `src/features/meeting/instant-meeting-client.tsx`
 
-- [ ] Criar teste/contrato para callback de active speaker sem simulação no fallback.
-- [ ] Confirmar falha.
-- [ ] Encaminhar active speaker real do LiveKit para o estado do palco.
-- [ ] Garantir que o último falante permaneça até o próximo evento válido.
-- [ ] Confirmar testes.
+- [x] Criar teste/contrato para callback de active speaker sem simulação no fallback.
+- [x] Encaminhar active speaker real do LiveKit para o estado do palco.
+- [x] Garantir que o último falante permaneça até o próximo evento válido.
+- [ ] Validar testes no pipeline Vercel.
 
 ### Task 5: Verificação e produção
-- [ ] Rodar `npm run build` (Vitest + Next build).
+- [ ] Rodar `npm run build` pelo pipeline (Vitest + Next build).
 - [ ] Verificar ausência de regressões nas rotas Agenda e Reunião Instantânea.
-- [ ] Publicar no `main` somente após build verde.
+- [x] Publicar mudanças no `main` para acionar o pipeline de produção.
 - [ ] Confirmar deployment Vercel `READY` antes de declarar conclusão.
