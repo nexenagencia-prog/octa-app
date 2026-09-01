@@ -1,5 +1,5 @@
 import { describe,expect,it } from 'vitest';
-import fs from 'node:fs';
+import * as fs from 'node:fs';
 
 const read=(path:string)=>fs.readFileSync(path,'utf8');
 
