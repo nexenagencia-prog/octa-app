@@ -1,0 +1,100 @@
+/* OCTA global refinements — black navigation, liquid-silver Skills, dark-mode harmony */
+
+/* Keep the approved black sidebar across the app. */
+.octa-sidebar{background:#000!important;box-shadow:0 24px 64px rgba(0,0,0,.22)!important}
+.octa-sidebar::before{opacity:.18!important;background:radial-gradient(ellipse at 72% 88%,rgba(255,255,255,.08),transparent 54%)!important}
+.octa-side-item.is-active{background:linear-gradient(90deg,rgba(255,255,255,.14),rgba(255,255,255,.055))!important}
+.octa-side-item.is-active::before{background:linear-gradient(180deg,#fff,#8d9399)!important;box-shadow:0 0 14px rgba(255,255,255,.32)!important}
+.octa-expand-orb{background:linear-gradient(145deg,#282828,#090909)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 10px 26px rgba(0,0,0,.34)!important}
+
+/* Instant meeting keeps the same permanent black-navigation language. */
+main[class*="bg-[#020812]"]>div>aside{width:242px!important;flex-basis:242px!important;background:#000!important;border-right:1px solid rgba(255,255,255,.07)!important;box-shadow:18px 0 44px rgba(0,0,0,.16)!important}
+main[class*="bg-[#020812]"]>div>aside a[href="/compartilhar-tela"],
+main[class*="bg-[#020812]"]>div>aside a[href="/gravar"]{display:none!important}
+main[class*="bg-[#020812]"]>div>aside a[href="/skills"]{border-color:rgba(255,255,255,.10)!important;background:rgba(255,255,255,.06)!important;color:#f1f1f1!important}
+main[class*="bg-[#020812]"]>div>aside a[href="/skills"] svg{color:#cfd2d5!important}
+
+/* Hero next-meeting card: closer to the approved reference. */
+.octa-previous-hero [class*="_next__"]{right:3.2%!important;top:7.5%!important;width:38%!important;min-width:350px!important;border:1px solid rgba(255,255,255,.18)!important;border-radius:28px!important;background:linear-gradient(145deg,rgba(9,10,11,.94),rgba(3,3,4,.91))!important;padding:20px 22px 22px!important;box-shadow:0 28px 72px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.08)!important;backdrop-filter:blur(32px) saturate(118%)!important}
+.octa-previous-hero [class*="_nextHead__"]{grid-template-columns:44px 1fr auto!important;gap:12px!important}
+.octa-previous-hero [class*="_nextHead__"]>span{width:44px!important;height:44px!important;border-radius:14px!important;background:linear-gradient(145deg,#fff,#e9e9e7)!important;box-shadow:0 6px 18px rgba(0,0,0,.24)!important}
+.octa-previous-hero [class*="_nextHead__"] small{font-size:14px!important;font-weight:600!important;color:rgba(255,255,255,.82)!important}
+.octa-previous-hero [class*="_time__"]{margin-top:18px!important;font-size:49px!important;line-height:.95!important;font-weight:430!important;letter-spacing:-.055em!important}
+.octa-previous-hero [class*="_time__"] small{font-size:15px!important;color:rgba(255,255,255,.58)!important}
+.octa-previous-hero [class*="_time__"]>a{top:1px!important;height:48px!important;border:1px solid rgba(255,255,255,.06)!important;border-radius:999px!important;background:linear-gradient(145deg,#2b2b2c,#1c1d1e)!important;padding:0 18px!important;font-size:12px!important;font-weight:600!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.07)!important}
+.octa-previous-hero [class*="_next__"] h2{margin:24px 0 15px!important;font-size:20px!important;font-weight:570!important;letter-spacing:-.025em!important}
+.octa-previous-hero [class*="_avatars__"] img,.octa-previous-hero [class*="_avatars__"] b{width:39px!important;height:39px!important;margin-left:-8px!important;border:2px solid #111!important}
+.octa-previous-hero [class*="_avatars__"] img:first-child{margin-left:0!important}
+@media(max-width:1400px){.octa-previous-hero [class*="_next__"]{width:42%!important;min-width:325px!important}.octa-previous-hero [class*="_time__"]{font-size:43px!important}.octa-previous-hero [class*="_time__"]>a{height:42px!important;padding:0 14px!important}}
+
+/* Notification popover. */
+.octa-notification-wrap{position:relative}
+.octa-notification-button{position:relative;display:grid;width:44px;height:44px;place-items:center;border:0;border-radius:999px;background:transparent;color:#102944;transition:.16s ease}
+.octa-notification-button:hover{background:rgba(255,255,255,.64)}
+.octa-notification-badge{position:absolute;right:0;top:0;display:grid;width:20px;height:20px;place-items:center;border:2px solid rgba(255,255,255,.92);border-radius:999px;background:#151719;color:#fff;font-size:9px;font-weight:700}
+.octa-notification-panel{position:absolute;right:0;top:54px;z-index:150;width:340px;overflow:hidden;border:1px solid rgba(0,0,0,.08);border-radius:22px;background:rgba(250,250,248,.94);padding:10px;color:#111;box-shadow:0 26px 80px rgba(0,0,0,.18);backdrop-filter:blur(28px) saturate(130%)}
+.octa-notification-panel>header{display:flex;align-items:center;justify-content:space-between;padding:8px 10px 11px;border-bottom:1px solid rgba(0,0,0,.06)}
+.octa-notification-panel>header strong{font-size:13px}.octa-notification-panel>header span{font-size:9px;color:#7b7f80}
+.octa-notification-item{display:grid;grid-template-columns:36px 1fr;gap:10px;padding:12px 10px;border-bottom:1px solid rgba(0,0,0,.05)}
+.octa-notification-item:last-child{border-bottom:0}.octa-notification-icon{display:grid;width:36px;height:36px;place-items:center;border-radius:12px;background:#111;color:#fff}.octa-notification-item b{display:block;font-size:11px}.octa-notification-item p{margin:3px 0 0;font-size:10px;line-height:1.4;color:#747879}.octa-notification-item small{display:block;margin-top:5px;font-size:8px;color:#9a9d9d}
+
+/* OCTA Skills — black cards + liquid-silver analytics. */
+.skills-reference-shell{background:#020202!important;border-color:rgba(255,255,255,.10)!important}
+.skills-reference-tabs button{color:rgba(255,255,255,.50)!important}.skills-reference-tabs button.is-active{background:linear-gradient(145deg,#2a2c2e,#101112)!important;color:#fff!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.12)!important}
+.skills-private,.skills-dark-link{border-color:rgba(255,255,255,.11)!important;background:#0d0d0e!important;color:#d8dadd!important}
+.skills-dash-card,.skills-reference-card,.skills-score-card,.skills-focus-card,.skills-goal-card,.skills-recent-card{border:1px solid rgba(255,255,255,.095)!important;background:linear-gradient(145deg,#101112 0%,#060607 62%,#131415 135%)!important;color:#f4f4f4!important;box-shadow:0 18px 52px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.055)!important}
+.skills-dash-card p,.skills-reference-card p,.skills-dash-card small,.skills-reference-card small{color:rgba(237,239,241,.58)!important}
+.skills-dash-label,.skills-dash-head span,.skills-eyebrow{color:#bfc3c7!important}
+.skills-dash-head h3,.skills-dash-card h3,.skills-reference-card h2,.skills-reference-card h3{color:#fff!important}
+.skills-score-row i,.skills-dash-score i,.skills-dash-score strong,.skills-dash-score span{color:#f2f3f4!important}
+.skills-skill-track{background:linear-gradient(90deg,#18191a,#292b2d)!important;box-shadow:inset 0 1px 2px rgba(0,0,0,.8)!important}
+.skills-skill-track i{background:linear-gradient(90deg,#676b6f 0%,#f7f8f8 48%,#a5aaae 72%,#4d5155 100%)!important;box-shadow:0 0 14px rgba(232,235,237,.20),inset 0 1px 0 rgba(255,255,255,.7)!important}
+.skills-goal-ring{background:conic-gradient(#f4f5f5 0 58%,#8b9094 78%,#4c5054 91%,rgba(255,255,255,.08) 91% 100%)!important;box-shadow:0 0 26px rgba(240,243,245,.10)!important}
+.skills-goal-ring>div{background:#090a0b!important}
+.skills-trend-chart path:first-of-type{fill:rgba(213,217,220,.12)!important}
+.skills-trend-chart path:nth-of-type(2){stroke:#e7e9ea!important;filter:drop-shadow(0 0 5px rgba(255,255,255,.18))}
+.skills-trend-chart circle{fill:#111!important;stroke:#f1f2f2!important}
+.skills-dash-map svg polygon:last-of-type{fill:rgba(215,219,222,.09)!important;stroke:#e2e5e7!important}
+.skills-dash-map svg circle{fill:#f2f3f4!important}
+.skills-map-deltas b,.skills-metric strong,.skills-score>small,.skills-coach,.skills-coach button,.skills-blue-button{color:#d8dcdf!important}
+.skills-search-dark,.skills-coach blockquote,.skills-simulation{border-color:rgba(255,255,255,.08)!important;background:#0d0e0f!important}
+.skills-reference-progress,.skills-goal-track{background:#1a1b1c!important}.skills-reference-progress i,.skills-goal-track i{background:linear-gradient(90deg,#666a6e,#f4f5f5 52%,#858a8e)!important;box-shadow:0 0 12px rgba(255,255,255,.12)!important}
+.skills-reference-meeting,.skills-recent-item{background:#0d0e0f!important;color:#efefef!important}.skills-recent-item strong,.skills-recent-item span{color:#f0f1f2!important}
+
+/* Dark mode — normalize bright leftovers across all app tabs without changing light mode. */
+[data-theme="dark"] body{background:#060708!important;color:#f0f1f2!important}
+[data-theme="dark"] .octa-page{background:#060708!important}
+[data-theme="dark"] .octa-main{background:linear-gradient(145deg,#090a0b,#060708)!important;border-radius:26px}
+[data-theme="dark"] .octa-topbar{background:transparent!important}
+[data-theme="dark"] .octa-inner-page{color:#edf0f2!important}
+[data-theme="dark"] .octa-inner-content [class*="bg-white"],
+[data-theme="dark"] .octa-inner-content .settings-row,
+[data-theme="dark"] .octa-inner-content .skills-goal-card,
+[data-theme="dark"] .octa-inner-content .skills-recent-card{background:rgba(14,15,16,.92)!important;border-color:rgba(255,255,255,.08)!important;color:#edf0f2!important}
+[data-theme="dark"] .octa-inner-content [class*="border-black"],
+[data-theme="dark"] .octa-inner-content [class*="border-[#"]{border-color:rgba(255,255,255,.09)!important}
+[data-theme="dark"] .octa-inner-content [class*="text-[#0"],
+[data-theme="dark"] .octa-inner-content [class*="text-[#1"],
+[data-theme="dark"] .octa-inner-content [class*="text-[#2"],
+[data-theme="dark"] .octa-inner-content [class*="text-[#3"]{color:#eef0f2!important}
+[data-theme="dark"] .octa-inner-content [class*="text-[#6"],
+[data-theme="dark"] .octa-inner-content [class*="text-[#7"],
+[data-theme="dark"] .octa-inner-content [class*="text-[#8"]{color:#9ba0a5!important}
+[data-theme="dark"] .octa-inner-content input,[data-theme="dark"] .octa-inner-content textarea,[data-theme="dark"] .octa-inner-content select{border-color:rgba(255,255,255,.09)!important;background:#0c0d0e!important;color:#f1f2f2!important}
+[data-theme="dark"] .octa-notification-button{color:#edf0f2}.octa-notification-button:hover{background:rgba(255,255,255,.06)}
+[data-theme="dark"] .octa-notification-panel{border-color:rgba(255,255,255,.10);background:rgba(9,10,11,.96);color:#f4f4f4;box-shadow:0 28px 88px rgba(0,0,0,.48)}
+[data-theme="dark"] .octa-notification-panel>header,[data-theme="dark"] .octa-notification-item{border-color:rgba(255,255,255,.07)}
+[data-theme="dark"] .octa-notification-item p,[data-theme="dark"] .octa-notification-panel>header span{color:#999da1}
+
+/* Home dark mode keeps hierarchy consistent if the user toggles it. */
+[data-theme="dark"] .octa-previous-hero{background:#08090a!important;color:#f0f1f2!important}
+[data-theme="dark"] .octa-previous-hero [class*="_copy__"]{background:linear-gradient(90deg,#08090a,#08090a 78%,rgba(8,9,10,.92) 88%,rgba(8,9,10,.04) 100%)!important}
+[data-theme="dark"] .octa-previous-hero [class*="_copy__"] h1,[data-theme="dark"] .octa-previous-hero [class*="_copy__"]>p{color:#f4f4f4!important}
+[data-theme="dark"] .octa-previous-hero [class*="_lead__"]{color:#989da0!important}
+[data-theme="dark"] .octa-previous-hero [class*="_metrics__"],
+[data-theme="dark"] .octa-previous-hero [class*="_card__"],
+[data-theme="dark"] .octa-previous-hero [class*="_actions__"]{border-color:rgba(255,255,255,.08)!important;background:linear-gradient(145deg,#111213,#090a0b)!important;color:#eef0f2!important;box-shadow:0 12px 34px rgba(0,0,0,.25)!important}
+[data-theme="dark"] .octa-previous-hero [class*="_action__"]{border-color:rgba(255,255,255,.07)!important;background:#121314!important;color:#f1f2f2!important}
+[data-theme="dark"] .octa-previous-hero [class*="_action__"]>span{background:#1b1c1d!important}
+[data-theme="dark"] .octa-previous-hero [class*="_row__"]{border-color:rgba(255,255,255,.07)!important}
+[data-theme="dark"] .octa-previous-hero [class*="_row__"] strong{color:#f2f3f3!important}
