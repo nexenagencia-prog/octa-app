@@ -14,7 +14,7 @@ const participants = [
 
 describe('PresentationMode', () => {
   it('keeps thumbnail selection private until explicit approval', () => {
-    render(<PresentationMode open onClose={() => {}} participants={participants} initialSlides={slides} />);
+    render(<PresentationMode open roomSlug="test-room" onClose={() => {}} participants={participants} initialSlides={slides} />);
     fireEvent.click(screen.getByRole('button', { name: /Slide 1/i }));
     expect(screen.getByText('Só você está vendo')).toBeInTheDocument();
     expect(screen.queryByText('AO VIVO')).not.toBeInTheDocument();
@@ -23,7 +23,7 @@ describe('PresentationMode', () => {
   });
 
   it('toggles participants and stops presentation', () => {
-    render(<PresentationMode open onClose={() => {}} participants={participants} initialSlides={slides} />);
+    render(<PresentationMode open roomSlug="test-room" onClose={() => {}} participants={participants} initialSlides={slides} />);
     fireEvent.click(screen.getByRole('button', { name: /Slide 1/i }));
     fireEvent.click(screen.getByRole('button', { name: 'Apresentar este slide' }));
     expect(screen.getByText('Ana')).toBeInTheDocument();
