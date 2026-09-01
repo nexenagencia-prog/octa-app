@@ -5,6 +5,8 @@ import { runOpenAIJson } from '@/lib/ai/openai-json';
 const bodySchema=z.object({question:z.string().min(2).max(800),context:z.object({overallScore:z.number().nullable().optional(),skills:z.array(z.object({key:z.string(),label:z.string(),score:z.number().nullable(),trend:z.number().nullable().optional(),count:z.number().optional()})).default([]),recent:z.array(z.object({meetingTitle:z.string(),summary:z.string(),overallScore:z.number().nullable().optional()})).default([])}).default({skills:[],recent:[]})});
 type CoachResponse={answer?:string;focus?:string;actions?:string[]};
 
+export async function GET(){return NextResponse.json({ok:true,configured:Boolean(process.env.OPENAI_API_KEY),model:process.env.OPENAI_MODEL||'gpt-5.6-luna'})}
+
 export async function POST(request:Request){
  const parsed=bodySchema.safeParse(await request.json().catch(()=>null));
  if(!parsed.success)return NextResponse.json({ok:false,error:'invalid_question',message:'Escreva uma pergunta para o coach.'},{status:400});
