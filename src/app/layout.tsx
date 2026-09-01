@@ -6,6 +6,7 @@ import './octa-reference-polish.css';
 import './octa-dark-icon-fixes.css';
 import './octa-ai-coach.css';
 import './octa-live-strategic-ai.css';
+import './octa-agenda-stage.css';
 import { CmsRuntime } from '@/components/cms-runtime';
 
 export const metadata: Metadata = {
