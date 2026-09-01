@@ -1,6 +1,6 @@
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { afterEach, describe, expect, it } from 'vitest';
 import { PresentationMode } from '../src/features/meeting/presentation-mode';
 
 const slides = [
@@ -12,6 +12,8 @@ const participants = [
   { id: 'u1', displayName: 'Ana', avatarUrl: null },
   { id: 'u2', displayName: 'Bruno', avatarUrl: null },
 ];
+
+afterEach(cleanup);
 
 describe('PresentationMode', () => {
   it('keeps thumbnail selection private until explicit approval', () => {
