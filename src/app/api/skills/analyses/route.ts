@@ -1,0 +1,28 @@
+import { NextResponse } from 'next/server';
+import { z } from 'zod';
+import { supabaseServer } from '@/lib/supabase/server';
+
+const analysisSchema=z.object({meetingId:z.string(),meetingTitle:z.string(),createdAt:z.string(),source:z.enum(['ai','demo']),summary:z.string(),overallScore:z.number().nullable().optional(),transcript:z.string().optional(),metrics:z.array(z.any())});
+
+export async function GET(){
+ const supabase=await supabaseServer();
+ if(!supabase)return NextResponse.json({ok:false,error:'supabase_not_configured'},{status:503});
+ const {data:{user}}=await supabase.auth.getUser();
+ if(!user)return NextResponse.json({ok:false,error:'unauthorized'},{status:401});
+ const {data,error}=await supabase.from('meeting_skill_analyses').select('*').eq('user_id',user.id).order('created_at',{ascending:false}).limit(30);
+ if(error)return NextResponse.json({ok:false,error:'read_failed'},{status:500});
+ return NextResponse.json({ok:true,analyses:(data??[]).map(row=>({meetingId:row.meeting_id,meetingTitle:row.meeting_title,createdAt:row.created_at,source:row.source,summary:row.summary??'',overallScore:row.overall_score,metrics:row.metrics??[],transcript:row.transcript??undefined}))});
+}
+
+export async function POST(request:Request){
+ const parsed=analysisSchema.safeParse(await request.json().catch(()=>null));
+ if(!parsed.success)return NextResponse.json({ok:false,error:'invalid_analysis'},{status:400});
+ const supabase=await supabaseServer();
+ if(!supabase)return NextResponse.json({ok:false,error:'supabase_not_configured'},{status:503});
+ const {data:{user}}=await supabase.auth.getUser();
+ if(!user)return NextResponse.json({ok:false,error:'unauthorized'},{status:401});
+ const a=parsed.data;
+ const {error}=await supabase.from('meeting_skill_analyses').upsert({user_id:user.id,meeting_id:a.meetingId,meeting_title:a.meetingTitle,transcript:a.transcript??null,overall_score:a.overallScore??null,metrics:a.metrics,summary:a.summary,source:a.source,created_at:a.createdAt,updated_at:new Date().toISOString()},{onConflict:'user_id,meeting_id'});
+ if(error)return NextResponse.json({ok:false,error:'write_failed'},{status:500});
+ return NextResponse.json({ok:true});
+}
