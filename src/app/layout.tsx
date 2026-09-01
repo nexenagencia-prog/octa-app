@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import './octa-refinements.css';
 import { CmsRuntime } from '@/components/cms-runtime';
 
 export const metadata: Metadata = {
