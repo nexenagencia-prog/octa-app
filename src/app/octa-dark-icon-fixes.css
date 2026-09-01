@@ -1,0 +1,41 @@
+/* Dark-mode icon contrast guarantees. Keep semantic green/red states untouched. */
+[data-theme="dark"] .octa-side-item,
+[data-theme="dark"] .octa-topbar a,
+[data-theme="dark"] .octa-topbar button,
+[data-theme="dark"] .octa-theme-toggle,
+[data-theme="dark"] .octa-notification-button,
+[data-theme="dark"] .octa-panel button,
+[data-theme="dark"] .octa-panel a,
+[data-theme="dark"] .octa-mini-button,
+[data-theme="dark"] .octa-icon-button,
+[data-theme="dark"] .octa-primary-button,
+[data-theme="dark"] .octa-secondary-button,
+[data-theme="dark"] .octa-action-tile,
+[data-theme="dark"] .home svg,
+[data-theme="dark"] .recordingMenu,
+[data-theme="dark"] .recordingPlay{
+  color:#eef1f3;
+}
+[data-theme="dark"] .octa-side-item svg,
+[data-theme="dark"] .octa-topbar svg,
+[data-theme="dark"] .octa-panel button svg,
+[data-theme="dark"] .octa-panel a svg,
+[data-theme="dark"] .octa-mini-button svg,
+[data-theme="dark"] .octa-icon-button svg,
+[data-theme="dark"] .octa-primary-button svg,
+[data-theme="dark"] .octa-secondary-button svg,
+[data-theme="dark"] .octa-action-tile svg,
+[data-theme="dark"] .home svg{
+  stroke:currentColor;
+  opacity:1;
+  visibility:visible;
+}
+[data-theme="dark"] .octa-side-item:not(.is-active){color:rgba(238,241,243,.78)}
+[data-theme="dark"] .octa-side-item:hover,[data-theme="dark"] .octa-side-item.is-active{color:#fff}
+[data-theme="dark"] .octa-theme-toggle,[data-theme="dark"] .octa-notification-button{border-color:rgba(255,255,255,.10);background:rgba(12,12,13,.88)}
+[data-theme="dark"] .octa-search svg{color:#cfd3d6!important}
+[data-theme="dark"] .octa-plan-icon svg,[data-theme="dark"] .octa-plan-check svg{color:#08090a!important;stroke:currentColor!important}
+[data-theme="dark"] .recordingPlay{background:#eceeef!important;color:#090a0b!important}
+[data-theme="dark"] .recordingMenu{color:#d7dbde!important}
+[data-theme="dark"] .nextHead>span{color:#111!important}
+[data-theme="dark"] .nextHead>span svg{stroke:currentColor!important}
