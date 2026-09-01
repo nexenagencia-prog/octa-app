@@ -1,7 +1,8 @@
+// @vitest-environment node
 import { describe,expect,it } from 'vitest';
-import * as fs from 'node:fs';
+import { readFileSync } from 'node:fs';
 
-const read=(path:string)=>fs.readFileSync(path,'utf8');
+const read=(path:string)=>readFileSync(path,'utf8');
 
 describe('OCTA AI reference card, profile greeting and audio playback',()=>{
   it('uses the saved profile name and persists profile changes',()=>{
