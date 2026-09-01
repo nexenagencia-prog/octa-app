@@ -23,7 +23,7 @@ export default function HomePage(){
         </div>
       </div>
       <div className={styles.photo}>
-        <Image src="/octa-hero-reference.webp" alt="Profissional trabalhando no notebook" fill priority className={styles.heroImage}/>
+        <Image src="/octa-hero-man.webp" alt="Profissional trabalhando no notebook" fill priority className={styles.heroImage}/>
         <div className={styles.photoShade}/>
         <article className={styles.next}>
           <div className={styles.nextHead}><span><CalendarDays size={17}/></span><small>Próxima reunião</small><MoreVertical size={17}/></div>
@@ -49,7 +49,7 @@ export default function HomePage(){
         <Action href="/contatos" icon={<UserRoundPlus/>} title="Convidar pessoas" sub="Adicionar participantes"/>
         <Action href="/gravacoes" icon={<CirclePlay/>} title="Gravar reunião" sub="Iniciar gravação"/>
       </div></article>
-      <Link href="/chat" className={styles.ai}><div><h2>OCTA AI <b>Beta</b></h2><p>Sua IA de reuniões. Mais foco, mais resultados.</p><span>Abrir OCTA AI <ArrowRight size={12}/></span></div><div className={styles.orb}/></Link>
+      <Link href="/chat" className={styles.ai}><div><h2>OCTA AI <b>Beta</b></h2><p>Sua IA de reuniões. Mais foco, mais resultados.</p><span>Abrir OCTA AI <ArrowRight size={12}/></span></div></Link>
       <Link href="/skills" className={`${styles.card} ${styles.skills}`}><div><h2>OCTA Skills</h2><p>Sua evolução em<br/>cada conversa.</p><span>Ver análise <ArrowRight size={12}/></span></div><div className={styles.ring}><strong>82</strong><small>/100</small></div></Link>
     </section>
 
