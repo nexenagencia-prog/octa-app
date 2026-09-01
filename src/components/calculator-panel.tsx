@@ -12,8 +12,10 @@ export function CalculatorPanel(){
     const onKey=(e:KeyboardEvent)=>{const k=mapKey(e.key);if(/^\d$/.test(k)||['.','=','⌫','C','%','÷','×','−','+'].includes(k)){e.preventDefault();press(k)}};
     window.addEventListener('keydown',onKey);return()=>window.removeEventListener('keydown',onKey);
   },[]);
-  return <div className="calculator-shell">
-    <div className="calculator-display"><span>{state.op&&state.acc!==null?`${state.acc} ${state.op}`:''}</span><strong>{state.display}</strong></div>
-    <div className="calculator-grid">{keys.map(key=><button key={key} onClick={()=>press(key)} className={`calculator-key ${['÷','×','−','+','='].includes(key)?'is-op':''} ${key==='0'?'col-span-2':''}`}>{key}</button>)}</div>
+  return <div className="calculator-shell calculator-premium" aria-label="Calculadora OCTA">
+    <div className="calculator-topline"><span>OCTA</span><small>Calculadora</small></div>
+    <div className="calculator-display"><span>{state.op&&state.acc!==null?`${state.acc} ${state.op}`:'Resultado'}</span><strong>{state.display}</strong></div>
+    <div className="calculator-grid">{keys.map(key=><button aria-label={`Tecla ${key}`} key={key} onClick={()=>press(key)} className={`calculator-key ${['÷','×','−','+','='].includes(key)?'is-op':''} ${['C','⌫','%'].includes(key)?'is-function':''} ${key==='0'?'col-span-2':''}`}>{key}</button>)}</div>
+    <div className="calculator-footer">Atalhos de teclado ativos</div>
   </div>;
 }
