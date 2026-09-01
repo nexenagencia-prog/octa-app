@@ -2,39 +2,82 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight, Eye, EyeOff, FileImage, MonitorUp, Upload, X } from 'lucide-react';
+import { supabaseBrowser } from '@/lib/supabase/client';
 import { loadPresentationFiles, type PresentationSlide } from './presentation-model';
 
 type PresentationParticipant = { id: string; displayName: string; avatarUrl?: string | null };
+type PresentationBroadcast = { action: 'show'; slide: PresentationSlide } | { action: 'stop' };
 
 type Props = {
   open: boolean;
   onClose: () => void;
   participants: PresentationParticipant[];
+  roomSlug: string;
   initialSlides?: PresentationSlide[];
 };
 
-export function PresentationMode({ open, onClose, participants, initialSlides = [] }: Props) {
+export function PresentationMode({ open, onClose, participants, roomSlug, initialSlides = [] }: Props) {
   const [slides, setSlides] = useState<PresentationSlide[]>(initialSlides);
   const [previewId, setPreviewId] = useState<string | null>(null);
   const [liveId, setLiveId] = useState<string | null>(null);
+  const [remoteLive, setRemoteLive] = useState<PresentationSlide | null>(null);
   const [participantsVisible, setParticipantsVisible] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const fileRef = useRef<HTMLInputElement>(null);
+  const channelRef = useRef<ReturnType<NonNullable<ReturnType<typeof supabaseBrowser>>['channel']> | null>(null);
 
   useEffect(() => setSlides(initialSlides), [initialSlides]);
   const preview = useMemo(() => slides.find((slide) => slide.id === previewId) ?? null, [slides, previewId]);
   const live = useMemo(() => slides.find((slide) => slide.id === liveId) ?? null, [slides, liveId]);
+  const displayedLive = live ?? remoteLive;
   const liveIndex = live ? slides.findIndex((slide) => slide.id === live.id) : -1;
+  const isPresenter = Boolean(live);
+
+  useEffect(() => {
+    const supabase = supabaseBrowser();
+    if (!supabase) return;
+    const channel = supabase.channel(`octa-presentation:${roomSlug}`);
+    channel
+      .on('broadcast', { event: 'presentation' }, ({ payload }) => {
+        const message = payload as PresentationBroadcast;
+        if (message.action === 'show') setRemoteLive(message.slide);
+        if (message.action === 'stop') setRemoteLive(null);
+      })
+      .subscribe();
+    channelRef.current = channel;
+    return () => {
+      channelRef.current = null;
+      void supabase.removeChannel(channel);
+    };
+  }, [roomSlug]);
+
+  const broadcast = (message: PresentationBroadcast) => {
+    void channelRef.current?.send({ type: 'broadcast', event: 'presentation', payload: message });
+  };
+
+  const showSlide = (slide: PresentationSlide) => {
+    setLiveId(slide.id);
+    setRemoteLive(null);
+    broadcast({ action: 'show', slide });
+  };
 
   const moveLive = (direction: -1 | 1) => {
     if (liveIndex < 0) return;
     const next = Math.min(slides.length - 1, Math.max(0, liveIndex + direction));
-    setLiveId(slides[next]?.id ?? null);
+    const slide = slides[next];
+    if (slide) showSlide(slide);
+  };
+
+  const stopPresentation = () => {
+    setLiveId(null);
+    setRemoteLive(null);
+    setPreviewId(null);
+    broadcast({ action: 'stop' });
   };
 
   useEffect(() => {
-    if (!open) return;
+    if (!open && !liveId) return;
     const onKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && previewId && !liveId) setPreviewId(null);
       if (liveId && event.key === 'ArrowLeft') moveLive(-1);
@@ -43,8 +86,6 @@ export function PresentationMode({ open, onClose, participants, initialSlides = 
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [open, previewId, liveId, liveIndex, slides.length]);
-
-  if (!open) return null;
 
   const onFiles = async (files: FileList | null) => {
     if (!files?.length) return;
@@ -62,29 +103,31 @@ export function PresentationMode({ open, onClose, participants, initialSlides = 
     }
   };
 
-  if (live) {
+  if (displayedLive) {
     return <div className="fixed inset-0 z-[120] flex bg-[#050505] text-white">
       <section className="relative flex min-w-0 flex-1 items-center justify-center bg-black p-4 md:p-8">
         <div className="absolute left-5 top-5 z-20 flex items-center gap-2 rounded-full border border-emerald-300/20 bg-emerald-300/10 px-3 py-2 text-[10px] font-semibold uppercase tracking-[.16em] text-emerald-200"><span className="size-2 rounded-full bg-emerald-300 shadow-[0_0_14px_#6effb0]"/> AO VIVO</div>
-        <img src={live.src} alt={live.name} className="max-h-[calc(100vh-112px)] max-w-full rounded-[24px] object-contain shadow-[0_30px_100px_rgba(0,0,0,.55)]" />
-        <div className="absolute bottom-5 left-1/2 z-30 flex -translate-x-1/2 items-center gap-2 rounded-full border border-white/10 bg-black/75 p-2 backdrop-blur-2xl">
+        <img src={displayedLive.src} alt={displayedLive.name} className="max-h-[calc(100vh-112px)] max-w-full rounded-[24px] object-contain shadow-[0_30px_100px_rgba(0,0,0,.55)]" />
+        {isPresenter && <div className="absolute bottom-5 left-1/2 z-30 flex -translate-x-1/2 items-center gap-2 rounded-full border border-white/10 bg-black/75 p-2 backdrop-blur-2xl">
           <button aria-label="Slide anterior" onClick={() => moveLive(-1)} disabled={liveIndex <= 0} className="grid size-10 place-items-center rounded-full bg-white/[.07] disabled:opacity-25"><ArrowLeft size={17}/></button>
           <span className="min-w-[72px] text-center text-xs text-white/70">{liveIndex + 1} / {slides.length}</span>
           <button aria-label="Próximo slide" onClick={() => moveLive(1)} disabled={liveIndex >= slides.length - 1} className="grid size-10 place-items-center rounded-full bg-white/[.07] disabled:opacity-25"><ArrowRight size={17}/></button>
           <button aria-label={participantsVisible ? 'Ocultar participantes' : 'Mostrar participantes'} onClick={() => setParticipantsVisible((value) => !value)} className="ml-2 flex h-10 items-center gap-2 rounded-full bg-white/[.07] px-4 text-xs">{participantsVisible ? <EyeOff size={15}/> : <Eye size={15}/>} {participantsVisible ? 'Ocultar participantes' : 'Mostrar participantes'}</button>
-          <button onClick={() => { setLiveId(null); setPreviewId(null); }} className="h-10 rounded-full bg-white px-4 text-xs font-semibold text-black">Parar apresentação</button>
-        </div>
+          <button onClick={stopPresentation} className="h-10 rounded-full bg-white px-4 text-xs font-semibold text-black">Parar apresentação</button>
+        </div>}
       </section>
       {participantsVisible && <aside className="hidden w-[220px] shrink-0 border-l border-white/[.08] bg-[#090909] p-3 lg:block"><div className="px-2 py-3 text-[10px] uppercase tracking-[.16em] text-white/35">Participantes</div><div className="space-y-2">{participants.map((participant) => <div key={participant.id} className="flex items-center gap-3 rounded-2xl border border-white/[.06] bg-white/[.035] p-2">{participant.avatarUrl ? <img src={participant.avatarUrl} alt="" className="size-10 rounded-xl object-cover"/> : <div className="grid size-10 place-items-center rounded-xl bg-white/10 text-xs font-semibold">{participant.displayName.slice(0,1)}</div>}<div className="min-w-0 truncate text-xs font-medium">{participant.displayName}</div></div>)}</div></aside>}
     </div>;
   }
+
+  if (!open) return null;
 
   return <div className="fixed inset-0 z-[115] bg-black/45 backdrop-blur-sm" onMouseDown={(event) => { if (event.target === event.currentTarget && !preview) onClose(); }}>
     {preview && <section className="absolute bottom-4 left-4 right-[390px] top-4 hidden items-center justify-center rounded-[30px] border border-white/10 bg-[#080808] p-6 shadow-2xl lg:flex">
       <div className="absolute left-5 top-5 flex items-center gap-2 rounded-full border border-white/10 bg-white/[.06] px-3 py-2 text-[10px] uppercase tracking-[.14em] text-white/60"><Eye size={13}/> Só você está vendo</div>
       <button aria-label="Fechar prévia" onClick={() => setPreviewId(null)} className="absolute right-5 top-5 grid size-9 place-items-center rounded-full bg-white/[.07] text-white/70"><X size={16}/></button>
       <img src={preview.src} alt={preview.name} className="max-h-[calc(100vh-150px)] max-w-full rounded-[20px] object-contain"/>
-      <button onClick={() => setLiveId(preview.id)} className="absolute bottom-5 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full bg-white px-5 py-3 text-xs font-semibold text-black shadow-xl"><MonitorUp size={15}/> Apresentar este slide</button>
+      <button onClick={() => showSlide(preview)} className="absolute bottom-5 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full bg-white px-5 py-3 text-xs font-semibold text-black shadow-xl"><MonitorUp size={15}/> Apresentar este slide</button>
     </section>}
     <aside className="absolute bottom-0 right-0 top-0 flex w-full max-w-[370px] flex-col border-l border-white/10 bg-[#080808] text-white shadow-2xl">
       <header className="flex items-center justify-between border-b border-white/[.07] px-5 py-4"><div><div className="text-[10px] uppercase tracking-[.17em] text-white/35">Apresentação</div><h2 className="mt-1 text-base font-semibold">Slides da reunião</h2></div><button aria-label="Fechar apresentação" onClick={onClose} className="grid size-9 place-items-center rounded-full bg-white/[.06] text-white/60"><X size={16}/></button></header>
