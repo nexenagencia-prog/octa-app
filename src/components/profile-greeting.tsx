@@ -12,6 +12,6 @@ export function ProfileGreeting({className=''}:{className?:string}){
     window.addEventListener('storage',sync);
     return()=>{window.removeEventListener(PROFILE_UPDATED_EVENT,onUpdate);window.removeEventListener('storage',sync)};
   },[]);
-  const firstName=name.trim().split(/\s+/)[0]||'Olá';
-  return <p className={className}>Olá, {firstName}</p>;
+  const firstName=name.trim().split(/\s+/)[0]||'Usuário';
+  return <p className={className}>Bem-vindo de volta, <strong>{firstName}</strong></p>;
 }
