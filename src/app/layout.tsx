@@ -6,7 +6,6 @@ import './octa-reference-polish.css';
 import './octa-dark-icon-fixes.css';
 import './octa-ai-coach.css';
 import { CmsRuntime } from '@/components/cms-runtime';
-import { OctaSkillCoach } from '@/components/ai/octa-skill-coach';
 
 export const metadata: Metadata = {
   title: 'OCTA — Presence Platform',
@@ -14,5 +13,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="pt-BR"><body><CmsRuntime/>{children}<OctaSkillCoach/></body></html>;
+  return <html lang="pt-BR"><body><CmsRuntime/>{children}</body></html>;
 }
