@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowLeft, ArrowRight, Eye, EyeOff, FileImage, MonitorUp, Upload, X } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Eye, EyeOff, FileImage, Monitor, MonitorUp, Upload, X } from 'lucide-react';
 import { supabaseBrowser } from '@/lib/supabase/client';
 import { loadPresentationFiles, type PresentationSlide } from './presentation-model';
 
@@ -17,6 +17,7 @@ type Props = {
 };
 
 export function PresentationMode({ open, onClose, participants, roomSlug, initialSlides = [] }: Props) {
+  const [entryMode, setEntryMode] = useState<'chooser' | 'presentation'>('chooser');
   const [slides, setSlides] = useState<PresentationSlide[]>(initialSlides);
   const [previewId, setPreviewId] = useState<string | null>(null);
   const [liveId, setLiveId] = useState<string | null>(null);
@@ -25,9 +26,14 @@ export function PresentationMode({ open, onClose, participants, roomSlug, initia
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const fileRef = useRef<HTMLInputElement>(null);
+  const screenStreamRef = useRef<MediaStream | null>(null);
   const channelRef = useRef<ReturnType<NonNullable<ReturnType<typeof supabaseBrowser>>['channel']> | null>(null);
 
   useEffect(() => setSlides(initialSlides), [initialSlides]);
+  useEffect(() => {
+    if (open) setEntryMode(initialSlides.length ? 'presentation' : 'chooser');
+  }, [open, initialSlides.length]);
+
   const preview = useMemo(() => slides.find((slide) => slide.id === previewId) ?? null, [slides, previewId]);
   const live = useMemo(() => slides.find((slide) => slide.id === liveId) ?? null, [slides, liveId]);
   const displayedLive = live ?? remoteLive;
@@ -76,6 +82,21 @@ export function PresentationMode({ open, onClose, participants, roomSlug, initia
     broadcast({ action: 'stop' });
   };
 
+  const shareScreen = async () => {
+    setError('');
+    try {
+      if (!navigator.mediaDevices?.getDisplayMedia) throw new Error('Compartilhamento de tela não está disponível neste navegador');
+      screenStreamRef.current?.getTracks().forEach((track) => track.stop());
+      const stream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
+      screenStreamRef.current = stream;
+      stream.getVideoTracks()[0]?.addEventListener('ended', () => { screenStreamRef.current = null; });
+      onClose();
+    } catch (cause) {
+      if (cause instanceof DOMException && cause.name === 'NotAllowedError') return;
+      setError(cause instanceof Error ? cause.message : 'Não foi possível compartilhar a tela');
+    }
+  };
+
   useEffect(() => {
     if (!open && !liveId) return;
     const onKey = (event: KeyboardEvent) => {
@@ -122,6 +143,19 @@ export function PresentationMode({ open, onClose, participants, roomSlug, initia
 
   if (!open) return null;
 
+  if (entryMode === 'chooser') {
+    return <div className="fixed inset-0 z-[115] grid place-items-center bg-black/55 p-4 backdrop-blur-md text-white">
+      <div className="w-full max-w-[620px] rounded-[30px] border border-white/10 bg-[#090909] p-5 shadow-[0_35px_110px_rgba(0,0,0,.65)]">
+        <div className="flex items-center justify-between"><div><div className="text-[10px] uppercase tracking-[.17em] text-white/35">Compartilhar</div><h2 className="mt-1 text-xl font-semibold">O que você quer apresentar?</h2></div><button aria-label="Fechar compartilhamento" onClick={onClose} className="grid size-9 place-items-center rounded-full bg-white/[.06] text-white/60"><X size={16}/></button></div>
+        <div className="mt-5 grid gap-3 sm:grid-cols-2">
+          <button onClick={() => setEntryMode('presentation')} className="rounded-[24px] border border-white/10 bg-white/[.04] p-5 text-left transition hover:-translate-y-0.5 hover:bg-white/[.07]"><span className="grid size-11 place-items-center rounded-2xl bg-white text-black"><FileImage size={20}/></span><span className="mt-5 block text-base font-semibold">Apresentação</span><span className="mt-1 block text-xs leading-5 text-white/45">PDF, JPEG e PNG com prévia privada antes de mostrar para todos.</span></button>
+          <button onClick={shareScreen} className="rounded-[24px] border border-white/10 bg-white/[.04] p-5 text-left transition hover:-translate-y-0.5 hover:bg-white/[.07]"><span className="grid size-11 place-items-center rounded-2xl bg-white/[.09]"><Monitor size={20}/></span><span className="mt-5 block text-base font-semibold">Tela ou janela</span><span className="mt-1 block text-xs leading-5 text-white/45">Abra o seletor do sistema para compartilhar uma tela, aba ou janela.</span></button>
+        </div>
+        {error && <p className="mt-3 rounded-xl bg-rose-500/10 px-3 py-2 text-[11px] text-rose-200">{error}</p>}
+      </div>
+    </div>;
+  }
+
   return <div className="fixed inset-0 z-[115] bg-black/45 backdrop-blur-sm" onMouseDown={(event) => { if (event.target === event.currentTarget && !preview) onClose(); }}>
     {preview && <section className="absolute bottom-4 left-4 right-[390px] top-4 hidden items-center justify-center rounded-[30px] border border-white/10 bg-[#080808] p-6 shadow-2xl lg:flex">
       <div className="absolute left-5 top-5 flex items-center gap-2 rounded-full border border-white/10 bg-white/[.06] px-3 py-2 text-[10px] uppercase tracking-[.14em] text-white/60"><Eye size={13}/> Só você está vendo</div>
@@ -130,7 +164,7 @@ export function PresentationMode({ open, onClose, participants, roomSlug, initia
       <button onClick={() => showSlide(preview)} className="absolute bottom-5 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full bg-white px-5 py-3 text-xs font-semibold text-black shadow-xl"><MonitorUp size={15}/> Apresentar este slide</button>
     </section>}
     <aside className="absolute bottom-0 right-0 top-0 flex w-full max-w-[370px] flex-col border-l border-white/10 bg-[#080808] text-white shadow-2xl">
-      <header className="flex items-center justify-between border-b border-white/[.07] px-5 py-4"><div><div className="text-[10px] uppercase tracking-[.17em] text-white/35">Apresentação</div><h2 className="mt-1 text-base font-semibold">Slides da reunião</h2></div><button aria-label="Fechar apresentação" onClick={onClose} className="grid size-9 place-items-center rounded-full bg-white/[.06] text-white/60"><X size={16}/></button></header>
+      <header className="flex items-center justify-between border-b border-white/[.07] px-5 py-4"><div><button onClick={() => setEntryMode('chooser')} className="mb-2 flex items-center gap-1 text-[10px] text-white/35 hover:text-white/70"><ArrowLeft size={12}/> voltar</button><div className="text-[10px] uppercase tracking-[.17em] text-white/35">Apresentação</div><h2 className="mt-1 text-base font-semibold">Slides da reunião</h2></div><button aria-label="Fechar apresentação" onClick={onClose} className="grid size-9 place-items-center rounded-full bg-white/[.06] text-white/60"><X size={16}/></button></header>
       <div className="p-4"><button onClick={() => fileRef.current?.click()} className="flex w-full items-center justify-between rounded-[22px] border border-dashed border-white/15 bg-white/[.035] p-4 text-left transition hover:bg-white/[.06]"><span><span className="block text-sm font-semibold">Adicionar PDF ou imagens</span><span className="mt-1 block text-[11px] text-white/40">PDF, JPEG e PNG · múltiplos arquivos</span></span>{loading ? <span className="text-[10px] text-white/50">carregando...</span> : <Upload size={18} className="text-white/50"/>}</button><input ref={fileRef} type="file" multiple accept="application/pdf,image/jpeg,image/png" className="hidden" onChange={(event) => onFiles(event.target.files)}/>{error && <p className="mt-2 rounded-xl bg-rose-500/10 px-3 py-2 text-[11px] text-rose-200">{error}</p>}</div>
       <div className="no-scrollbar flex-1 space-y-3 overflow-y-auto px-4 pb-6">{slides.length === 0 ? <div className="mt-8 grid place-items-center rounded-[24px] border border-white/[.06] bg-white/[.025] p-8 text-center"><FileImage size={24} className="text-white/25"/><p className="mt-3 text-xs text-white/45">Seus slides aparecem aqui antes de qualquer coisa ser compartilhada.</p></div> : slides.map((slide, index) => <button key={slide.id} aria-label={`${slide.name} · abrir prévia`} onClick={() => setPreviewId(slide.id)} className={`group w-full rounded-[20px] border p-2 text-left transition ${previewId === slide.id ? 'border-white/30 bg-white/[.08]' : 'border-white/[.07] bg-white/[.03] hover:bg-white/[.055]'}`}><div className="relative aspect-video overflow-hidden rounded-[14px] bg-black"><img src={slide.src} alt="" className="h-full w-full object-contain"/><span className="absolute left-2 top-2 rounded-full bg-black/70 px-2 py-1 text-[9px]">{index + 1}</span></div><div className="mt-2 truncate px-1 text-[11px] font-medium text-white/70">{slide.name}</div></button>)}</div>
     </aside>
