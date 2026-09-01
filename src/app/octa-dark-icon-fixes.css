@@ -39,7 +39,19 @@
 [data-theme="dark"] .recordingMenu{color:#d7dbde!important}
 [data-theme="dark"] .nextHead>span{color:#111!important}
 [data-theme="dark"] .nextHead>span svg{stroke:currentColor!important}
-[data-theme="dark"] .octa-contacts-page .octa-contact-card{background:#000!important;border-color:rgba(255,255,255,.09)!important;color:#f5f6f7!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 18px 42px rgba(0,0,0,.22)!important}
-[data-theme="dark"] .octa-contacts-page .octa-contact-card h2{color:#fff!important}
-[data-theme="dark"] .octa-contacts-page .octa-contact-card p{color:rgba(238,241,243,.58)!important}
-[data-theme="dark"] .octa-contacts-page .octa-contact-card .octa-mini-button{background:#111214!important;border-color:rgba(255,255,255,.10)!important;color:#eef1f3!important}
+
+/* Contacts: light mode = black cards. */
+.octa-contacts-page .octa-contact-card{background:#000!important;border-color:rgba(255,255,255,.10)!important;color:#f5f6f7!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 18px 42px rgba(0,0,0,.20)!important}
+.octa-contacts-page .octa-contact-card h2{color:#fff!important}
+.octa-contacts-page .octa-contact-card p{color:rgba(238,241,243,.58)!important}
+.octa-contacts-page .octa-contact-card .octa-mini-button{background:#111214!important;border-color:rgba(255,255,255,.10)!important;color:#eef1f3!important}
+.octa-contacts-page .octa-contact-card .bg-black\/5{background:rgba(255,255,255,.10)!important}
+.octa-contacts-page .octa-contact-card .text-black\/70{color:#f5f6f7!important}
+
+/* Contacts: dark mode = liquid silver cards. */
+[data-theme="dark"] .octa-contacts-page .octa-contact-card{background:linear-gradient(145deg,#f5f6f7 0%,#e8eaec 32%,#b7bcc0 68%,#8f9499 100%)!important;border-color:rgba(255,255,255,.45)!important;color:#090a0b!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.85),0 18px 42px rgba(0,0,0,.30)!important}
+[data-theme="dark"] .octa-contacts-page .octa-contact-card h2{color:#090a0b!important}
+[data-theme="dark"] .octa-contacts-page .octa-contact-card p{color:rgba(9,10,11,.62)!important}
+[data-theme="dark"] .octa-contacts-page .octa-contact-card .octa-mini-button{background:rgba(9,10,11,.90)!important;border-color:rgba(9,10,11,.12)!important;color:#f5f6f7!important}
+[data-theme="dark"] .octa-contacts-page .octa-contact-card .bg-black\/5{background:rgba(9,10,11,.08)!important}
+[data-theme="dark"] .octa-contacts-page .octa-contact-card .text-black\/70{color:#090a0b!important}
