@@ -1,0 +1,24 @@
+/* Keep both meeting stages clear of the bottom control dock and guarantee room for chat input. */
+.instant-dual-stage{
+  transform:translateY(-12px);
+  max-height:calc(100% - 82px);
+}
+.instant-host-column,
+.instant-participant-stage{
+  min-height:0;
+}
+.instant-host-fixed{
+  max-height:calc(100dvh - 190px);
+}
+.meeting-chat-dock{
+  max-height:48%;
+  overflow:hidden;
+}
+.meeting-chat-glass{
+  max-height:100%;
+  overflow:hidden;
+}
+@media(max-height:820px){
+  .instant-dual-stage{transform:translateY(-8px);max-height:calc(100% - 76px)}
+  .instant-host-fixed{max-height:calc(100dvh - 176px)}
+}
