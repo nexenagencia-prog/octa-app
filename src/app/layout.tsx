@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import './octa-refinements.css';
+import './octa-black-silver-v2.css';
 import { CmsRuntime } from '@/components/cms-runtime';
 
 export const metadata: Metadata = {
-  title: 'OKTA — Presence Platform',
+  title: 'OCTA — Presence Platform',
   description: 'Vertical-first intelligent videoconferencing.',
 };
 
