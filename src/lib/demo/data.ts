@@ -2,8 +2,8 @@ import type { ChatMessage, Meeting, Participant, Profile } from '@/types/domain'
 
 export const currentUser: Profile = {
   id: 'u-host',
-  displayName: 'Denner Biersack',
-  username: 'denner',
+  displayName: 'Sandro',
+  username: 'sandro',
   headline: 'Marketing Digital',
   company: 'OCTA',
   status: 'Disponível',
