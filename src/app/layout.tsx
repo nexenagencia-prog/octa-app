@@ -10,6 +10,7 @@ import './octa-live-strategic-ai.css';
 import './octa-agenda-stage.css';
 import './meeting-chat-visibility.css';
 import './octa-ui-polish-batch.css';
+import './home-quick-actions-alignment.css';
 import { CmsRuntime } from '@/components/cms-runtime';
 import { GlobalOctaAI } from '@/components/ai/global-octa-ai';
 import { GlobalCalculatorOverlay } from '@/components/global-calculator-overlay';
