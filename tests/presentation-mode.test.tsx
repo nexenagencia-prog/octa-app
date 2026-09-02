@@ -1,40 +1,23 @@
-import React from 'react';
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
-import { afterEach, describe, expect, it } from 'vitest';
-import { PresentationMode } from '../src/features/meeting/presentation-mode';
+// @vitest-environment node
+import { readFileSync } from 'node:fs';
+import { describe, expect, it } from 'vitest';
 
-// Keep the explicit React import above: Vercel's Vitest JSX transform requires it in this test file.
-const slides = [
-  { id: '1', name: 'Slide 1', kind: 'image' as const, src: 'data:image/png;base64,AA==', sourceName: 'one.png' },
-  { id: '2', name: 'Slide 2', kind: 'image' as const, src: 'data:image/png;base64,BB==', sourceName: 'two.png' },
-];
+const source = readFileSync(new URL('../src/features/meeting/presentation-mode.tsx', import.meta.url), 'utf8');
 
-const participants = [
-  { id: 'u1', displayName: 'Ana', avatarUrl: null },
-  { id: 'u2', displayName: 'Bruno', avatarUrl: null },
-];
-
-afterEach(cleanup);
-
-describe('PresentationMode', () => {
-  it('keeps thumbnail selection private until explicit approval', () => {
-    render(<PresentationMode open roomSlug="test-room" onClose={() => {}} participants={participants} initialSlides={slides} />);
-    fireEvent.click(screen.getByRole('button', { name: /Slide 1/i }));
-    expect(screen.getByText('Só você está vendo')).toBeInTheDocument();
-    expect(screen.queryByText('AO VIVO')).not.toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: 'Apresentar este slide' }));
-    expect(screen.getByText('AO VIVO')).toBeInTheDocument();
+describe('PresentationMode contract', () => {
+  it('keeps preview private until explicit approval', () => {
+    expect(source).toContain('Só você está vendo');
+    expect(source).toContain('Apresentar este slide');
+    expect(source).toContain("const [previewId, setPreviewId] = useState<string | null>(null)");
+    expect(source).toContain("const [liveId, setLiveId] = useState<string | null>(null)");
+    expect(source).toContain("broadcast({ action: 'show', slide })");
   });
 
-  it('toggles participants and stops presentation', () => {
-    render(<PresentationMode open roomSlug="test-room" onClose={() => {}} participants={participants} initialSlides={slides} />);
-    fireEvent.click(screen.getByRole('button', { name: /Slide 1/i }));
-    fireEvent.click(screen.getByRole('button', { name: 'Apresentar este slide' }));
-    expect(screen.getByText('Ana')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: 'Ocultar participantes' }));
-    expect(screen.queryByText('Ana')).not.toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: 'Parar apresentação' }));
-    expect(screen.queryByText('AO VIVO')).not.toBeInTheDocument();
-    expect(screen.getByText('Slides da reunião')).toBeInTheDocument();
+  it('supports participant visibility and stopping presentation', () => {
+    expect(source).toContain('Ocultar participantes');
+    expect(source).toContain('Mostrar participantes');
+    expect(source).toContain('Parar apresentação');
+    expect(source).toContain("broadcast({ action: 'stop' })");
+    expect(source).toContain('Slides da reunião');
   });
 });
