@@ -4,6 +4,7 @@ import {GripHorizontal,X} from 'lucide-react';
 import {CalculatorPanel} from '@/components/calculator-panel';
 import {FloatingNotesCard} from '@/features/notes/floating-notes-card';
 
+// Global floating tools open centered over the current page; calculator inherits the hero glass palette.
 export function GlobalCalculatorOverlay(){
   const [open,setOpen]=useState(false);
   const [notesOpen,setNotesOpen]=useState(false);
