@@ -52,4 +52,31 @@ describe('OCTA local slide studio',()=>{
     expect(sidebar).toContain('octa-hero-brand-lock');
     expect(sidebar).toContain('octa-hero-profile-lock');
   });
+
+  it('offers photoshop-like layers, top tools, additive photos and editable gradients',()=>{
+    const store=readFileSync('src/lib/local-slide-studio.ts','utf8');
+    const page=readFileSync('src/app/criar-slides/page.tsx','utf8');
+    expect(store).toContain("type: 'text' | 'image' | 'shape' | 'gradient'");
+    expect(store).toContain('gradientFrom');
+    expect(store).toContain('gradientTo');
+    expect(store).toContain('gradientAngle');
+    expect(store).toContain('locked?: boolean');
+    expect(store).toContain('hidden?: boolean');
+    expect(store).toContain('name?: string');
+    expect(page).toContain('Camadas');
+    expect(page).toContain('Barra de ferramentas');
+    expect(page).toContain('Adicionar foto');
+    expect(page).toContain('Substituir imagem');
+    expect(page).toContain('Adicionar degradê');
+    expect(page).toContain('Cor inicial');
+    expect(page).toContain('Cor final');
+    expect(page).toContain('Ângulo');
+    expect(page).toContain('Bloquear camada');
+    expect(page).toContain('Ocultar camada');
+    expect(page).toContain('Agrupar');
+    expect(page).toContain('Distribuir');
+    expect(page).toContain('Ajustar à tela');
+    expect(page).toContain('Organizar automaticamente');
+    expect(page).toContain('Cmd/Ctrl + C');
+  });
 });
