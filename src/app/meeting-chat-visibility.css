@@ -1,24 +1,129 @@
-/* Keep both meeting stages clear of the bottom control dock and guarantee room for chat input. */
-.instant-dual-stage{
-  transform:translateY(-34px);
-  max-height:calc(100% - 64px);
-}
-.instant-host-column,
-.instant-participant-stage{
+/* Meeting viewport correction: keep both vertical stages fully visible, clear of top actions and bottom controls. */
+.instant-stage{
   min-height:0;
 }
-.instant-host-fixed{
-  max-height:calc(100dvh - 172px);
+
+.instant-stage > header{
+  position:relative;
+  z-index:40;
+  flex:0 0 auto;
+  margin-bottom:10px;
 }
-.meeting-chat-dock{
-  max-height:48%;
+
+.instant-dual-stage{
+  min-height:0;
+  flex:1 1 auto;
+  transform:none;
+  max-height:calc(100% - 88px);
+  align-items:start;
   overflow:hidden;
 }
+
+.instant-host-column,
+.instant-participant-stage,
+.participant-stage{
+  min-height:0;
+  align-self:start;
+}
+
+/* Preserve 9:16 while reducing the stage enough to reveal the entire lower border/chat. */
+.instant-host-fixed{
+  width:auto!important;
+  height:min(66dvh,680px)!important;
+  max-height:calc(100dvh - 250px)!important;
+  aspect-ratio:9/16!important;
+}
+
+.participant-stage{
+  height:min(66dvh,680px)!important;
+  max-height:calc(100dvh - 250px)!important;
+  overflow:hidden;
+}
+
+.participant-stage-scroll{
+  min-height:0;
+  overflow-y:auto;
+}
+
+.meeting-chat-dock{
+  max-height:46%;
+  overflow:hidden;
+}
+
 .meeting-chat-glass{
   max-height:100%;
   overflow:hidden;
 }
-@media(max-height:820px){
-  .instant-dual-stage{transform:translateY(-26px);max-height:calc(100% - 58px)}
-  .instant-host-fixed{max-height:calc(100dvh - 158px)}
+
+/* Short desktop screens: shrink both meeting panels rather than letting either edge be clipped. */
+@media (min-width:1024px) and (max-height:900px){
+  .instant-stage > header{margin-bottom:8px}
+  .instant-dual-stage{max-height:calc(100% - 82px)}
+  .instant-host-fixed,
+  .participant-stage{
+    height:min(61dvh,610px)!important;
+    max-height:calc(100dvh - 270px)!important;
+  }
+}
+
+@media (min-width:1024px) and (max-height:780px){
+  .instant-stage > header{margin-bottom:6px}
+  .instant-host-fixed,
+  .participant-stage{
+    height:min(56dvh,540px)!important;
+    max-height:calc(100dvh - 285px)!important;
+  }
+}
+
+/* Light theme: the meeting workspace follows OCTA light mode instead of forcing a black page. */
+html[data-theme="light"] .instant-meeting-shell,
+html[data-theme="light"] .instant-meeting-main,
+html[data-theme="light"] .instant-stage,
+html[data-theme="light"] .instant-stage > main{
+  background:#f4f6f7!important;
+}
+
+html[data-theme="light"] .instant-stage{
+  color:#111315!important;
+  background:radial-gradient(circle at 50% 18%,rgba(255,255,255,.92),transparent 38%),#f4f6f7!important;
+}
+
+html[data-theme="light"] .instant-stage > header > div:first-child,
+html[data-theme="light"] .instant-stage > header button{
+  border-color:rgba(16,20,24,.10)!important;
+  background:rgba(255,255,255,.82)!important;
+  color:#111315!important;
+  box-shadow:0 8px 24px rgba(20,28,34,.06)!important;
+}
+
+html[data-theme="light"] .instant-stage > header .text-white\/35,
+html[data-theme="light"] .instant-stage > header .text-white\/45,
+html[data-theme="light"] .instant-stage > header .text-white\/80{
+  color:rgba(17,19,21,.52)!important;
+}
+
+html[data-theme="light"] .participant-stage{
+  border-color:rgba(15,20,24,.10)!important;
+  background:#fff!important;
+  color:#111315!important;
+  box-shadow:0 18px 48px rgba(20,28,34,.08)!important;
+}
+
+html[data-theme="light"] .participant-stage small,
+html[data-theme="light"] .participant-stage span{
+  color:rgba(17,19,21,.55);
+}
+
+html[data-theme="light"] .participant-stage-head-actions button,
+html[data-theme="light"] .participant-stage-controls button{
+  border-color:rgba(15,20,24,.10)!important;
+  background:#eef1f3!important;
+  color:#202326!important;
+}
+
+html[data-theme="light"] .instant-controls{
+  border-color:rgba(15,20,24,.10)!important;
+  background:rgba(255,255,255,.86)!important;
+  color:#17191b!important;
+  box-shadow:0 12px 36px rgba(20,28,34,.08)!important;
 }
