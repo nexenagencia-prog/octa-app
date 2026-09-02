@@ -11,7 +11,7 @@ describe('meeting chat visibility',()=>{
  it('lifts the dual meeting stage above the bottom controls',()=>{
   const css=fs.readFileSync('src/app/meeting-chat-visibility.css','utf8');
   expect(css).toContain('.instant-dual-stage');
-  expect(css).toContain('translateY(-12px)');
-  expect(css).toContain('max-height:calc(100dvh - 190px)');
+  expect(css).toContain('translateY(-34px)');
+  expect(css).toContain('max-height:calc(100dvh - 172px)');
  });
 });
