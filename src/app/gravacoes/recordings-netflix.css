@@ -21,14 +21,14 @@
 body:has(.recordings-cinema){background:#f3f3f3!important;color:#111!important}
 body:has(.recordings-cinema) .octa-page-heading h1{color:#111!important}
 body:has(.recordings-cinema) .octa-main{background:transparent!important}
-body:has(.recordings-cinema) .octa-sidebar{background:linear-gradient(180deg,#050505,#000)!important;box-shadow:0 24px 60px rgba(0,0,0,.25)!important}
+body:has(.recordings-cinema) .octa-sidebar{background:linear-gradient(180deg,rgb(5,5,5),#000)!important;box-shadow:0 24px 60px rgba(0,0,0,.25)!important}
 body:has(.recordings-cinema) .octa-sidebar::before{background:radial-gradient(ellipse at 70% 45%,rgba(255,255,255,.10),transparent 54%),linear-gradient(145deg,transparent 35%,rgba(255,255,255,.055) 36%,transparent 59%)!important}
 body:has(.recordings-cinema) .octa-side-item.is-active::before{background:#fff!important;box-shadow:0 0 18px rgba(255,255,255,.28)!important}
-body:has(.recordings-cinema) .octa-mark i{background:linear-gradient(145deg,#303030,#050505)!important}
+body:has(.recordings-cinema) .octa-mark i{background:linear-gradient(145deg,#303030,rgb(5,5,5))!important}
 body:has(.recordings-cinema) .octa-toplink,body:has(.recordings-cinema) .octa-search,body:has(.recordings-cinema) .octa-search input,body:has(.recordings-cinema) .octa-search input::placeholder{color:#222!important}
 body:has(.recordings-cinema) .octa-toplink.is-active::after,body:has(.recordings-cinema) .octa-toplink.is-active::before{background:#000!important}
 body:has(.recordings-cinema) .octa-search{background:rgba(0,0,0,.07)!important;border-color:rgba(0,0,0,.10)!important}
 body:has(.recordings-cinema) .octa-kicker{color:#111!important}
-body:has(.recordings-cinema) .octa-expand-orb{background:#050505!important;box-shadow:0 10px 26px rgba(0,0,0,.24)!important}
+body:has(.recordings-cinema) .octa-expand-orb{background:rgb(5,5,5)!important;box-shadow:0 10px 26px rgba(0,0,0,.24)!important}
 body:has(.recordings-cinema) ::selection{background:#111!important;color:#fff!important}
 @media (max-width:700px){.recordings-feature-copy{left:7%;right:7%;max-width:none!important}.recordings-performance{padding:7px 10px}.recordings-performance-label{font-size:9px}}
