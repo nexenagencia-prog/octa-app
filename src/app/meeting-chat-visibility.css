@@ -11,6 +11,8 @@
 }
 
 .instant-dual-stage{
+  --meeting-stage-height:min(66dvh,680px);
+  --meeting-stage-width:min(37.125dvh,382.5px);
   min-height:0;
   flex:1 1 auto;
   transform:none;
@@ -26,17 +28,29 @@
   align-self:start;
 }
 
-/* Preserve 9:16 while reducing the stage enough to reveal the entire lower border/chat. */
-.instant-host-fixed{
-  width:auto!important;
-  height:min(66dvh,680px)!important;
+/* Both meeting screens share exactly the same outer dimensions. */
+.instant-host-column{
+  width:var(--meeting-stage-width)!important;
+  max-width:var(--meeting-stage-width)!important;
+  flex:0 0 var(--meeting-stage-width)!important;
+}
+
+.instant-host-fixed,
+.participant-stage{
+  width:var(--meeting-stage-width)!important;
+  min-width:var(--meeting-stage-width)!important;
+  max-width:var(--meeting-stage-width)!important;
+  height:var(--meeting-stage-height)!important;
+  min-height:0!important;
   max-height:calc(100dvh - 250px)!important;
+  flex:0 0 auto!important;
+}
+
+.instant-host-fixed{
   aspect-ratio:9/16!important;
 }
 
 .participant-stage{
-  height:min(66dvh,680px)!important;
-  max-height:calc(100dvh - 250px)!important;
   overflow:hidden;
 }
 
@@ -55,22 +69,28 @@
   overflow:hidden;
 }
 
-/* Short desktop screens: shrink both meeting panels rather than letting either edge be clipped. */
+/* Short desktop screens: shrink both meeting panels together, keeping identical dimensions. */
 @media (min-width:1024px) and (max-height:900px){
   .instant-stage > header{margin-bottom:8px}
-  .instant-dual-stage{max-height:calc(100% - 82px)}
+  .instant-dual-stage{
+    --meeting-stage-height:min(61dvh,610px);
+    --meeting-stage-width:min(34.3125dvh,343.125px);
+    max-height:calc(100% - 82px)
+  }
   .instant-host-fixed,
   .participant-stage{
-    height:min(61dvh,610px)!important;
     max-height:calc(100dvh - 270px)!important;
   }
 }
 
 @media (min-width:1024px) and (max-height:780px){
   .instant-stage > header{margin-bottom:6px}
+  .instant-dual-stage{
+    --meeting-stage-height:min(56dvh,540px);
+    --meeting-stage-width:min(31.5dvh,303.75px);
+  }
   .instant-host-fixed,
   .participant-stage{
-    height:min(56dvh,540px)!important;
     max-height:calc(100dvh - 285px)!important;
   }
 }
