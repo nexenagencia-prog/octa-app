@@ -1,5 +1,5 @@
 'use client';
-import { Maximize2, Minimize2, PenLine, X } from 'lucide-react';
+import { Maximize2, Minimize2, PenLine, Save, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { saveNote } from '@/lib/notes-store';
 
@@ -8,10 +8,10 @@ export function FloatingNotesCard({roomSlug,meetingTitle,onClose}:{roomSlug?:str
   const drag=useRef<{offsetX:number;offsetY:number}|null>(null);
   const noteIdRef=useRef<string|undefined>(undefined);
   const [position,setPosition]=useState({x:16,y:112});
+  const [subject,setSubject]=useState('');
   const [content,setContent]=useState('');
   const [minimized,setMinimized]=useState(false);
   const [expanded,setExpanded]=useState(false);
-  const [savedAt,setSavedAt]=useState(()=>new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}));
   const draftKey=`octa-note-draft:${roomSlug??'global'}`;
 
   useEffect(()=>{
@@ -21,18 +21,8 @@ export function FloatingNotesCard({roomSlug,meetingTitle,onClose}:{roomSlug?:str
     }));
     place();window.addEventListener('resize',place);return()=>window.removeEventListener('resize',place);
   },[]);
-  useEffect(()=>{try{const raw=localStorage.getItem(draftKey);if(raw){const draft=JSON.parse(raw);setContent(draft.content??'');noteIdRef.current=draft.noteId??undefined}}catch{}},[draftKey]);
-  useEffect(()=>{try{localStorage.setItem(draftKey,JSON.stringify({content,noteId:noteIdRef.current}))}catch{}},[draftKey,content]);
-  useEffect(()=>{
-    if(!content.trim())return;
-    const timer=setTimeout(()=>{
-      const saved=saveNote({id:noteIdRef.current,title:'Bloco de notas',subject:'',content:content.trim(),format:'plain',roomSlug,meetingTitle});
-      noteIdRef.current=saved.id;
-      setSavedAt(new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}));
-      try{localStorage.setItem(draftKey,JSON.stringify({content,noteId:saved.id}))}catch{}
-    },650);
-    return()=>clearTimeout(timer);
-  },[content,draftKey,meetingTitle,roomSlug]);
+  useEffect(()=>{try{const raw=localStorage.getItem(draftKey);if(raw){const draft=JSON.parse(raw);setSubject(draft.subject??'');setContent(draft.content??'');noteIdRef.current=draft.noteId??undefined}}catch{}},[draftKey]);
+  useEffect(()=>{try{localStorage.setItem(draftKey,JSON.stringify({subject,content,noteId:noteIdRef.current}))}catch{}},[draftKey,subject,content]);
   useEffect(()=>{
     const move=(e:PointerEvent)=>{
       if(!drag.current||!panelRef.current||expanded)return;
@@ -49,14 +39,21 @@ export function FloatingNotesCard({roomSlug,meetingTitle,onClose}:{roomSlug?:str
   const startDrag=(e:React.PointerEvent)=>{
     if(expanded)return;
     const target=e.target as HTMLElement;
-    if(target.closest('button,textarea'))return;
+    if(target.closest('button,textarea,input'))return;
     const rect=panelRef.current?.getBoundingClientRect();if(!rect)return;
     drag.current={offsetX:e.clientX-rect.left,offsetY:e.clientY-rect.top};
+  };
+  const handleSave=()=>{
+    if(!subject.trim()&&!content.trim())return;
+    const saved=saveNote({id:noteIdRef.current,title:subject.trim()||'Anotação sem assunto',subject:subject.trim(),content:content.trim(),format:'plain',roomSlug,meetingTitle});
+    noteIdRef.current=saved.id;
+    try{localStorage.removeItem(draftKey)}catch{}
+    onClose();
   };
 
   return <div ref={panelRef} className={`floatingReferenceNote ${minimized?'isMinimized':''} ${expanded?'isExpanded':''}`} style={expanded?undefined:{left:position.x,top:position.y}}>
     <header className="noteHeader" onPointerDown={startDrag} title="Arraste o bloco para mover">
-      <div className="noteTitle"><PenLine size={21}/><span>Bloco de notas</span></div>
+      <div className="noteTitle"><PenLine size={21}/><input value={subject} onChange={e=>setSubject(e.target.value)} placeholder="Assunto" aria-label="Assunto da anotação"/></div>
       <div className="noteWindow">
         <button type="button" aria-label={minimized?'Restaurar bloco de notas':'Minimizar bloco de notas'} onClick={()=>setMinimized(v=>!v)}><Minimize2 size={20}/></button>
         <button type="button" aria-label="Fechar bloco de notas" onClick={onClose}><X size={22}/></button>
@@ -65,8 +62,11 @@ export function FloatingNotesCard({roomSlug,meetingTitle,onClose}:{roomSlug?:str
     {!minimized&&<>
       <textarea value={content} onChange={e=>setContent(e.target.value)} placeholder="Digite suas anotações aqui..." autoFocus/>
       <footer>
-        <div><span>Salvo automaticamente</span><i>•</i><b>{savedAt}</b></div>
-        <button type="button" aria-label={expanded?'Restaurar tamanho':'Expandir bloco de notas'} onClick={()=>setExpanded(v=>!v)}><Maximize2 size={16}/></button>
+        <span className="saveHint">Salve para enviar a Minhas Anotações</span>
+        <div className="footerActions">
+          <button type="button" className="saveButton" onClick={handleSave} disabled={!subject.trim()&&!content.trim()}><Save size={15}/><span>Salvar</span></button>
+          <button type="button" className="expandButton" aria-label={expanded?'Restaurar tamanho':'Expandir bloco de notas'} onClick={()=>setExpanded(v=>!v)}><Maximize2 size={16}/></button>
+        </div>
       </footer>
     </>}
     <style jsx>{`
@@ -75,15 +75,22 @@ export function FloatingNotesCard({roomSlug,meetingTitle,onClose}:{roomSlug?:str
       .floatingReferenceNote.isExpanded{inset:18px!important;width:auto;height:auto;min-width:0;min-height:0;resize:none}
       .noteHeader{height:54px;padding:0 17px;display:flex;align-items:center;justify-content:space-between;touch-action:none;user-select:none;cursor:grab}
       .noteHeader:active{cursor:grabbing}
-      .noteTitle{display:flex;align-items:center;gap:11px;font-size:18px;font-weight:400;letter-spacing:-.025em}
-      .noteTitle :global(svg){stroke-width:1.8}
-      .noteWindow{display:flex;align-items:center;gap:14px}
-      .noteWindow button,footer button{border:0;background:transparent;color:rgba(255,255,255,.92);padding:4px;display:grid;place-items:center;cursor:pointer}
+      .noteTitle{display:flex;align-items:center;gap:11px;min-width:0;flex:1;font-size:18px;font-weight:400;letter-spacing:-.025em}
+      .noteTitle :global(svg){stroke-width:1.8;flex:0 0 auto}
+      .noteTitle input{width:100%;min-width:0;border:0;background:transparent;outline:0;color:#f5f3f1;font:400 18px/1.2 -apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Inter,sans-serif;letter-spacing:-.025em;padding:6px 0}
+      .noteTitle input::placeholder{color:rgba(245,240,236,.58)}
+      .noteWindow{display:flex;align-items:center;gap:14px;margin-left:12px}
+      .noteWindow button,.expandButton{border:0;background:transparent;color:rgba(255,255,255,.92);padding:4px;display:grid;place-items:center;cursor:pointer}
       textarea{display:block;width:100%;height:calc(100% - 108px);resize:none;border:1px solid rgba(255,255,255,.075);border-radius:17px;background:linear-gradient(145deg,rgba(70,64,59,.17),rgba(8,10,11,.24));outline:0;padding:20px 22px;color:#f6f3f0;font:400 16px/1.55 -apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Inter,sans-serif;letter-spacing:-.015em;box-shadow:inset 0 1px 16px rgba(0,0,0,.08)}
       textarea::placeholder{color:rgba(245,240,236,.58);opacity:1}
-      footer{height:54px;padding:0 18px;display:flex;align-items:center;justify-content:space-between;color:#bca18b;font-size:11px}
-      footer div{display:flex;align-items:center;gap:10px}footer i{font-style:normal;color:#a98d78}footer b{font-weight:450}footer button{color:rgba(255,255,255,.5)}
-      @media(max-width:760px){.floatingReferenceNote{width:calc(100vw - 20px);height:330px;min-width:0;min-height:220px;border-radius:21px}.noteHeader{padding:0 14px}.noteTitle{font-size:17px}.noteWindow{gap:10px}textarea{padding:18px;font-size:15px}footer{padding:0 15px;font-size:10px}.floatingReferenceNote.isExpanded{inset:10px!important}}
+      footer{height:54px;padding:0 14px 0 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;color:#c8b6a8;font-size:11px}
+      .saveHint{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .footerActions{display:flex;align-items:center;gap:8px}
+      .saveButton{border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.12);color:#fff;border-radius:12px;padding:8px 12px;display:flex;align-items:center;gap:7px;font:600 12px/1 -apple-system,BlinkMacSystemFont,"SF Pro Text",Inter,sans-serif;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+      .saveButton:hover{background:rgba(255,255,255,.18)}
+      .saveButton:disabled{opacity:.38;cursor:default}
+      .expandButton{color:rgba(255,255,255,.55)}
+      @media(max-width:760px){.floatingReferenceNote{width:calc(100vw - 20px);height:330px;min-width:0;min-height:220px;border-radius:21px}.noteHeader{padding:0 14px}.noteTitle input{font-size:17px}.noteWindow{gap:10px}textarea{padding:18px;font-size:15px}footer{padding:0 10px 0 14px;font-size:10px}.saveHint{display:none}.floatingReferenceNote.isExpanded{inset:10px!important}}
     `}</style>
   </div>;
 }
