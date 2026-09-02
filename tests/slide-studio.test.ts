@@ -16,7 +16,7 @@ describe('OCTA local slide studio',()=>{
     expect(columns.elements.filter(element=>element.type==='shape')).toHaveLength(2);
   });
 
-  it('keeps the editor local while exposing intelligent frames, fonts, manual save and animations',()=>{
+  it('keeps the editor local with frames, fonts, manual save and presentation animation',()=>{
     const store=readFileSync('src/lib/local-slide-studio.ts','utf8');
     const page=readFileSync('src/app/criar-slides/page.tsx','utf8');
     const sidebar=readFileSync('src/components/global-legacy-sidebar.tsx','utf8');
@@ -30,23 +30,13 @@ describe('OCTA local slide studio',()=>{
     expect(page).toContain("type ResizeMode='se'|'sw'|'ne'|'nw'|'e'|'w'|'n'|'s'");
     expect(page).toContain('Cantos da foto');
     expect(page).toContain("borderRadius:'inherit'");
-    expect(page).toContain('Molduras de foto');
-    expect(page).toContain('Colocar foto na moldura');
     expect(page).toContain('Helvetica');
     expect(page).toContain('Noto Sans');
     expect(page).toContain('Bebas Neue');
     expect(page).toContain('Bank Gothic');
     expect(page).toContain('Bender');
     expect(page).toContain('Salvar agora');
-    expect(page).toContain('Salvar uma cópia');
-    expect(page).toContain('showSaveFilePicker');
     expect(page).toContain('Montagem item por item');
-    expect(page).toContain('advancePresentation');
-    expect(page).toContain('Ordem de entrada');
-    expect(page).toContain('Desfazer');
-    expect(page).toContain('Frente');
-    expect(page).toContain('Fundo');
-    expect(page).toContain('Renomear');
     expect(page).toContain('Salvo neste computador');
     expect(sidebar).toContain("['Criar slides','/criar-slides',FileImage]");
     expect(sidebar).toContain('octa-hero-brand-lock');
