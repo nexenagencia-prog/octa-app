@@ -10,9 +10,18 @@ describe('OCTA AI reference card, profile greeting and audio playback',()=>{
     const coach=read('src/components/ai/octa-skill-coach.tsx');
     expect(profile).toContain('octa-profile-name');
     expect(profile).toContain("window.dispatchEvent(new CustomEvent('octa-profile:updated'" );
-    expect(coach).toContain('octa-profile-name');
+    expect(coach).toContain("fetch('/api/profile',{cache:'no-store'})");
     expect(coach).toContain('Olá, ${profileName}');
     expect(coach).toContain("'octa-profile:updated'");
+  });
+
+  it('uses a clean geometric OCTA mark instead of the previous multi-piece symbol',()=>{
+    const mark=read('src/components/ai/octa-digital-mark.tsx');
+    expect(mark).toContain('<svg');
+    expect(mark).toContain('viewBox="0 0 32 32"');
+    expect(mark).toContain('<circle');
+    expect(mark).not.toContain('<i/>');
+    expect(mark).not.toContain('<em/>');
   });
 
   it('offers listen controls for assistant messages without horizontal chat scrolling',()=>{
