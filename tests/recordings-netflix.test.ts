@@ -1,20 +1,10 @@
 // @vitest-environment node
-import { describe, expect, it } from 'vitest';
-import { existsSync, readFileSync } from 'node:fs';
-
-describe('recordings Netflix treatment', () => {
-  it('renders a performance badge with five stars in the featured replay', () => {
-    const page = readFileSync('src/app/gravacoes/page.tsx', 'utf8');
-    expect(page).toContain('recordings-performance');
-    expect(page).toContain('Maior performance');
-    expect(page).toContain('Array.from({ length: 5 })');
-  });
-
-  it('uses a recordings-only black cinematic stylesheet without blue surfaces', () => {
-    expect(existsSync('src/app/gravacoes/recordings-netflix.css')).toBe(true);
-    if (!existsSync('src/app/gravacoes/recordings-netflix.css')) return;
-    const css = readFileSync('src/app/gravacoes/recordings-netflix.css', 'utf8').toLowerCase();
-    expect(css).toContain('#000');
-    expect(css).not.toMatch(/#07121d|#102536|#062536|#0[0-9a-f]{5}/);
-  });
+import {describe,expect,it} from 'vitest';
+import {readFileSync} from 'node:fs';
+const read=(p:string)=>readFileSync(p,'utf8');
+describe('recordings reference dashboard',()=>{
+ it('reuses the approved home sidebar and replaces the old featured replay layout',()=>{const page=read('src/app/gravacoes/page.tsx');expect(page).toContain("homeStyles from '../home-reference.module.css'");expect(page).toContain("label==='Gravações'?homeStyles.active");expect(page).not.toContain('recordings-feature');expect(page).toContain('recordings-grid')});
+ it('matches the supplied three-column recordings dashboard with report and OCTA AI',()=>{const page=read('src/app/gravacoes/page.tsx');const css=read('src/app/gravacoes/recordings-netflix.css');expect(css).toContain('grid-template-columns:repeat(3,minmax(0,1fr))');expect(page).toContain('Relatório da reunião');expect(page).toContain('Performance geral');expect(page).toContain('Digite sua mensagem...');expect(page).toContain('Suas reuniões gravadas, organizadas como na Netflix.')});
+ it('lets the user rename recordings and upload persistent custom covers',()=>{const page=read('src/app/gravacoes/page.tsx');expect(page).toContain("const STORAGE_KEY='octa-recording-customizations-v1'");expect(page).toContain("canvas.toDataURL('image/webp',.82)");expect(page).toContain('Subir foto de capa');expect(page).toContain('Nome da gravação');expect(page).toContain('Salvar alterações');expect(page).toContain('localStorage.setItem(STORAGE_KEY')});
+ it('suppresses the duplicate floating global AI on recordings',()=>{const global=read('src/components/ai/global-octa-ai.tsx');expect(global).toContain("pathname==='/gravacoes'")});
 });
