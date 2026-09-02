@@ -2,6 +2,7 @@
 import {describe,expect,it} from 'vitest';
 import {readFileSync} from 'node:fs';
 
+// Regression contract: both floating tools must open centered; calculator must remain hero-toned glass.
 describe('centered floating tools',()=>{
   it('opens the notes card centered in the viewport',()=>{
     const source=readFileSync('src/features/notes/floating-notes-card.tsx','utf8');
