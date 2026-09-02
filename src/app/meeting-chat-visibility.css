@@ -260,3 +260,5 @@ html[data-theme="light"] .meeting-chat-glass form button{
 html[data-theme="light"] .meeting-chat-glass form button svg{
   color:#090a0b!important;
 }
+
+/* production deploy marker: meeting header alignment + editable labels + white host overlays */
