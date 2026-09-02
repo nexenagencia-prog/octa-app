@@ -1,4 +1,5 @@
 // @vitest-environment node
+// Regression lock: profile identity comes from OCTA profile and the removed man hero must not return.
 import { describe,expect,it } from 'vitest';
 import { readFileSync } from 'node:fs';
 const read=(path:string)=>readFileSync(path,'utf8');
