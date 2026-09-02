@@ -1,6 +1,54 @@
 'use client';
-import Image from 'next/image';import Link from 'next/link';import { ArrowRight, CalendarDays, CirclePlay, MoreVertical, Play, Plus, Sparkles, UserRoundPlus, UsersRound, Video } from 'lucide-react';import { demoParticipants } from '@/lib/demo/data';import { AppShell } from '@/components/app-shell';import { ProfileGreeting } from '@/components/profile-greeting';import styles from './home-previous.module.css';
-const people=demoParticipants.slice(0,5);const avatar=(i:number)=>people[i]?.avatarUrl||'/octa-hero-reference.webp';
-const HERO_PHOTO='/octa-hero-user.webp';
-export default function HomePage(){return <AppShell><main className={`${styles.home} octa-previous-hero`}><section className={styles.hero}><div className={styles.copy}><ProfileGreeting/><div className="octa-plan-pill">Plano Pro</div><h1>Suas reuniões.<br/>Seu tempo.<br/>Tudo conectado.</h1><div className={styles.lead}>A OCTA reúne reuniões, agenda, contatos e gravações em uma única experiência — para você ir além em cada conversa.</div><div className={styles.ctas}><Link href="/reuniao-instantanea" className={styles.primary}><Plus size={18}/>Nova reunião<ArrowRight size={16}/></Link><Link href="/agenda" className={styles.secondary}><CalendarDays size={17}/>Agendar reunião</Link></div></div><div className={styles.photo}><img src={HERO_PHOTO} alt="Notebook e smartphone" className={styles.heroImage} style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover'}}/><div className={styles.photoShade}/><p className={styles.quote}>⚡ “Grandes ideias<br/>acontecem em boas conversas.”</p></div></section><section className={`${styles.metrics} octa-home-metrics`}><Metric icon={<Video/>} value="08" label="Reuniões hoje"/><Metric icon={<UsersRound/>} value="12" label="Contatos recentes"/><Metric icon={<CirclePlay/>} value="24" label="Gravações"/><Metric icon={<Sparkles/>} value="82%" label="Performance"/></section><section className={styles.middle}><article className={`${styles.card} ${styles.actions}`}><h2>Ações rápidas</h2><div><Action href="/reuniao-instantanea" icon={<Video/>} title="Criar reunião" sub="Agora, com um clique"/><Action href="/agenda" icon={<CalendarDays/>} title="Agendar" sub="Criar evento"/><Action href="/contatos" icon={<UserRoundPlus/>} title="Convidar pessoas" sub="Adicionar participantes"/><Action href="/gravacoes" icon={<CirclePlay/>} title="Ver gravações" sub="Replay e análises"/></div></article><Link href="/chat" className={styles.ai}><div className={styles.aiCopy}><h2>OCTA AI <b>Beta</b></h2><p>Sua IA de reuniões. Mais foco, mais resultados.</p><span className={styles.aiButton}>Abrir OCTA AI <ArrowRight size={13}/></span></div><div className={styles.aiOrb}><Image src="/octa-ai-circle.webp" alt="" fill sizes="160px"/></div></Link><Link href="/skills" className={`${styles.card} ${styles.skills}`}><div><h2>Skills</h2><p>Sua evolução em<br/>cada conversa.</p><span>Ver análise <ArrowRight size={12}/></span></div><div className={styles.ring}><strong>82</strong><small>/100</small></div></Link></section><section className={styles.bottom}><article className={styles.card}><CardHead title="Reuniões recentes" href="/reunioes" label="Ver todas"/><Meeting title="Briefing Campanha" meta="Hoje · 10:30"/><Meeting title="Alinhamento Comercial" meta="Hoje · 15:00"/><Meeting title="Reunião com Cliente" meta="Ontem · 16:20"/></article><article className={`${styles.card} ${styles.recordingsCard}`}><CardHead title="Gravações" href="/gravacoes" label="Ver todas"/><Recording title="Planejamento de Marketing" meta="Hoje · 14:30 · 48 min" duration="48:12" thumb={avatar(0)}/><Recording title="Reunião com João Silva" meta="Ontem · 15:00 · 32 min" duration="32:46" thumb={avatar(3)}/><Recording title="Alinhamento Comercial" meta="Ontem · 10:30 · 26 min" duration="26:10" thumb={avatar(4)}/></article><article className={`${styles.card} ${styles.agenda}`}><CardHead title="Agenda da semana" href="/agenda" label="Ver agenda"/><div className={styles.days}><span>Seg 18</span><span>Ter 19</span><b>Qua 20</b><span>Qui 21</span><span>Sex 22</span></div><div className={styles.schedule}><i style={{top:'18%'}}>09:00 Reunião com Cliente</i><i style={{top:'52%'}}>14:30 Planejamento de Marketing</i><i style={{top:'72%'}}>16:00 Briefing Criativo</i></div></article></section></main></AppShell>}
-function Metric({icon,value,label}:{icon:React.ReactNode;value:string;label:string}){return <div className={styles.metric}><span>{icon}</span><strong>{value}</strong><small>{label}</small></div>}function Action({href,icon,title,sub}:{href:string;icon:React.ReactNode;title:string;sub:string}){return <Link href={href} className={styles.action}><span>{icon}</span><strong>{title}</strong><small>{sub}</small></Link>}function CardHead({title,href,label}:{title:string;href:string;label:string}){return <header className={styles.cardHead}><h2>{title}</h2><Link href={href}>{label}<ArrowRight size={11}/></Link></header>}function Meeting({title,meta}:{title:string;meta:string}){return <div className={styles.row}><Image src={avatar(0)} alt="" width={30} height={30}/><div><strong>{title}</strong><small>{meta}</small></div><Link href="/reunioes">Entrar</Link></div>}function Recording({title,meta,duration,thumb}:{title:string;meta:string;duration:string;thumb:string}){return <div className={styles.recordingRow}><Link href="/gravacoes" className={styles.recordingThumb}><Image src={thumb} alt="" fill sizes="120px"/><b>{duration}</b></Link><div className={styles.recordingCopy}><strong>{title}</strong><small>{meta}</small></div><button className={styles.recordingMenu} aria-label={`Mais opções de ${title}`}><MoreVertical size={16}/></button><Link href="/gravacoes" className={styles.recordingPlay} aria-label={`Reproduzir ${title}`}><Play size={14} fill="currentColor"/></Link></div>}
+import Link from 'next/link';
+import Image from 'next/image';
+import {useEffect,useState} from 'react';
+import {useRouter} from 'next/navigation';
+import {ArrowRight,Bell,BookOpenText,Calculator,CalendarDays,Clock3,Filter,Home,Monitor,NotebookPen,Play,Search,Sparkles,UserRound,UsersRound,Video,VideoIcon} from 'lucide-react';
+import {demoParticipants} from '@/lib/demo/data';
+import styles from './home-reference.module.css';
+
+const side=[
+ ['Início','/',Home],['Reuniões','/reunioes',VideoIcon],['Agenda','/agenda',CalendarDays],['Contatos','/contatos',UserRound],['Gravações','/gravacoes',Play],['Calculadora','/calculadora',Calculator],['Filtros','/filtros',Filter],['Anotar','/anotacoes',NotebookPen],['Lousa','/lousa',Monitor],['Minhas Anotações','/minhas-anotacoes',BookOpenText],['Skill','/skills',Sparkles],
+] as const;
+const actions=[['Nova reunião','/reuniao-instantanea',Video],['Entrar em reunião','/reunioes?modo=entrar',ArrowRight],['Agendar','/agenda',CalendarDays],['Convidar pessoas','/contatos',UsersRound]] as const;
+const recordings=[['Reunião de alinhamento','29/08/2025 · 58:24'],['Apresentação do projeto','28/08/2025 · 1:12:09']];
+
+export default function HomePage(){
+ const router=useRouter();const[q,setQ]=useState('');const[name,setName]=useState('Sandro');const[avatar,setAvatar]=useState(demoParticipants[0]?.avatarUrl||'/octa-hero-reference.webp');
+ useEffect(()=>{fetch('/api/profile',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(d=>{if(d?.profile?.displayName)setName(d.profile.displayName);if(d?.profile?.avatarUrl)setAvatar(d.profile.avatarUrl)}).catch(()=>{})},[]);
+ const submit=(e:React.FormEvent)=>{e.preventDefault();if(q.trim())router.push(`/reunioes?q=${encodeURIComponent(q.trim())}`)};
+ return <main className={styles.shell}>
+  <aside className={styles.sidebar}>
+   <Link href="/" className={styles.brand}><span className={styles.logoRing}/>OCTA</Link>
+   <div className={styles.profile}><div className={styles.avatar}><Image src={avatar} alt={name} fill sizes="56px"/><i/></div><div><strong>{name}</strong><span>Marketing Digital</span></div></div>
+   <div className={styles.performance}><div><span>Performance do skills</span><b>82/100</b></div><i><em/></i></div>
+   <nav>{side.map(([label,href,Icon])=><Link key={label} href={href} className={label==='Início'?styles.active:''}><Icon size={20}/><span>{label}</span></Link>)}</nav>
+   <Link href="/planos" className={styles.plan}><span>◇</span><div><b>Plano Pro</b><small>Renova em 12 dias</small></div><ArrowRight size={16}/></Link>
+  </aside>
+
+  <section className={styles.workspace}>
+   <header className={styles.topbar}>
+    <form onSubmit={submit} className={styles.search}><Search size={18}/><input value={q} onChange={e=>setQ(e.target.value)} placeholder="Buscar reunião, pessoa ou gravação"/></form>
+    <nav><Link className={styles.topActive} href="/">Início</Link><Link href="/reunioes">Reuniões</Link><Link href="/agenda">Agenda</Link><Link href="/planos">Planos e preços</Link></nav>
+    <button aria-label="Notificações"><Bell size={20}/></button>
+   </header>
+
+   <div className={styles.heroPhoto}/><div className={styles.heroShade}/>
+   <section className={styles.heroCopy}><h1>Bem-vindo <b>{name}!</b></h1><p>Organize suas reuniões, conecte-se<br/>e aumente sua produtividade.</p><Link href="/reuniao-instantanea" className={styles.create}>Criar reunião <span><Video size={18}/></span></Link></section>
+   <div className={styles.actions}>{actions.map(([label,href,Icon])=><Link key={label} href={href}><span><Icon size={21}/></span><b>{label}</b></Link>)}</div>
+
+   <section className={styles.bottomCards}>
+    <article className={styles.glass}><small>PRÓXIMA REUNIÃO</small><div className={styles.nextMeeting}><div className={styles.date}><span>Hoje</span><b>30</b><small>AGO</small></div><div><h3>Reunião de planejamento</h3><p><Clock3 size={13}/>14:00 - 15:00</p><p><UsersRound size={13}/>6 participantes</p><Link href="/reunioes">Entrar em reunião <ArrowRight size={14}/></Link></div></div></article>
+    <article className={styles.glass}><header><small>GRAVAÇÕES RECENTES</small><Link href="/gravacoes">Ver todas</Link></header>{recordings.map((r,i)=><div className={styles.recording} key={r[0]}><div className={styles.thumb}><Image src={i?demoParticipants[2].avatarUrl!:demoParticipants[1].avatarUrl!} alt="" fill sizes="88px"/><Play size={15} fill="currentColor"/></div><div><b>{r[0]}</b><span>{r[1]}</span></div><button>•••</button></div>)}</article>
+   </section>
+
+   <aside className={styles.rightRail}>
+    <article className={styles.glass}><header><small>SKILLS</small><button>•••</button></header><p>Performance geral</p><div className={styles.score}><b>82</b><span>/100</span><div className={styles.sparkline}>⌁⌁⌁</div><em>+6,4%</em></div><p className={styles.analyzed}>8 reuniões analisadas</p><div className={styles.progressBars}><i/><i/><i/><i/></div><div className={styles.goal}>91% da meta</div><Link href="/skills">Ver insights <ArrowRight size={17}/></Link></article>
+    <article className={styles.glass}><small>SUAS GRAVAÇÕES</small><div className={styles.audio}><span><Play size={16} fill="currentColor"/></span><div className={styles.wave}>|||||||||||||||||||</div><b>32:46</b></div><h3>Apresentação produto</h3><p>Ontem, 16:30</p><Link href="/gravacoes">Ver todas <ArrowRight size={17}/></Link></article>
+    <article className={`${styles.glass} ${styles.aiCard}`}><div><small>✦ &nbsp; OCTA AI</small><h3>Olá, {name}!</h3><p>Posso te ajudar com resumos,<br/>insights e muito mais.</p><Link href="/chat">Abrir chat <ArrowRight size={15}/></Link></div><div className={styles.aiSphere}/></article>
+   </aside>
+
+   <Link href="/chat" className={styles.aiBar}><span className={styles.aiRing}/><div><b>OCTA AI <em>BETA</em></b><small>Olá, {name}! Como posso te ajudar hoje?</small></div><div className={styles.composer}>Digite sua mensagem...<span><ArrowRight size={19}/></span></div></Link>
+  </section>
+ </main>
+}
