@@ -6,7 +6,7 @@ describe('ASK OCTA site integration', () => {
   it('mounts the full OCTA AI coach inside Skills', () => {
     const skills = readFileSync('src/app/skills/page.tsx', 'utf8');
 
-    expect(skills).toContain("import { OctaSkillCoach } from '@/components/ai/octa-skill-coach'");
+    expect(skills).toMatch(/import\s*\{\s*OctaSkillCoach\s*\}\s*from\s*['\"]@\/components\/ai\/octa-skill-coach['\"]/);
     expect(skills).toContain('<OctaSkillCoach');
   });
 
