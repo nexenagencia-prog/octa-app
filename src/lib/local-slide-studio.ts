@@ -3,6 +3,10 @@
 export const SLIDE_WIDTH = 1600;
 export const SLIDE_HEIGHT = 900;
 
+export type SlideAnimation = 'none' | 'fade' | 'slide-up' | 'slide-left' | 'zoom' | 'reveal';
+export type SlideExitAnimation = 'none' | 'fade' | 'slide-down' | 'slide-right' | 'zoom-out';
+export type SlideFrame = 'none' | 'rounded' | 'circle' | 'portrait' | 'landscape' | 'polaroid';
+
 export type SlideElement = {
   id: string;
   type: 'text' | 'image' | 'shape';
@@ -13,12 +17,19 @@ export type SlideElement = {
   text?: string;
   assetId?: string;
   fontSize?: number;
+  fontFamily?: string;
   fontWeight?: number;
   color?: string;
   align?: 'left' | 'center' | 'right';
   fill?: string;
   radius?: number;
   rotation?: number;
+  opacity?: number;
+  frame?: SlideFrame;
+  enterAnimation?: SlideAnimation;
+  exitAnimation?: SlideExitAnimation;
+  animationOrder?: number;
+  animationDuration?: number;
 };
 
 export type SlidePage = {
@@ -87,14 +98,28 @@ async function withStore<T>(store: string, mode: IDBTransactionMode, action: (ob
   }
 }
 
+function withAnimation(element: SlideElement, order: number): SlideElement {
+  return {
+    ...element,
+    enterAnimation: element.enterAnimation ?? 'fade',
+    exitAnimation: element.exitAnimation ?? 'fade',
+    animationOrder: element.animationOrder ?? order,
+    animationDuration: element.animationDuration ?? 420,
+    opacity: element.opacity ?? 1,
+    fontFamily: element.fontFamily ?? (element.type === 'text' ? 'Helvetica, Arial, sans-serif' : undefined),
+    frame: element.frame ?? (element.type === 'image' ? 'rounded' : undefined),
+  };
+}
+
 export function createSlide(layout: 'blank' | 'cover' | 'editorial' | 'data' | 'image' | 'columns' = 'blank'): SlidePage {
   const base: SlidePage = { id: uid(), name: 'Novo slide', background: '#d8c1aa', elements: [] };
-  const text = (value: string, x: number, y: number, w: number, h: number, size: number, weight = 500, color = '#f7f3ee', align: SlideElement['align'] = 'left'): SlideElement => ({
+  let order = 0;
+  const text = (value: string, x: number, y: number, w: number, h: number, size: number, weight = 500, color = '#f7f3ee', align: SlideElement['align'] = 'left'): SlideElement => withAnimation({
     id: uid(), type: 'text', text: value, x, y, w, h, fontSize: size, fontWeight: weight, color, align,
-  });
-  const shape = (x: number, y: number, w: number, h: number, fill: string, radius = 34): SlideElement => ({
+  }, ++order);
+  const shape = (x: number, y: number, w: number, h: number, fill: string, radius = 34): SlideElement => withAnimation({
     id: uid(), type: 'shape', x, y, w, h, fill, radius,
-  });
+  }, ++order);
 
   if (layout === 'cover') return {
     ...base,
@@ -200,4 +225,8 @@ export async function saveAsset(blob: Blob, name: string): Promise<SlideAsset> {
 
 export async function getAsset(id: string): Promise<SlideAsset | null> {
   return (await withStore<SlideAsset | undefined>(ASSETS, 'readonly', store => store.get(id))) ?? null;
+}
+
+export async function listAssets(): Promise<SlideAsset[]> {
+  return withStore<SlideAsset[]>(ASSETS, 'readonly', store => store.getAll());
 }
