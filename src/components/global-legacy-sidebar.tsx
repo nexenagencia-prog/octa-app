@@ -1,53 +1,53 @@
 'use client';
-import { useEffect, useState } from 'react';
-import { usePathname } from 'next/navigation';
-import { DashboardSidebar } from '@/components/nav';
-import { ToolOverlay } from '@/components/tool-overlay';
-import { ToolOverlayProvider } from '@/components/tool-overlay-context';
+import Link from 'next/link';
+import {useEffect,useState} from 'react';
+import {usePathname} from 'next/navigation';
+import {ArrowRight,BookOpenText,Calculator,CalendarDays,Filter,Home,Monitor,NotebookPen,Play,Sparkles,UserRound,VideoIcon} from 'lucide-react';
+import {demoParticipants} from '@/lib/demo/data';
+import homeStyles from '@/app/home-reference.module.css';
 
-const SIDEBAR_KEY='octa-sidebar-collapsed';
-const excluded=(path:string)=>path==='/'||path.startsWith('/login')||path.startsWith('/reset-password')||path.startsWith('/auth')||path.startsWith('/admin')||path.startsWith('/room/');
+const side=[['Início','/',Home],['Reuniões','/reunioes',VideoIcon],['Agenda','/agenda',CalendarDays],['Contatos','/contatos',UserRound],['Gravações','/gravacoes',Play],['Calculadora','/calculadora',Calculator],['Filtros','/filtros',Filter],['Anotar','/anotacoes',NotebookPen],['Lousa','/lousa',Monitor],['Minhas Anotações','/minhas-anotacoes',BookOpenText],['Skill','/skills',Sparkles]] as const;
+const excluded=(path:string)=>path.startsWith('/login')||path.startsWith('/reset-password')||path.startsWith('/auth')||path.startsWith('/admin');
 
 export function GlobalLegacySidebar(){
   const pathname=usePathname();
-  const[active,setActive]=useState(false);
-  const[collapsed,setCollapsed]=useState(false);
+  const active=!excluded(pathname);
+  const[name,setName]=useState('Sandro');
+  const[headline,setHeadline]=useState('Marketing Digital');
+  const[avatar,setAvatar]=useState(demoParticipants[0]?.avatarUrl||'/octa-hero-reference.webp');
 
   useEffect(()=>{
-    const sync=()=>{
-      const hasSharedShell=Boolean(document.querySelector('.octa-page .octa-sidebar'));
-      setActive(!excluded(pathname)&&!hasSharedShell);
-      try{setCollapsed(localStorage.getItem(SIDEBAR_KEY)==='1')}catch{}
-    };
-    const timer=window.setTimeout(sync,0);
-    window.addEventListener('octa-preferences-updated',sync);
-    return()=>{window.clearTimeout(timer);window.removeEventListener('octa-preferences-updated',sync)};
-  },[pathname]);
-
-  useEffect(()=>{
-    document.documentElement.classList.toggle('octa-global-sidebar-active',active);
-    document.documentElement.classList.toggle('octa-global-sidebar-collapsed',active&&collapsed);
-    return()=>{
-      document.documentElement.classList.remove('octa-global-sidebar-active');
-      document.documentElement.classList.remove('octa-global-sidebar-collapsed');
-    };
-  },[active,collapsed]);
+    if(!active)return;
+    const apply=(p:any)=>{if(p?.displayName||p?.name)setName(p.displayName||p.name);if(p?.headline)setHeadline(p.headline);if(p?.avatarUrl)setAvatar(p.avatarUrl)};
+    fetch('/api/profile',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(d=>apply(d?.profile)).catch(()=>{});
+    const sync=(e:Event)=>apply((e as CustomEvent).detail);
+    window.addEventListener('octa-profile:updated',sync);
+    return()=>window.removeEventListener('octa-profile:updated',sync);
+  },[active]);
 
   if(!active)return null;
-  const toggle=()=>setCollapsed(value=>{const next=!value;try{localStorage.setItem(SIDEBAR_KEY,next?'1':'0')}catch{}return next});
-
-  return <ToolOverlayProvider>
-    <div className="octa-global-sidebar-host"><DashboardSidebar collapsed={collapsed} onToggle={toggle}/></div>
-    <ToolOverlay/>
+  return <>
+    <div className="octa-home-sidebar-global">
+      <aside className={homeStyles.sidebar}>
+        <Link href="/" className={homeStyles.brand}><span className={homeStyles.logoRing}/>OCTA</Link>
+        <div className={homeStyles.profile}><div className={homeStyles.avatar}><img src={avatar} alt={name}/><i/></div><div><strong>{name}</strong><span>{headline}</span></div></div>
+        <div className={homeStyles.performance}><div><span>Performance do skills</span><b>82/100</b></div><i><em/></i></div>
+        <nav>{side.map(([label,href,Icon])=>{const target=href.split('?')[0];const isActive=target==='/'?pathname==='/':pathname===target||pathname.startsWith(target+'/');return <Link key={label} href={href} className={isActive?homeStyles.active:''}><Icon size={20}/><span>{label}</span></Link>})}</nav>
+        <Link href="/planos" className={homeStyles.plan}><span>◇</span><div><b>Plano Pro</b><small>Renova em 12 dias</small></div><ArrowRight size={16}/></Link>
+      </aside>
+    </div>
     <style jsx global>{`
       @media (min-width:1280px){
-        .octa-global-sidebar-host .octa-sidebar{position:fixed!important;inset:0 auto 0 0!important;height:100dvh!important;width:250px!important;z-index:2147482000!important;border-radius:0!important;display:flex!important}
-        .octa-global-sidebar-host .octa-sidebar.is-collapsed{width:82px!important}
-        html.octa-global-sidebar-active body>main:not(.octa-page){margin-left:250px!important;width:calc(100% - 250px)!important;max-width:none!important}
-        html.octa-global-sidebar-active.octa-global-sidebar-collapsed body>main:not(.octa-page){margin-left:82px!important;width:calc(100% - 82px)!important}
-        html.octa-global-sidebar-active body>main:has(>.recordings-workspace)>aside:first-child{display:none!important}
-        html.octa-global-sidebar-active body>main:has(>.recordings-workspace){display:block!important}
+        .octa-home-sidebar-global{position:fixed!important;inset:0 auto 0 0!important;width:250px!important;height:100dvh!important;z-index:2147482000!important;overflow:hidden!important}
+        .octa-home-sidebar-global>aside{position:absolute!important;inset:0!important;width:250px!important;height:100dvh!important;min-height:100dvh!important;max-height:100dvh!important;border-radius:0!important;transform:none!important;margin:0!important}
+        .octa-page>.octa-sidebar{display:none!important}
+        .octa-page .octa-main,.octa-page.sidebar-collapsed .octa-main{margin-left:250px!important}
+        body>main:not(.octa-page){margin-left:250px!important;width:calc(100% - 250px)!important;max-width:none!important}
+        body>main:has(>section[class*="_workspace"]){margin-left:250px!important;width:calc(100% - 250px)!important;display:block!important}
+        body>main:has(>section[class*="_workspace"])>aside:first-child{display:none!important}
+        body>main:has(>.recordings-workspace){margin-left:250px!important;width:calc(100% - 250px)!important;display:block!important}
+        body>main:has(>.recordings-workspace)>aside:first-child{display:none!important}
       }
     `}</style>
-  </ToolOverlayProvider>;
+  </>;
 }
