@@ -1,31 +1,54 @@
-/* Meeting stage correction: preserve true 9:16 video proportions and free vertical space by floating top actions. */
+/* Meeting stage correction: preserve true 9:16 video proportions and keep actions outside the video area. */
 .instant-stage{
   min-height:0;
   height:100%;
   position:relative;
 }
 
-/* Top actions no longer consume vertical space from the video stages. */
-.instant-stage > header{
-  position:absolute!important;
-  inset:0!important;
+/* Compact action bar: it owns its own row, so no button can overlap either video. */
+.instant-stage > header,
+.meeting-actionbar{
+  position:relative!important;
+  inset:auto!important;
   z-index:50;
-  pointer-events:none;
-  margin:0!important;
-}
-
-.instant-stage > header > div:first-child{
-  position:absolute!important;
-  left:12px;
-  bottom:82px;
+  flex:0 0 auto;
+  min-height:46px;
+  width:100%;
+  margin:0 0 8px!important;
   pointer-events:auto;
 }
 
+.instant-stage > header > div:first-child,
 .instant-stage > header > div:last-child{
-  position:absolute!important;
-  right:12px;
-  top:10px;
+  position:relative!important;
+  inset:auto!important;
+  left:auto!important;
+  right:auto!important;
+  top:auto!important;
+  bottom:auto!important;
   pointer-events:auto;
+}
+
+.meeting-title-card{
+  height:42px;
+  max-width:min(430px,48%);
+  flex:1 1 360px;
+}
+
+.meeting-title-input,
+.meeting-host-label-input{
+  border:0;
+  padding:0;
+}
+
+.meeting-action-buttons{
+  min-height:42px;
+  align-items:center;
+}
+
+.meeting-top-action{
+  flex:0 0 auto;
+  align-self:center;
 }
 
 .instant-dual-stage{
@@ -37,8 +60,8 @@
   justify-content:center!important;
   column-gap:12px!important;
   gap:12px!important;
-  overflow:visible!important;
-  padding-top:8px;
+  overflow:hidden!important;
+  padding-top:0;
   padding-bottom:4px;
 }
 
@@ -94,16 +117,20 @@
   -webkit-backdrop-filter:blur(24px) saturate(125%);
 }
 
-/* On shorter desktop screens both panels scale down together, still true 9:16. */
+/* Short screens: reduce only vertical scale while keeping exact 9:16. */
 @media (min-width:1024px) and (max-height:900px){
-  .instant-stage > header > div:first-child{bottom:74px}
+  .instant-stage > header,.meeting-actionbar{min-height:42px;margin-bottom:6px!important}
+  .meeting-title-card{height:40px}
+  .meeting-action-buttons{min-height:40px}
   .instant-controls{margin-top:6px!important;padding-top:5px!important;padding-bottom:5px!important}
   .instant-host-fixed,
   .participant-stage{height:min(610px,100%)!important}
 }
 
 @media (min-width:1024px) and (max-height:780px){
-  .instant-stage > header > div:first-child{bottom:68px}
+  .instant-stage > header,.meeting-actionbar{min-height:40px;margin-bottom:4px!important}
+  .meeting-title-card{height:38px}
+  .meeting-action-buttons{min-height:38px}
   .instant-controls{margin-top:4px!important;padding-top:3px!important;padding-bottom:3px!important}
   .instant-host-fixed,
   .participant-stage{height:min(540px,100%)!important}
@@ -122,17 +149,19 @@ html[data-theme="light"] .instant-stage{
   background:radial-gradient(circle at 50% 18%,rgba(255,255,255,.92),transparent 38%),#f4f6f7!important;
 }
 
-html[data-theme="light"] .instant-stage > header > div:first-child,
-html[data-theme="light"] .instant-stage > header button{
+html[data-theme="light"] .meeting-title-card,
+html[data-theme="light"] .meeting-actionbar button{
   border-color:rgba(16,20,24,.10)!important;
   background:rgba(255,255,255,.88)!important;
   color:#111315!important;
   box-shadow:0 8px 24px rgba(20,28,34,.06)!important;
 }
 
-html[data-theme="light"] .instant-stage > header .text-white\/35,
-html[data-theme="light"] .instant-stage > header .text-white\/45,
-html[data-theme="light"] .instant-stage > header .text-white\/80{
+html[data-theme="light"] .meeting-title-input{
+  color:#111315!important;
+}
+
+html[data-theme="light"] .meeting-host-label-input{
   color:rgba(17,19,21,.58)!important;
 }
 
@@ -164,6 +193,23 @@ html[data-theme="light"] .instant-controls{
   background:rgba(255,255,255,.90)!important;
   color:#17191b!important;
   box-shadow:0 12px 36px rgba(20,28,34,.08)!important;
+}
+
+/* The host VIDEO keeps white overlays in light mode because they sit on top of imagery. */
+html[data-theme="light"] .instant-video-frame,
+html[data-theme="light"] .instant-video-frame div,
+html[data-theme="light"] .instant-video-frame span,
+html[data-theme="light"] .instant-video-frame b,
+html[data-theme="light"] .instant-video-frame button,
+html[data-theme="light"] .instant-video-frame svg{
+  color:#fff!important;
+}
+
+html[data-theme="light"] .instant-video-frame .text-white\/45,
+html[data-theme="light"] .instant-video-frame .text-white\/68,
+html[data-theme="light"] .instant-video-frame .text-white\/80,
+html[data-theme="light"] .instant-video-frame .text-white\/92{
+  color:rgba(255,255,255,.82)!important;
 }
 
 /* In light mode the integrated chat keeps the SAME dark blurred-glass language as dark mode. */
