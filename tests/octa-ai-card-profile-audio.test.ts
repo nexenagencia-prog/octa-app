@@ -5,14 +5,25 @@ import { readFileSync } from 'node:fs';
 const read=(path:string)=>readFileSync(path,'utf8');
 
 describe('OCTA AI reference card, profile greeting and audio playback',()=>{
-  it('uses the saved profile name and persists profile changes',()=>{
+  it('uses the OCTA server profile as the only official AI name source',()=>{
     const profile=read('src/app/profile/page.tsx');
     const coach=read('src/components/ai/octa-skill-coach.tsx');
-    expect(profile).toContain('octa-profile-name');
     expect(profile).toContain("window.dispatchEvent(new CustomEvent('octa-profile:updated'" );
     expect(coach).toContain("fetch('/api/profile',{cache:'no-store'})");
     expect(coach).toContain('Olá, ${profileName}');
     expect(coach).toContain("'octa-profile:updated'");
+    expect(coach).not.toContain("localStorage.getItem(PROFILE_NAME_KEY)");
+    expect(coach).not.toContain("localStorage.setItem(PROFILE_NAME_KEY");
+    expect(coach).not.toContain("window.addEventListener('storage'");
+  });
+
+  it('updates the active conversation when the saved profile changes',()=>{
+    const coach=read('src/components/ai/octa-skill-coach.tsx');
+    expect(coach).toContain('replaceProfileName');
+    expect(coach).toContain('previousProfileNameRef');
+    expect(coach).toContain('applyOfficialProfile');
+    expect(coach).toContain('profileName:profileName||undefined');
+    expect(coach).toContain('Fale comigo, ${profileName}...');
   });
 
   it('uses a clean geometric OCTA mark instead of the previous multi-piece symbol',()=>{
