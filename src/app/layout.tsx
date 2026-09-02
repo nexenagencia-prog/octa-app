@@ -13,6 +13,7 @@ import './octa-ui-polish-batch.css';
 import { CmsRuntime } from '@/components/cms-runtime';
 import { GlobalOctaAI } from '@/components/ai/global-octa-ai';
 import { GlobalCalculatorOverlay } from '@/components/global-calculator-overlay';
+import { GlobalLegacySidebar } from '@/components/global-legacy-sidebar';
 
 export const metadata: Metadata = {
   title: 'OCTA — Presence Platform',
@@ -21,5 +22,5 @@ export const metadata: Metadata = {
 
 // Keep global visual layers explicit so production includes meeting-stage and chat visibility refinements.
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="pt-BR"><body><CmsRuntime/>{children}<GlobalCalculatorOverlay/><GlobalOctaAI/></body></html>;
+  return <html lang="pt-BR"><body><CmsRuntime/>{children}<GlobalLegacySidebar/><GlobalCalculatorOverlay/><GlobalOctaAI/></body></html>;
 }
