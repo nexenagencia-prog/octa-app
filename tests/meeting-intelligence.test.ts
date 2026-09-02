@@ -1,0 +1,9 @@
+// @vitest-environment node
+import {describe,expect,it} from 'vitest';
+import {buildMeetingIntelligence,freeCoachAnswer} from '../src/lib/meeting-intelligence';
+
+describe('OCTA Meeting Intelligence',()=>{
+ it('calculates evidence-based participation and outputs',()=>{const intel=buildMeetingIntelligence({meetingId:'m1',meetingTitle:'Planejamento',transcript:'Ana: Precisamos definir o lançamento. Como podemos reduzir o prazo? Decidimos lançar na sexta. Bruno vai enviar o cronograma até amanhã. Outro ponto: orçamento. Ficou pendente revisar o orçamento.',segments:[{speakerName:'Ana',startMs:0,endMs:30000,text:'Precisamos definir o lançamento. Como podemos reduzir o prazo? Decidimos lançar na sexta.'},{speakerName:'Bruno',startMs:30000,endMs:50000,text:'Vou enviar o cronograma até amanhã.'},{speakerName:'Ana',startMs:50000,endMs:80000,text:'Outro ponto: orçamento. Ficou pendente revisar o orçamento.'}],metadata:{durationSeconds:80}});expect(intel.participants).toHaveLength(2);expect(intel.questions.total).toBe(1);expect(intel.decisions.length).toBeGreaterThan(0);expect(intel.tasks.length).toBeGreaterThan(0);expect(intel.unresolved.length).toBeGreaterThan(0)});
+ it('does not fabricate score with almost no evidence',()=>{const intel=buildMeetingIntelligence({meetingId:'m2',meetingTitle:'Curta',transcript:'ok'});expect(intel.meetingScore).toBeNull();expect(intel.dimensions.filter(d=>d.score!==null).length).toBe(0)});
+ it('keeps free coach inside meeting scope',()=>{const answer=freeCoachAnswer('qual a capital da frança?',{skills:[],recent:[]});expect(answer.answer).toContain('especializada em reuniões')});
+});
