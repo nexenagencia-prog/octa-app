@@ -7,7 +7,7 @@ export function FloatingNotesCard({roomSlug,meetingTitle,onClose}:{roomSlug?:str
   const panelRef=useRef<HTMLDivElement|null>(null);
   const drag=useRef<{offsetX:number;offsetY:number}|null>(null);
   const noteIdRef=useRef<string|undefined>(undefined);
-  const [position,setPosition]=useState({x:16,y:112});
+  const [position,setPosition]=useState({x:0,y:0});
   const [subject,setSubject]=useState('');
   const [content,setContent]=useState('');
   const [minimized,setMinimized]=useState(false);
@@ -15,11 +15,14 @@ export function FloatingNotesCard({roomSlug,meetingTitle,onClose}:{roomSlug?:str
   const draftKey=`octa-note-draft:${roomSlug??'global'}`;
 
   useEffect(()=>{
-    const place=()=>setPosition(current=>({
-      x:Math.max(12,Math.min(current.x===16?window.innerWidth-Math.min(420,window.innerWidth-24)-24:current.x,window.innerWidth-96)),
-      y:Math.max(12,Math.min(current.y,window.innerHeight-76)),
-    }));
-    place();window.addEventListener('resize',place);return()=>window.removeEventListener('resize',place);
+    const center=()=>{
+      const width=Math.min(420,window.innerWidth-24);
+      const height=Math.min(360,window.innerHeight-24);
+      setPosition({x:Math.max(12,(window.innerWidth-width)/2),y:Math.max(12,(window.innerHeight-height)/2)});
+    };
+    center();
+    window.addEventListener('resize',center);
+    return()=>window.removeEventListener('resize',center);
   },[]);
   useEffect(()=>{try{const raw=localStorage.getItem(draftKey);if(raw){const draft=JSON.parse(raw);setSubject(draft.subject??'');setContent(draft.content??'');noteIdRef.current=draft.noteId??undefined}}catch{}},[draftKey]);
   useEffect(()=>{try{localStorage.setItem(draftKey,JSON.stringify({subject,content,noteId:noteIdRef.current}))}catch{}},[draftKey,subject,content]);
