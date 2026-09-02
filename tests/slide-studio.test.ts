@@ -26,7 +26,7 @@ describe('OCTA local slide studio',()=>{
     expect(store).toContain('enterAnimation');
     expect(store).toContain('animationOrder');
     expect(page).toContain('loadPresentationFiles');
-    expect(page).toContain('PDF/JPEG');
+    expect(page).toContain('application/pdf,image/jpeg,image/png');
     expect(page).toContain("type ResizeMode='se'|'sw'|'ne'|'nw'|'e'|'w'|'n'|'s'");
     expect(page).toContain('Cantos da foto');
     expect(page).toContain("borderRadius:'inherit'");
