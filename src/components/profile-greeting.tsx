@@ -1,17 +1,9 @@
 'use client';
-import { useEffect, useState } from 'react';
-import { getProfile, PROFILE_UPDATED_EVENT, type EditableProfile } from '@/lib/profile-store';
-
+import { useEffect,useState } from 'react';
+type ProfileUpdatedEvent=CustomEvent<{name?:string}>;
 export function ProfileGreeting({className=''}:{className?:string}){
-  const [name,setName]=useState(()=>getProfile().displayName);
-  useEffect(()=>{
-    const sync=()=>setName(getProfile().displayName);
-    const onUpdate=(event:Event)=>setName(((event as CustomEvent<EditableProfile>).detail?.displayName)||getProfile().displayName);
-    sync();
-    window.addEventListener(PROFILE_UPDATED_EVENT,onUpdate);
-    window.addEventListener('storage',sync);
-    return()=>{window.removeEventListener(PROFILE_UPDATED_EVENT,onUpdate);window.removeEventListener('storage',sync)};
-  },[]);
-  const firstName=name.trim().split(/\s+/)[0]||'Usuário';
-  return <p className={className}>Bem-vindo de volta, <strong>{firstName}</strong></p>;
+ const[name,setName]=useState('');
+ useEffect(()=>{let active=true;const load=()=>fetch('/api/profile',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(data=>{if(active&&data?.profile?.displayName)setName(data.profile.displayName)}).catch(()=>{});const onUpdate=(event:Event)=>{const next=(event as ProfileUpdatedEvent).detail?.name?.trim();if(next)setName(next);else void load()};void load();window.addEventListener('octa-profile:updated',onUpdate);return()=>{active=false;window.removeEventListener('octa-profile:updated',onUpdate)}},[]);
+ const firstName=name.trim().split(/\s+/)[0]||'Usuário';
+ return <p className={className}>Bem-vindo de volta, <strong>{firstName}</strong></p>;
 }
