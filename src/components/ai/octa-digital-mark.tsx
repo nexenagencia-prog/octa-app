@@ -1,29 +1,33 @@
 export function OctaDigitalMark({size=28}:{size?:number}){
   return <i className="octa-ai-mark" style={{width:size,height:size}} aria-hidden="true">
+    <img className="octa-ai-orb-image" src="/octa-ai-orb-faithful.webp" alt=""/>
     <span className="octa-ai-liquid-core"/>
     <span className="octa-ai-liquid-wave wave-one"/>
     <span className="octa-ai-liquid-wave wave-two"/>
     <span className="octa-ai-liquid-shine"/>
     <style jsx global>{`
-      .octa-ai-coach{right:24px!important;bottom:22px!important;z-index:2147483000!important;animation:octa-ai-float 4.4s ease-in-out infinite}
-      .octa-ai-orb{width:64px!important;height:64px!important;min-width:64px!important;min-height:64px!important;aspect-ratio:1/1!important;flex:0 0 64px!important;box-sizing:border-box!important;justify-content:center!important;padding:0!important;border-radius:50%!important;border:1px solid rgba(255,255,255,.42)!important;background:radial-gradient(circle at 34% 27%,rgba(236,255,255,.96) 0 5%,rgba(92,255,211,.72) 9%,rgba(15,183,232,.52) 24%,rgba(0,86,190,.78) 53%,rgba(0,24,86,.96) 100%)!important;box-shadow:0 15px 38px rgba(0,0,0,.32),0 0 22px rgba(34,218,255,.26),inset 0 0 0 1px rgba(255,255,255,.18),inset -10px -14px 22px rgba(0,20,80,.48)!important;overflow:hidden!important;backdrop-filter:blur(18px) saturate(150%)!important;-webkit-backdrop-filter:blur(18px) saturate(150%)!important;transition:box-shadow .22s ease!important;transform:none!important}
-      .octa-ai-orb:hover{transform:none!important;box-shadow:0 19px 44px rgba(0,0,0,.36),0 0 30px rgba(61,231,255,.34),inset 0 0 0 1px rgba(255,255,255,.22),inset -10px -14px 22px rgba(0,20,80,.44)!important}
+      .octa-ai-coach{right:24px!important;bottom:22px!important;z-index:2147483000!important;animation:octa-ai-float 4.8s ease-in-out infinite}
+      .octa-ai-orb{width:64px!important;height:64px!important;min-width:64px!important;aspect-ratio:1/1!important;justify-content:center!important;padding:0!important;border-radius:50%!important;border:1px solid rgba(166,247,255,.42)!important;background:#02070b!important;box-shadow:0 15px 38px rgba(0,0,0,.34),0 0 24px rgba(45,224,255,.22)!important;overflow:hidden!important;transition:box-shadow .22s ease,filter .22s ease!important}
+      .octa-ai-orb:hover{filter:brightness(1.08)!important;box-shadow:0 18px 42px rgba(0,0,0,.38),0 0 32px rgba(63,235,255,.32)!important}
       .octa-ai-orb>span,.octa-ai-orb>svg:last-child{display:none!important}
-      .octa-ai-orb>.octa-ai-mark{display:block!important;width:52px!important;height:52px!important;min-width:52px!important;min-height:52px!important;aspect-ratio:1/1!important;flex:0 0 52px!important}
-      .octa-ai-mark{position:relative!important;display:inline-block!important;box-sizing:border-box!important;aspect-ratio:1/1!important;border-radius:50%!important;overflow:hidden!important;background:radial-gradient(circle at 36% 30%,rgba(226,255,255,.95) 0 4%,rgba(82,255,209,.74) 10%,rgba(5,184,236,.72) 30%,rgba(0,92,204,.82) 62%,rgba(0,31,105,.95) 100%)!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.28),inset -9px -12px 18px rgba(0,15,72,.45),0 0 17px rgba(64,236,255,.28)!important;transform:none!important;isolation:isolate!important;vertical-align:middle!important}
-      .octa-ai-mark svg{display:none!important}
-      .octa-ai-liquid-core,.octa-ai-liquid-wave,.octa-ai-liquid-shine{position:absolute!important;display:block!important;pointer-events:none!important}
-      .octa-ai-liquid-core{inset:-12%!important;border-radius:45% 55% 48% 52%!important;background:conic-gradient(from 45deg,rgba(84,255,202,.95),rgba(0,190,239,.12),rgba(0,67,186,.8),rgba(41,234,255,.74),rgba(155,255,135,.86),rgba(84,255,202,.95))!important;filter:blur(2px) saturate(140%)!important;mix-blend-mode:screen!important;opacity:.78!important;animation:octa-ai-liquid-spin 8s linear infinite!important}
-      .octa-ai-liquid-wave{width:74%!important;height:28%!important;left:-7%!important;border-radius:50%!important;background:linear-gradient(90deg,rgba(151,255,135,.1),rgba(129,255,170,.94),rgba(57,242,238,.7),rgba(0,137,240,.12))!important;filter:blur(2px)!important;mix-blend-mode:screen!important}
-      .octa-ai-liquid-wave.wave-one{top:17%!important;animation:octa-ai-wave-one 5.6s ease-in-out infinite alternate!important}
-      .octa-ai-liquid-wave.wave-two{width:90%!important;height:24%!important;left:14%!important;bottom:13%!important;background:linear-gradient(90deg,rgba(0,94,218,.06),rgba(0,228,255,.7),rgba(123,255,180,.82),rgba(170,255,104,.16))!important;animation:octa-ai-wave-two 6.8s ease-in-out infinite alternate!important}
-      .octa-ai-liquid-shine{width:36%!important;height:25%!important;left:12%!important;top:8%!important;border-radius:50%!important;background:radial-gradient(ellipse at center,rgba(255,255,255,.92),rgba(221,255,255,.34) 38%,transparent 72%)!important;filter:blur(1px)!important;transform:rotate(-20deg)!important;opacity:.9!important}
+      .octa-ai-orb>.octa-ai-mark{display:block!important;width:58px!important;height:58px!important;aspect-ratio:1/1!important;border-radius:50%!important}
+      .octa-ai-mark{position:relative;display:inline-block;flex:none;border-radius:50%;overflow:hidden;background:#02070b;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18);isolation:isolate}
+      .octa-ai-orb-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;z-index:1;animation:octa-ai-image-breathe 5.8s ease-in-out infinite alternate}
+      .octa-ai-liquid-core,.octa-ai-liquid-wave,.octa-ai-liquid-shine{position:absolute;display:block;pointer-events:none;border-radius:50%;z-index:2}
+      .octa-ai-liquid-core{inset:2%;background:conic-gradient(from 180deg,transparent 0 18%,rgba(119,255,215,.14) 27%,transparent 38% 61%,rgba(34,218,255,.16) 72%,transparent 84%);mix-blend-mode:screen;animation:octa-ai-liquid-spin 8s linear infinite}
+      .octa-ai-liquid-wave{left:10%;width:80%;height:18%;filter:blur(3px);mix-blend-mode:screen;opacity:.35;background:linear-gradient(90deg,transparent,rgba(112,255,192,.75),rgba(57,225,255,.55),transparent)}
+      .octa-ai-liquid-wave.wave-one{top:23%;animation:octa-ai-wave-one 4.8s ease-in-out infinite alternate}
+      .octa-ai-liquid-wave.wave-two{bottom:19%;animation:octa-ai-wave-two 6.2s ease-in-out infinite alternate}
+      .octa-ai-liquid-shine{left:16%;top:10%;width:27%;height:18%;background:radial-gradient(ellipse at center,rgba(255,255,255,.42),transparent 72%);filter:blur(1px);z-index:3}
+      .octa-ai-mark:after{content:"";position:absolute;z-index:4;left:9%;right:9%;height:1px;top:12%;background:linear-gradient(90deg,transparent,rgba(173,255,255,.82),transparent);box-shadow:0 0 8px rgba(79,236,255,.72);opacity:.55;animation:octa-ai-scan 3.6s ease-in-out infinite}
       @keyframes octa-ai-liquid-spin{to{transform:rotate(360deg)}}
-      @keyframes octa-ai-wave-one{0%{transform:translate(-7%,4%) rotate(-24deg)}100%{transform:translate(22%,22%) rotate(-9deg)}}
-      @keyframes octa-ai-wave-two{0%{transform:translate(9%,-8%) rotate(28deg)}100%{transform:translate(-18%,-25%) rotate(14deg)}}
-      @keyframes octa-ai-float{0%,100%{translate:0 0}50%{translate:0 -6px}}
-      @media(max-width:700px){.octa-ai-coach{right:14px!important;bottom:82px!important}.octa-ai-orb{width:56px!important;height:56px!important;min-width:56px!important;min-height:56px!important;flex-basis:56px!important}.octa-ai-orb>.octa-ai-mark{width:46px!important;height:46px!important;min-width:46px!important;min-height:46px!important;flex-basis:46px!important}}
-      @media(prefers-reduced-motion:reduce){.octa-ai-coach,.octa-ai-liquid-core,.octa-ai-liquid-wave{animation:none!important}}
+      @keyframes octa-ai-image-breathe{0%{filter:saturate(1) brightness(.98)}100%{filter:saturate(1.08) brightness(1.06)}}
+      @keyframes octa-ai-wave-one{0%{transform:translateY(-2px) rotate(-10deg);opacity:.18}100%{transform:translateY(8px) rotate(8deg);opacity:.42}}
+      @keyframes octa-ai-wave-two{0%{transform:translateY(5px) rotate(9deg);opacity:.16}100%{transform:translateY(-7px) rotate(-7deg);opacity:.38}}
+      @keyframes octa-ai-scan{0%{top:12%;opacity:0}18%{opacity:.62}75%{opacity:.35}100%{top:86%;opacity:0}}
+      @keyframes octa-ai-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+      @media(max-width:700px){.octa-ai-coach{right:14px!important;bottom:82px!important}.octa-ai-orb{width:56px!important;height:56px!important;min-width:56px!important}.octa-ai-orb>.octa-ai-mark{width:50px!important;height:50px!important}}
+      @media(prefers-reduced-motion:reduce){.octa-ai-coach,.octa-ai-orb-image,.octa-ai-liquid-core,.octa-ai-liquid-wave,.octa-ai-mark:after{animation:none!important}}
     `}</style>
   </i>
 }
