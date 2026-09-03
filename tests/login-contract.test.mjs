@@ -1,8 +1,9 @@
-import fs from 'node:fs';
+// @vitest-environment node
+import { readFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
 
-const page = fs.readFileSync(new URL('../src/app/login/page.tsx', import.meta.url), 'utf8');
-const css = fs.readFileSync(new URL('../src/app/login/login.module.css', import.meta.url), 'utf8');
+const page = readFileSync(new URL('../src/app/login/page.tsx', import.meta.url), 'utf8');
+const css = readFileSync(new URL('../src/app/login/login.module.css', import.meta.url), 'utf8');
 
 assert.match(page, /Bem-vindo/);
 assert.match(page, /Acesse sua conta para continuar/);
