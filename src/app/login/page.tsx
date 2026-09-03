@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { ArrowRight, Eye, EyeOff, LockKeyhole, Mail } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { supabaseBrowser } from '@/lib/supabase/client';
@@ -8,8 +8,19 @@ import styles from './login.module.css';
 
 type Mode = 'signin' | 'signup';
 
+function friendlyAuthMessage(message: string) {
+  const value = message.toLowerCase();
+  if (value.includes('invalid login credentials')) return 'E-mail ou senha incorretos.';
+  if (value.includes('email not confirmed')) return 'Confirme seu e-mail antes de entrar.';
+  if (value.includes('user already registered')) return 'Este e-mail já possui uma conta.';
+  if (value.includes('password should be')) return 'Use uma senha com pelo menos 6 caracteres.';
+  if (value.includes('rate limit')) return 'Muitas tentativas. Aguarde um pouco e tente novamente.';
+  return message || 'Não foi possível concluir o acesso.';
+}
+
 export default function LoginPage() {
   const router = useRouter();
+  const supabase = useMemo(() => supabaseBrowser(), []);
   const [mode, setMode] = useState<Mode>('signin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -17,7 +28,14 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
 
-  const supabase = supabaseBrowser();
+  useEffect(() => {
+    if (!supabase) return;
+    let active = true;
+    supabase.auth.getSession().then(({ data }) => {
+      if (active && data.session) router.replace('/');
+    }).catch(() => undefined);
+    return () => { active = false; };
+  }, [router, supabase]);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -29,19 +47,30 @@ export default function LoginPage() {
 
     setLoading(true);
     try {
+      const cleanEmail = email.trim().toLowerCase();
       if (mode === 'signup') {
-        const { error } = await supabase.auth.signUp({ email, password });
+        const emailRedirectTo = `${window.location.origin}/auth/callback?next=/`;
+        const { data, error } = await supabase.auth.signUp({
+          email: cleanEmail,
+          password,
+          options: { emailRedirectTo },
+        });
         if (error) throw error;
-        setMessage('Conta criada. Verifique seu e-mail para continuar.');
+        if (data.session) {
+          router.replace('/');
+          router.refresh();
+          return;
+        }
+        setMessage('Conta criada. Confirme seu e-mail para entrar.');
         return;
       }
 
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const { error } = await supabase.auth.signInWithPassword({ email: cleanEmail, password });
       if (error) throw error;
       router.replace('/');
       router.refresh();
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : 'Não foi possível entrar.');
+      setMessage(friendlyAuthMessage(error instanceof Error ? error.message : 'Não foi possível entrar.'));
     } finally {
       setLoading(false);
     }
@@ -60,13 +89,15 @@ export default function LoginPage() {
       options: { redirectTo },
     });
     if (error) {
-      setMessage(error.message);
+      setMessage(friendlyAuthMessage(error.message));
       setLoading(false);
     }
   }
 
   async function forgotPassword() {
-    if (!email.trim()) {
+    setMessage('');
+    const cleanEmail = email.trim().toLowerCase();
+    if (!cleanEmail) {
       setMessage('Digite seu e-mail para recuperar a senha.');
       return;
     }
@@ -75,11 +106,16 @@ export default function LoginPage() {
       return;
     }
     setLoading(true);
-    const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-      redirectTo: `${window.location.origin}/login`,
-    });
-    setMessage(error ? error.message : 'Enviamos as instruções para seu e-mail.');
-    setLoading(false);
+    try {
+      const redirectTo = `${window.location.origin}/auth/callback?next=/reset-password`;
+      const { error } = await supabase.auth.resetPasswordForEmail(cleanEmail, { redirectTo });
+      if (error) throw error;
+      setMessage('Enviamos um link de recuperação para seu e-mail.');
+    } catch (error) {
+      setMessage(friendlyAuthMessage(error instanceof Error ? error.message : 'Não foi possível recuperar sua senha.'));
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -96,7 +132,7 @@ export default function LoginPage() {
             <span>E-mail</span>
             <div className={styles.inputShell}>
               <Mail size={21} strokeWidth={1.6} />
-              <input type="email" autoComplete="email" placeholder="Digite seu e-mail" value={email} onChange={(event) => setEmail(event.target.value)} required />
+              <input type="email" autoComplete="email" inputMode="email" placeholder="Digite seu e-mail" value={email} onChange={(event) => setEmail(event.target.value)} required disabled={loading} />
             </div>
           </label>
 
@@ -104,15 +140,15 @@ export default function LoginPage() {
             <span>Senha</span>
             <div className={styles.inputShell}>
               <LockKeyhole size={21} strokeWidth={1.6} />
-              <input type={showPassword ? 'text' : 'password'} autoComplete={mode === 'signin' ? 'current-password' : 'new-password'} placeholder="Digite sua senha" value={password} onChange={(event) => setPassword(event.target.value)} minLength={6} required />
-              <button className={styles.eye} type="button" onClick={() => setShowPassword((value) => !value)} aria-label="Mostrar ou ocultar senha">
+              <input type={showPassword ? 'text' : 'password'} autoComplete={mode === 'signin' ? 'current-password' : 'new-password'} placeholder="Digite sua senha" value={password} onChange={(event) => setPassword(event.target.value)} minLength={6} required disabled={loading} />
+              <button className={styles.eye} type="button" onClick={() => setShowPassword((value) => !value)} aria-label="Mostrar ou ocultar senha" disabled={loading}>
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
             </div>
           </label>
 
           {mode === 'signin' && <button className={styles.forgot} type="button" onClick={forgotPassword} disabled={loading}>Esqueci minha senha</button>}
-          {message && <p className={styles.message} role="status">{message}</p>}
+          {message && <p className={styles.message} role="status" aria-live="polite">{message}</p>}
 
           <button className={styles.primary} type="submit" disabled={loading}>
             <span>{loading ? 'Aguarde...' : mode === 'signin' ? 'Entrar' : 'Criar conta'}</span>
@@ -129,7 +165,7 @@ export default function LoginPage() {
 
         <p className={styles.switchText}>
           {mode === 'signin' ? 'Ainda não tem uma conta?' : 'Já tem uma conta?'}{' '}
-          <button type="button" onClick={() => { setMode(mode === 'signin' ? 'signup' : 'signin'); setMessage(''); }}>
+          <button type="button" disabled={loading} onClick={() => { setMode(mode === 'signin' ? 'signup' : 'signin'); setMessage(''); }}>
             {mode === 'signin' ? 'Criar conta' : 'Entrar'}
           </button>
         </p>
