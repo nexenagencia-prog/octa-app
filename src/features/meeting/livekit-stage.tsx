@@ -5,18 +5,21 @@ import { useEffect, useRef, useState } from 'react';
 import { liveKitUrl } from '@/lib/livekit/config';
 
 type WhiteboardShareDetail={active:boolean;track?:MediaStreamTrack};
+type StageProps={room:string;identity:string;name:string;micEnabled?:boolean;cameraEnabled?:boolean;photoUrl?:string|null;fallbackPhotoUrl?:string|null;onActiveSpeaker?:(identity:string|null)=>void};
 
-function CameraStage(){
+function CameraStage({cameraEnabled,photoUrl,fallbackPhotoUrl}:{cameraEnabled:boolean;photoUrl?:string|null;fallbackPhotoUrl?:string|null}){
  const tracks=useTracks([Track.Source.ScreenShare,Track.Source.Camera]);
  const shared=tracks.find(t=>t.publication?.source===Track.Source.ScreenShare&&t.publication?.isSubscribed&&!t.publication?.isMuted);
  const camera=tracks.find(t=>t.publication?.source===Track.Source.Camera&&t.publication?.isSubscribed&&!t.publication?.isMuted)??tracks.find(t=>t.publication?.source===Track.Source.Camera);
- const visible=shared??camera;
- if(!visible) return <div className="grid size-full place-items-center bg-gradient-to-b from-[#201c2c] to-[#08090c] text-sm text-white/35">Câmera pronta para conectar</div>;
+ const visible=shared??(cameraEnabled?camera:undefined);
+ if(!visible){const image=photoUrl||fallbackPhotoUrl;return <div className="relative grid size-full place-items-center overflow-hidden bg-[#11100f] text-sm text-white/35">{image?<img src={image} alt="Câmera desligada" className="size-full object-cover"/>:'Câmera desligada'}</div>}
  return <VideoTrack trackRef={visible} className={`size-full ${shared?'object-contain bg-[#11100f]':'object-cover'}`}/>;
 }
 
-function RoomBridge({onActiveSpeaker}:{onActiveSpeaker?:(identity:string|null)=>void}){
+function RoomBridge({micEnabled,cameraEnabled,onActiveSpeaker}:{micEnabled:boolean;cameraEnabled:boolean;onActiveSpeaker?:(identity:string|null)=>void}){
  const room=useRoomContext();const sharedTrack=useRef<LocalTrack|null>(null);
+ useEffect(()=>{void room.localParticipant.setMicrophoneEnabled(micEnabled).catch(()=>undefined)},[micEnabled,room]);
+ useEffect(()=>{void room.localParticipant.setCameraEnabled(cameraEnabled).catch(()=>undefined)},[cameraEnabled,room]);
  useEffect(()=>{
   if(!onActiveSpeaker)return;
   const handler=(speakers:Array<{identity:string}>)=>onActiveSpeaker(speakers[0]?.identity??null);
@@ -40,10 +43,10 @@ function RoomBridge({onActiveSpeaker}:{onActiveSpeaker?:(identity:string|null)=>
  return null;
 }
 
-export function LiveKitStage({room,identity,name,onActiveSpeaker}:{room:string;identity:string;name:string;onActiveSpeaker?:(identity:string|null)=>void}){
+export function LiveKitStage({room,identity,name,micEnabled=true,cameraEnabled=true,photoUrl,fallbackPhotoUrl,onActiveSpeaker}:StageProps){
  const [token,setToken]=useState<string|null>(null); const [error,setError]=useState('');
  useEffect(()=>{let alive=true; fetch(`/api/livekit/token?room=${encodeURIComponent(room)}&identity=${encodeURIComponent(identity)}&name=${encodeURIComponent(name)}`).then(async r=>{if(!r.ok)throw new Error(await r.text()); return r.json()}).then(d=>alive&&setToken(d.token)).catch(e=>alive&&setError(e.message)); return()=>{alive=false}},[room,identity,name]);
  if(error) return <div className="grid size-full place-items-center bg-[#111217] p-6 text-center text-xs text-rose-300">LiveKit: {error}</div>;
  if(!token) return <div className="grid size-full place-items-center bg-[#111217] text-xs text-white/35">Conectando vídeo seguro…</div>;
- return <LiveKitRoom token={token} serverUrl={liveKitUrl} connect audio video className="size-full"><CameraStage/><RoomBridge onActiveSpeaker={onActiveSpeaker}/><RoomAudioRenderer/></LiveKitRoom>
+ return <LiveKitRoom token={token} serverUrl={liveKitUrl} connect audio={micEnabled} video={cameraEnabled} className="size-full"><CameraStage cameraEnabled={cameraEnabled} photoUrl={photoUrl} fallbackPhotoUrl={fallbackPhotoUrl}/><RoomBridge micEnabled={micEnabled} cameraEnabled={cameraEnabled} onActiveSpeaker={onActiveSpeaker}/><RoomAudioRenderer/></LiveKitRoom>
 }
