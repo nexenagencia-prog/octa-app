@@ -13,12 +13,12 @@ export function ToolOverlayProvider({children}:{children:React.ReactNode}){
   const lastPath=useRef('/');
 
   useEffect(()=>{
-    if(pathname!=='/lousa'){
-      lastPath.current=pathname||'/';
+    if(pathname==='/lousa'){
+      setTool('whiteboard');
+      router.replace(lastPath.current||'/');
       return;
     }
-    setTool('whiteboard');
-    router.replace(lastPath.current||'/');
+    lastPath.current=pathname||'/';
   },[pathname,router]);
 
   const interceptWhiteboard=useCallback((event:SyntheticEvent)=>{
