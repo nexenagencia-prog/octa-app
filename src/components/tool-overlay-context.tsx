@@ -1,5 +1,5 @@
 'use client';
-import { createContext, useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent, type SyntheticEvent } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent, type SyntheticEvent } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 
 export type ToolOverlayName = 'calculator' | 'filters' | 'notes' | 'whiteboard' | null;
