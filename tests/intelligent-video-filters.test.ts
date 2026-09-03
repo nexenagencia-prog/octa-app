@@ -4,7 +4,7 @@ import {filterCss,videoFilterPresets} from '@/lib/video-filters';
 describe('intelligent meeting video filters',()=>{
   it('replaces legacy color looks with professional appearance presets',()=>{
     const ids=videoFilterPresets.map(p=>p.id);
-    expect(ids).toEqual(['auto-face','natural-pro','studio-light','skin-balance','executive','low-light-rescue','camera-clean','soft-focus']);
+    expect(ids).toEqual(['auto-face','natural-pro','under-eye-natural','studio-light','skin-balance','executive','low-light-rescue','camera-clean','soft-focus']);
     expect(ids).not.toContain('warm');
     expect(ids).not.toContain('cool');
     expect(ids).not.toContain('mono');
@@ -19,6 +19,9 @@ describe('intelligent meeting video filters',()=>{
   it('keeps retouching intentionally subtle and adjustable',()=>{
     expect(filterCss('natural-pro',0)).toBe('none');
     expect(filterCss('natural-pro',60)).toContain('blur(');
+    expect(filterCss('under-eye-natural',0)).toBe('none');
+    expect(filterCss('under-eye-natural',60)).toContain('brightness(');
+    expect(filterCss('under-eye-natural',60)).toContain('blur(');
     expect(filterCss('skin-balance',60)).toContain('saturate(');
     expect(filterCss('low-light-rescue',60)).toContain('brightness(');
   });
