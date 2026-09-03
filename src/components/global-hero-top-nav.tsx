@@ -17,7 +17,7 @@ export function GlobalHeroTopNav(){
   const path=usePathname();
   const router=useRouter();
   const[query,setQuery]=useState('');
-  if(hiddenPrefixes.some(prefix=>path===prefix||path.startsWith(prefix)))return null;
+  if(path==='/'||hiddenPrefixes.some(prefix=>path===prefix||path.startsWith(prefix)))return null;
   const submit=(event:React.FormEvent)=>{event.preventDefault();const value=query.trim();if(value)router.push(`/reunioes?q=${encodeURIComponent(value)}`)};
   return <>
     <header className="global-hero-topnav" aria-label="Navegação principal OCTA">
