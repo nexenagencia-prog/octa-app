@@ -42,7 +42,7 @@ function RoomBridge({micEnabled,cameraEnabled,onActiveSpeaker}:{micEnabled:boole
   return()=>{window.removeEventListener('octa-whiteboard-share',handler);if(sharedTrack.current){void room.localParticipant.unpublishTrack(sharedTrack.current);sharedTrack.current.stop();sharedTrack.current=null}};
  },[room]);
  useEffect(()=>{
-  const send=(event:Event)=>{const detail=(event as CustomEvent<MeetingChatEvent>).detail;if(!detail)return;const payload=new TextEncoder().encode(JSON.stringify(detail));void room.localParticipant.publishData(payload,{reliable:true,topic:'octa-chat'}).catch(()=>undefined)};
+  const send=(event:Event)=>{const detail=(event as CustomEvent<MeetingChatEvent>).detail;if(!detail)return;const encoded=new TextEncoder().encode(JSON.stringify(detail));const payload=new Uint8Array(encoded.length);payload.set(encoded);void room.localParticipant.publishData(payload,{reliable:true,topic:'octa-chat'}).catch(()=>undefined)};
   const receive=(payload:Uint8Array,participant?:{identity?:string;name?:string},_kind?:unknown,topic?:string)=>{if(topic!=='octa-chat')return;try{const parsed=JSON.parse(new TextDecoder().decode(payload)) as MeetingChatEvent;window.dispatchEvent(new CustomEvent('octa-chat-message',{detail:{...parsed,userId:participant?.identity||parsed.userId,userName:participant?.name||parsed.userName}}))}catch{}};
   window.addEventListener('octa-chat-send',send);room.on(RoomEvent.DataReceived,receive as never);
   return()=>{window.removeEventListener('octa-chat-send',send);room.off(RoomEvent.DataReceived,receive as never)};
