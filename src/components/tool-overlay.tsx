@@ -7,8 +7,9 @@ import { WhiteboardPanel } from '@/features/whiteboard/whiteboard-panel';
 import { useEffect, useRef, useState } from 'react';
 
 export function ToolOverlay(){
-  const {tool,closeTool}=useToolOverlay();
+  const {tool,openTool,closeTool}=useToolOverlay();
   const panelRef=useRef<HTMLDivElement|null>(null);const drag=useRef<{offsetX:number;offsetY:number}|null>(null);const [position,setPosition]=useState({x:0,y:0});
+  useEffect(()=>{const intercept=(event:MouseEvent)=>{const target=event.target as HTMLElement|null;const anchor=target?.closest('a[href="/lousa"]');if(!anchor)return;event.preventDefault();event.stopPropagation();openTool('whiteboard')};document.addEventListener('click',intercept,true);return()=>document.removeEventListener('click',intercept,true)},[openTool]);
   useEffect(()=>{if(tool!=='calculator')return;const frame=requestAnimationFrame(()=>{const rect=panelRef.current?.getBoundingClientRect();const width=rect?.width??410;const height=rect?.height??590;setPosition({x:Math.max(8,(window.innerWidth-width)/2),y:Math.max(8,(window.innerHeight-height)/2)})});return()=>cancelAnimationFrame(frame)},[tool]);
   useEffect(()=>{const move=(e:PointerEvent)=>{if(!drag.current||!panelRef.current)return;const rect=panelRef.current.getBoundingClientRect();setPosition({x:Math.max(8,Math.min(window.innerWidth-rect.width-8,e.clientX-drag.current.offsetX)),y:Math.max(8,Math.min(window.innerHeight-rect.height-8,e.clientY-drag.current.offsetY))})};const up=()=>{drag.current=null};window.addEventListener('pointermove',move);window.addEventListener('pointerup',up);return()=>{window.removeEventListener('pointermove',move);window.removeEventListener('pointerup',up)}},[]);
   if(!tool)return null;
