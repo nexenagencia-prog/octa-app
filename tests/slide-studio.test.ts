@@ -79,4 +79,15 @@ describe('OCTA local slide studio',()=>{
     expect(page).toContain('Opacidade final');
     expect(page).toContain('min="0" max="100"');
   });
+
+  it('renders saved slides to full HD and restores real editor thumbnails',()=>{
+    const store=readFileSync('src/lib/local-slide-studio.ts','utf8');
+    const page=readFileSync('src/app/criar-slides/page.tsx','utf8');
+    expect(store).toContain('renderSlideToDataUrl');
+    expect(store).toContain('width=1920');
+    expect(store).toContain('height=1080');
+    expect(store).toContain("canvas.toDataURL('image/jpeg'");
+    expect(page).toContain('miniature-stage');
+    expect(page).toContain('slide.elements.map');
+  });
 });
