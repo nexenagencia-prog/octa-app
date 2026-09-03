@@ -2,11 +2,11 @@
 import Link from 'next/link';
 import {useEffect,useState} from 'react';
 import {usePathname} from 'next/navigation';
-import {ArrowRight,BookOpenText,Calculator,CalendarDays,FileImage,Filter,Home,Monitor,NotebookPen,Play,Sparkles,UserRound,VideoIcon} from 'lucide-react';
+import {ArrowRight,BookOpenText,Calculator,CalendarDays,FileImage,Home,Monitor,NotebookPen,Play,Sparkles,UserRound,VideoIcon} from 'lucide-react';
 import {demoParticipants} from '@/lib/demo/data';
 import homeStyles from '@/app/home-reference.module.css';
 
-const side=[['Início','/',Home],['Reuniões','/reunioes',VideoIcon],['Agenda','/agenda',CalendarDays],['Contatos','/contatos',UserRound],['Gravações','/gravacoes',Play],['Calculadora','/calculadora',Calculator],['Filtros','/filtros',Filter],['Criar slides','/criar-slides',FileImage],['Anotar','/anotacoes',NotebookPen],['Lousa','/lousa',Monitor],['Minhas Anotações','/minhas-anotacoes',BookOpenText],['Skill','/skills',Sparkles]] as const;
+const side=[['Início','/',Home],['Reuniões','/reunioes',VideoIcon],['Agenda','/agenda',CalendarDays],['Contatos','/contatos',UserRound],['Gravações','/gravacoes',Play],['Calculadora','/calculadora',Calculator],['Criar slides','/criar-slides',FileImage],['Anotar','/anotacoes',NotebookPen],['Lousa','/lousa',Monitor],['Minhas Anotações','/minhas-anotacoes',BookOpenText],['Skill','/skills',Sparkles]] as const;
 const excluded=(path:string)=>path.startsWith('/login')||path.startsWith('/reset-password')||path.startsWith('/auth')||path.startsWith('/admin');
 
 export function GlobalLegacySidebar(){
