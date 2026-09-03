@@ -23,4 +23,14 @@ describe('global hero top navigation',()=>{
     expect(nav).toContain('left:250px');
     expect(nav).toContain("path===item.href?'is-active':''");
   });
+
+  it('matches the compact proportions of the approved hero screenshot',()=>{
+    const nav=readFileSync('src/components/global-hero-top-nav.tsx','utf8');
+    expect(nav).toContain('height:76px');
+    expect(nav).toContain('width:min(390px,31vw)');
+    expect(nav).toContain('height:44px');
+    expect(nav).toContain('font-size:15px');
+    expect(nav).toContain('gap:38px');
+    expect(nav).toContain('size:36px');
+  });
 });
