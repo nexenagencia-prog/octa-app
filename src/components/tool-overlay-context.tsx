@@ -15,6 +15,7 @@ export function ToolOverlayProvider({children}:{children:React.ReactNode}){
     const normalizeWhiteboardLinks=()=>{
       document.querySelectorAll<HTMLAnchorElement>('a[href="/lousa"]').forEach(link=>{
         link.dataset.octaWhiteboardTool='1';
+        link.removeAttribute('href');
         link.setAttribute('role','button');
         link.setAttribute('aria-label','Abrir lousa flutuante');
       });
