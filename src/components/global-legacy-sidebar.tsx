@@ -7,7 +7,7 @@ import {demoParticipants} from '@/lib/demo/data';
 import homeStyles from '@/app/home-reference.module.css';
 
 const side=[['Início','/',Home],['Reuniões','/reunioes',VideoIcon],['Agenda','/agenda',CalendarDays],['Contatos','/contatos',UserRound],['Gravações','/gravacoes',Play],['Calculadora','/calculadora',Calculator],['Criar slides','/criar-slides',FileImage],['Anotar','/anotacoes',NotebookPen],['Lousa','/lousa',Monitor],['Minhas Anotações','/minhas-anotacoes',BookOpenText],['Skill','/skills',Sparkles]] as const;
-const excluded=(path:string)=>path.startsWith('/login')||path.startsWith('/reset-password')||path.startsWith('/auth')||path.startsWith('/admin');
+const excluded=(path:string)=>path==='/'||path.startsWith('/login')||path.startsWith('/reset-password')||path.startsWith('/auth')||path.startsWith('/admin');
 
 export function GlobalLegacySidebar(){
   const pathname=usePathname();
