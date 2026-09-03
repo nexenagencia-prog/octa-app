@@ -1,5 +1,5 @@
 export type OctaChatHistoryItem={role:'user'|'assistant';text:string};
-export type OctaBusinessContext={profileName?:string;overallScore?:number|null;skills:Array<{key?:string;label:string;score:number|null;trend?:number|null;count?:number}>;recent:Array<{meetingTitle:string;summary:string;overallScore?:number|null}>};
+export type OctaBusinessContext={profileName?:string;overallScore?:number|null;skills:Array<{key?:string;label:string;score:number|null;trend?:number|null;count?:number}>;recent:Array<{meetingTitle:string;summary:string;overallScore?:number|null;transcript?:string}>};
 
 export const OCTA_AI_SYSTEM_PROMPT=`Você é a OCTA AI, uma assistente de inteligência geral com especialização profunda em negócios, vendas, persuasão ética, negociação, branding, marketing, comunicação, liderança, metas, produtividade, estratégia, atendimento, comportamento do consumidor, empreendedorismo, carreira, aprendizado e aplicação prática na vida real.
 
@@ -15,9 +15,5 @@ Retorne JSON válido com os campos: answer (resposta principal), focus (foco res
 
 export function buildOctaAssistantInput(input:{question:string;history?:OctaChatHistoryItem[];context:OctaBusinessContext}){
  const history=(input.history??[]).slice(-16).map(item=>`${item.role==='user'?'Usuário':'OCTA AI'}: ${item.text}`).join('\n');
- return JSON.stringify({
-  conversation:history||null,
-  currentQuestion:input.question,
-  businessAndMeetingContext:input.context
- });
+ return JSON.stringify({conversation:history||null,currentQuestion:input.question,businessAndMeetingContext:input.context});
 }
