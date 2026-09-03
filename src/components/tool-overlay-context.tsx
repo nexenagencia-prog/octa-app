@@ -8,36 +8,39 @@ const ToolOverlayContext = createContext<ToolOverlayContextValue | null>(null);
 export function ToolOverlayProvider({children}:{children:React.ReactNode}){
   const [tool,setTool]=useState<ToolOverlayName>(null);
   useEffect(()=>{
+    const isWhiteboardTrigger=(target:EventTarget|null)=>{
+      const element=target instanceof Element?target:null;
+      return element?.closest('[data-octa-whiteboard-tool="1"],a[href="/lousa"]') as HTMLElement|null;
+    };
     const normalizeWhiteboardLinks=()=>{
       document.querySelectorAll<HTMLAnchorElement>('a[href="/lousa"]').forEach(link=>{
         link.dataset.octaWhiteboardTool='1';
-        link.removeAttribute('href');
         link.setAttribute('role','button');
-        link.tabIndex=0;
         link.setAttribute('aria-label','Abrir lousa flutuante');
       });
     };
-    normalizeWhiteboardLinks();
-    const observer=new MutationObserver(normalizeWhiteboardLinks);
-    observer.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['href']});
     const openWhiteboard=(event:Event)=>{
-      const target=event.target as Element|null;
-      const trigger=target?.closest('[data-octa-whiteboard-tool="1"],a[href="/lousa"]');
+      const trigger=isWhiteboardTrigger(event.target);
       if(!trigger)return;
       event.preventDefault();
       event.stopPropagation();
+      if('stopImmediatePropagation' in event)event.stopImmediatePropagation();
       setTool('whiteboard');
     };
     const openWhiteboardByKey=(event:KeyboardEvent)=>{
       if(event.key!=='Enter'&&event.key!==' ')return;
-      const target=event.target as Element|null;
-      if(!target?.closest('[data-octa-whiteboard-tool="1"]'))return;
+      if(!isWhiteboardTrigger(event.target))return;
       openWhiteboard(event);
     };
+    normalizeWhiteboardLinks();
+    const observer=new MutationObserver(normalizeWhiteboardLinks);
+    observer.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['href']});
+    document.addEventListener('pointerdown',openWhiteboard,true);
     document.addEventListener('click',openWhiteboard,true);
     document.addEventListener('keydown',openWhiteboardByKey,true);
     return()=>{
       observer.disconnect();
+      document.removeEventListener('pointerdown',openWhiteboard,true);
       document.removeEventListener('click',openWhiteboard,true);
       document.removeEventListener('keydown',openWhiteboardByKey,true);
     };
