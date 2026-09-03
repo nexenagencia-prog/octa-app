@@ -70,4 +70,13 @@ describe('OCTA local slide studio',()=>{
     expect(page).toContain('Organizar automaticamente');
     expect(page).toContain('Cmd/Ctrl + C');
   });
+
+  it('lets each gradient endpoint reach zero opacity independently',()=>{
+    const page=readFileSync('src/app/criar-slides/page.tsx','utf8');
+    expect(page).toContain('gradientFromOpacity');
+    expect(page).toContain('gradientToOpacity');
+    expect(page).toContain('Opacidade inicial');
+    expect(page).toContain('Opacidade final');
+    expect(page).toContain('min="0" max="100"');
+  });
 });
