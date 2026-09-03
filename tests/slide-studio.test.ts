@@ -1,3 +1,4 @@
+// deploy retry marker 2026-09-03
 // @vitest-environment node
 import {describe,expect,it} from 'vitest';
 import {readFileSync} from 'node:fs';
