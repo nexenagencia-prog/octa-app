@@ -30,4 +30,9 @@ describe('approved meeting reference layout', () => {
     expect(instant).toContain('<SlideRail');
     expect(instant).toContain('meeting-reference-right');
   });
+
+  it('keeps the host overlay actions compact and at the top', () => {
+    expect(instant).toContain("style={{top:14,right:14,bottom:'auto',gap:6}}");
+    expect(instant).toContain('style={{width:32,height:32}}');
+  });
 });
