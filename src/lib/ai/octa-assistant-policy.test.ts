@@ -18,11 +18,12 @@ describe('OCTA AI policy',()=>{
     const input=buildOctaAssistantInput({
       question:'E como eu aplico isso amanhã?',
       history:[{role:'user',text:'Me ensine SPIN Selling'},{role:'assistant',text:'SPIN usa situação, problema, implicação e necessidade.'}],
-      context:{profileName:'Sandro',skills:[],recent:[]}
+      context:{profileName:'Sandro',skills:[],recent:[{meetingTitle:'Venda',summary:'Cliente avaliou a proposta.',overallScore:82,transcript:'Cliente: o preço ainda está alto para mim.'}]}
     });
     expect(input).toContain('Me ensine SPIN Selling');
     expect(input).toContain('SPIN usa situação');
     expect(input).toContain('E como eu aplico isso amanhã?');
+    expect(input).toContain('o preço ainda está alto');
     expect(input.indexOf('Me ensine SPIN Selling')).toBeLessThan(input.indexOf('E como eu aplico isso amanhã?'));
   });
 });
