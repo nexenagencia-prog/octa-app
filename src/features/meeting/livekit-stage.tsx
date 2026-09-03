@@ -13,7 +13,7 @@ function CameraStage({cameraEnabled,photoUrl,fallbackPhotoUrl}:{cameraEnabled:bo
  const camera=tracks.find(t=>t.publication?.source===Track.Source.Camera&&t.publication?.isSubscribed&&!t.publication?.isMuted)??tracks.find(t=>t.publication?.source===Track.Source.Camera);
  const visible=shared??(cameraEnabled?camera:undefined);
  if(!visible){const image=photoUrl||fallbackPhotoUrl;return <div className="relative grid size-full place-items-center overflow-hidden bg-[#11100f] text-sm text-white/35">{image?<img src={image} alt="Câmera desligada" className="size-full object-cover"/>:'Câmera desligada'}</div>}
- return <VideoTrack trackRef={visible} className={`size-full ${shared?'object-contain bg-[#11100f]':'object-cover'}`}/>;
+ return <VideoTrack trackRef={visible} className={`size-full ${shared?'object-contain bg-[#11100f]':'object-cover'}`} style={shared?undefined:{transform:'scaleX(-1)'}}/>;
 }
 
 function RoomBridge({micEnabled,cameraEnabled,onActiveSpeaker}:{micEnabled:boolean;cameraEnabled:boolean;onActiveSpeaker?:(identity:string|null)=>void}){
