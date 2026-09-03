@@ -2,12 +2,15 @@
 import {describe,expect,it} from 'vitest';
 import {existsSync,readFileSync} from 'node:fs';
 
-describe('floating whiteboard only',()=>{
-  it('removes the lousa route and converts its nav link into an overlay trigger',()=>{
+describe('floating whiteboard navigation',()=>{
+  it('intercepts the Lousa link synchronously before Next navigation and recovers stale /lousa URLs',()=>{
     expect(existsSync('src/app/lousa/page.tsx')).toBe(false);
     const context=readFileSync('src/components/tool-overlay-context.tsx','utf8');
-    expect(context).toContain("link.removeAttribute('href')");
+    expect(context).toContain('onClickCapture={interceptWhiteboard}');
     expect(context).toContain("setTool('whiteboard')");
+    expect(context).toContain("pathname==='/lousa'");
+    expect(context).toContain("router.replace(lastPath.current||'/')");
+    expect(context).not.toContain('MutationObserver');
   });
 
   it('shares only the whiteboard canvas, never the personal desktop',()=>{

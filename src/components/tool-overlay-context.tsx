@@ -1,5 +1,6 @@
 'use client';
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent, type SyntheticEvent } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 
 export type ToolOverlayName = 'calculator' | 'filters' | 'notes' | 'whiteboard' | null;
 type ToolOverlayContextValue = { tool: ToolOverlayName; openTool:(tool:Exclude<ToolOverlayName,null>)=>void; closeTool:()=>void };
@@ -7,46 +8,36 @@ const ToolOverlayContext = createContext<ToolOverlayContextValue | null>(null);
 
 export function ToolOverlayProvider({children}:{children:React.ReactNode}){
   const [tool,setTool]=useState<ToolOverlayName>(null);
+  const pathname=usePathname();
+  const router=useRouter();
+  const lastPath=useRef('/');
+
   useEffect(()=>{
-    const isWhiteboardTrigger=(target:EventTarget|null)=>{
-      const element=target instanceof Element?target:null;
-      return element?.closest('[data-octa-whiteboard-tool="1"],a[href="/lousa"]') as HTMLElement|null;
-    };
-    const normalizeWhiteboardLinks=()=>{
-      document.querySelectorAll<HTMLAnchorElement>('a[href="/lousa"]').forEach(link=>{
-        link.dataset.octaWhiteboardTool='1';
-        link.removeAttribute('href');
-        link.setAttribute('role','button');
-        link.setAttribute('aria-label','Abrir lousa flutuante');
-      });
-    };
-    const openWhiteboard=(event:Event)=>{
-      const trigger=isWhiteboardTrigger(event.target);
-      if(!trigger)return;
-      event.preventDefault();
-      event.stopPropagation();
-      if('stopImmediatePropagation' in event)event.stopImmediatePropagation();
-      setTool('whiteboard');
-    };
-    const openWhiteboardByKey=(event:KeyboardEvent)=>{
-      if(event.key!=='Enter'&&event.key!==' ')return;
-      if(!isWhiteboardTrigger(event.target))return;
-      openWhiteboard(event);
-    };
-    normalizeWhiteboardLinks();
-    const observer=new MutationObserver(normalizeWhiteboardLinks);
-    observer.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['href']});
-    document.addEventListener('pointerdown',openWhiteboard,true);
-    document.addEventListener('click',openWhiteboard,true);
-    document.addEventListener('keydown',openWhiteboardByKey,true);
-    return()=>{
-      observer.disconnect();
-      document.removeEventListener('pointerdown',openWhiteboard,true);
-      document.removeEventListener('click',openWhiteboard,true);
-      document.removeEventListener('keydown',openWhiteboardByKey,true);
-    };
+    if(pathname!=='/lousa'){
+      lastPath.current=pathname||'/';
+      return;
+    }
+    setTool('whiteboard');
+    router.replace(lastPath.current||'/');
+  },[pathname,router]);
+
+  const interceptWhiteboard=useCallback((event:SyntheticEvent)=>{
+    const target=event.target as Element|null;
+    const trigger=target?.closest('a[href="/lousa"],[data-octa-whiteboard-tool="1"]');
+    if(!trigger)return;
+    event.preventDefault();
+    event.stopPropagation();
+    setTool('whiteboard');
   },[]);
+
+  const interceptWhiteboardKey=useCallback((event:ReactKeyboardEvent)=>{
+    if(event.key!=='Enter'&&event.key!==' ')return;
+    const target=event.target as Element|null;
+    if(!target?.closest('a[href="/lousa"],[data-octa-whiteboard-tool="1"]'))return;
+    interceptWhiteboard(event);
+  },[interceptWhiteboard]);
+
   const value=useMemo(()=>({tool,openTool:(next:Exclude<ToolOverlayName,null>)=>setTool(next),closeTool:()=>setTool(null)}),[tool]);
-  return <ToolOverlayContext.Provider value={value}>{children}</ToolOverlayContext.Provider>;
+  return <ToolOverlayContext.Provider value={value}><div style={{display:'contents'}} onClickCapture={interceptWhiteboard} onAuxClickCapture={interceptWhiteboard} onKeyDownCapture={interceptWhiteboardKey}>{children}</div></ToolOverlayContext.Provider>;
 }
 export function useToolOverlay(){const value=useContext(ToolOverlayContext);if(!value) throw new Error('useToolOverlay must be used inside ToolOverlayProvider');return value;}
