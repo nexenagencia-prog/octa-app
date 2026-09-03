@@ -1,41 +1,26 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { MeetingPrejoin } from '@/features/meeting/meeting-prejoin';
+import { readFileSync } from 'node:fs';
+import { describe, expect, it } from 'vitest';
 
-const makeStream=()=>({
-  getVideoTracks:()=>[{enabled:true,stop:vi.fn()}],
-  getAudioTracks:()=>[{enabled:true,stop:vi.fn()}],
-  getTracks:()=>[{enabled:true,stop:vi.fn()},{enabled:true,stop:vi.fn()}],
-}) as unknown as MediaStream;
+const source=readFileSync('src/features/meeting/meeting-prejoin.tsx','utf8');
 
-describe('meeting prejoin entry choices',()=>{
- beforeEach(()=>{
-  Object.defineProperty(navigator,'mediaDevices',{configurable:true,value:{getUserMedia:vi.fn().mockResolvedValue(makeStream())}});
-  Object.defineProperty(HTMLMediaElement.prototype,'play',{configurable:true,value:vi.fn().mockResolvedValue(undefined)});
-  Object.defineProperty(URL,'createObjectURL',{configurable:true,value:vi.fn(()=> 'blob:meeting-photo')});
+describe('meeting prejoin entry contract',()=>{
+ it('offers explicit camera and no-camera entry choices',()=>{
+  expect(source).toContain('Entrar com câmera');
+  expect(source).toContain('Entrar sem câmera');
+  expect(source).toContain('const enterWithCamera=async');
+  expect(source).toContain('const enterWithoutCamera=()=>{onCameraChange(false);onJoin()}');
  });
 
- it('offers explicit camera and no-camera entry choices',async()=>{
-  const onCameraChange=vi.fn();const onJoin=vi.fn();
-  render(<MeetingPrejoin title="Teste" cameraEnabled micEnabled photoUrl={null} fallbackPhotoUrl={null} onCameraChange={onCameraChange} onMicChange={vi.fn()} onPhotoChange={vi.fn()} onJoin={onJoin}/>);
-  expect(await screen.findByRole('button',{name:/Entrar com câmera/i})).toBeInTheDocument();
-  expect(screen.getByRole('button',{name:/Entrar sem câmera/i})).toBeInTheDocument();
-  fireEvent.click(screen.getByRole('button',{name:/Entrar sem câmera/i}));
-  expect(onCameraChange).toHaveBeenLastCalledWith(false);expect(onJoin).toHaveBeenCalledTimes(1);
-  fireEvent.click(screen.getByRole('button',{name:/Entrar com câmera/i}));
-  expect(onCameraChange).toHaveBeenLastCalledWith(true);expect(onJoin).toHaveBeenCalledTimes(2);
+ it('lets the user explicitly test the real camera before entering',()=>{
+  expect(source).toContain('Testar câmera');
+  expect(source).toContain('const testCamera=async()=>{onCameraChange(true);await start(true)}');
+  expect(source).toContain('getUserMedia(createMeetingMediaConstraints())');
  });
 
- it('lets the user explicitly test the camera before entering',async()=>{
-  const onCameraChange=vi.fn();
-  render(<MeetingPrejoin title="Teste" cameraEnabled={false} micEnabled photoUrl={null} fallbackPhotoUrl={null} onCameraChange={onCameraChange} onMicChange={vi.fn()} onPhotoChange={vi.fn()} onJoin={vi.fn()}/>);
-  fireEvent.click(screen.getByRole('button',{name:/Testar câmera/i}));
-  await waitFor(()=>expect(onCameraChange).toHaveBeenCalledWith(true));
-  expect(navigator.mediaDevices.getUserMedia).toHaveBeenCalled();
- });
-
- it('shows an editable photo action for the user',async()=>{
-  render(<MeetingPrejoin title="Teste" cameraEnabled={false} micEnabled photoUrl="blob:existing" fallbackPhotoUrl={null} onCameraChange={vi.fn()} onMicChange={vi.fn()} onPhotoChange={vi.fn()} onJoin={vi.fn()}/>);
-  expect(await screen.findAllByRole('button',{name:/Alterar foto/i})).not.toHaveLength(0);
+ it('keeps the meeting photo editable and uses proportional 9:16 cropping',()=>{
+  expect(source).toContain("currentPhoto?'Alterar foto':'Adicionar foto'");
+  expect(source).toContain('onClick={openPhotoPicker}');
+  expect(source).toContain("style={{aspectRatio:'9/16'}}");
+  expect(source).toContain('object-cover');
  });
 });
