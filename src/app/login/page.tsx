@@ -1,200 +1,175 @@
 'use client';
+
 import { FormEvent, useEffect, useMemo, useState } from 'react';
-import Link from 'next/link';
-import { ArrowRight, CheckCircle2, KeyRound, Mail, Sparkles } from 'lucide-react';
-import { Button, Card, Pill } from '@/components/ui';
-import { isSupabaseConfigured, supabaseBrowser } from '@/lib/supabase/client';
+import { ArrowRight, Eye, EyeOff, LockKeyhole, Mail } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { supabaseBrowser } from '@/lib/supabase/client';
+import styles from './login.module.css';
 
-export default function LoginPage(){
-  const [email,setEmail]=useState('');
-  const [password,setPassword]=useState('');
-  const [confirmPassword,setConfirmPassword]=useState('');
-  const [status,setStatus]=useState('');
-  const [loading,setLoading]=useState(false);
-  const [hasSession,setHasSession]=useState(false);
-  const [settingPassword,setSettingPassword]=useState(false);
-  const [recovering,setRecovering]=useState(false);
-  const [passwordSaved,setPasswordSaved]=useState(false);
+type Mode = 'signin' | 'signup';
 
-  const reset = useMemo(()=>typeof window!=='undefined' ? new URLSearchParams(window.location.search).get('reset') : null,[]);
+function friendlyAuthMessage(message: string) {
+  const value = message.toLowerCase();
+  if (value.includes('invalid login credentials')) return 'E-mail ou senha incorretos.';
+  if (value.includes('email not confirmed')) return 'Confirme seu e-mail antes de entrar.';
+  if (value.includes('user already registered')) return 'Este e-mail já possui uma conta.';
+  if (value.includes('password should be')) return 'Use uma senha com pelo menos 6 caracteres.';
+  if (value.includes('rate limit')) return 'Muitas tentativas. Aguarde um pouco e tente novamente.';
+  return message || 'Não foi possível concluir o acesso.';
+}
 
-  useEffect(()=>{
-    if(reset==='success') setStatus('Senha redefinida. Entre com sua nova senha.');
-    if(reset==='expired') setStatus('O link de redefinição expirou. Solicite um novo abaixo.');
-    if(!isSupabaseConfigured)return;
-    const supabase=supabaseBrowser();
-    if(!supabase)return;
-    supabase.auth.getUser().then(({data})=>{
-      if(data.user){
-        setHasSession(true);
-        setEmail(data.user.email||'');
-      }
-    }).catch(()=>{});
-  },[reset]);
+export default function LoginPage() {
+  const router = useRouter();
+  const supabase = useMemo(() => supabaseBrowser(), []);
+  const [mode, setMode] = useState<Mode>('signin');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
 
-  async function submit(e:FormEvent){
-    e.preventDefault();
-    if(loading)return;
-    setStatus('');
+  useEffect(() => {
+    if (!supabase) return;
+    let active = true;
+    supabase.auth.getSession().then(({ data }) => {
+      if (active && data.session) router.replace('/');
+    }).catch(() => undefined);
+    return () => { active = false; };
+  }, [router, supabase]);
 
-    if(!isSupabaseConfigured){
-      setStatus('Supabase não está configurado neste deploy.');
-      return;
-    }
-    const supabase=supabaseBrowser();
-    if(!supabase){
-      setStatus('Não foi possível iniciar o acesso ao CMS.');
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setMessage('');
+    if (!supabase) {
+      setMessage('Login temporariamente indisponível.');
       return;
     }
 
     setLoading(true);
-    try{
-      const {error}=await supabase.auth.signInWithPassword({email,password});
-      if(error){
-        setStatus(error.message==='Invalid login credentials'?'E-mail ou senha incorretos.':error.message);
+    try {
+      const cleanEmail = email.trim().toLowerCase();
+      if (mode === 'signup') {
+        const emailRedirectTo = `${window.location.origin}/auth/callback?next=/`;
+        const { data, error } = await supabase.auth.signUp({
+          email: cleanEmail,
+          password,
+          options: { emailRedirectTo },
+        });
+        if (error) throw error;
+        if (data.session) {
+          router.replace('/');
+          router.refresh();
+          return;
+        }
+        setMessage('Conta criada. Confirme seu e-mail para entrar.');
         return;
       }
-      location.assign('/admin');
-    }catch(error){
-      setStatus(error instanceof Error ? error.message : 'Não foi possível entrar no CMS.');
-    }finally{
+
+      const { error } = await supabase.auth.signInWithPassword({ email: cleanEmail, password });
+      if (error) throw error;
+      router.replace('/');
+      router.refresh();
+    } catch (error) {
+      setMessage(friendlyAuthMessage(error instanceof Error ? error.message : 'Não foi possível entrar.'));
+    } finally {
       setLoading(false);
     }
   }
 
-  async function sendRecovery(e:FormEvent){
-    e.preventDefault();
-    if(loading)return;
-    setStatus('');
-    if(!email.trim()){
-      setStatus('Digite seu e-mail administrador para redefinir a senha.');
-      return;
-    }
-    const supabase=supabaseBrowser();
-    if(!supabase){
-      setStatus('Não foi possível iniciar a recuperação de senha.');
+  async function continueWithGoogle() {
+    setMessage('');
+    if (!supabase) {
+      setMessage('Login temporariamente indisponível.');
       return;
     }
     setLoading(true);
-    try{
-      const redirectTo=`${window.location.origin}/auth/callback?next=/reset-password`;
-      const {error}=await supabase.auth.resetPasswordForEmail(email.trim(),{redirectTo});
-      if(error){
-        setStatus(error.message);
-        return;
-      }
-      setStatus('E-mail de recuperação enviado. Abra a mensagem mais recente da OCTA e clique em redefinir senha.');
-    }catch(error){
-      setStatus(error instanceof Error ? error.message : 'Não foi possível enviar a recuperação de senha.');
-    }finally{
+    const redirectTo = `${window.location.origin}/auth/callback?next=/`;
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo },
+    });
+    if (error) {
+      setMessage(friendlyAuthMessage(error.message));
       setLoading(false);
     }
   }
 
-  async function definePassword(e:FormEvent){
-    e.preventDefault();
-    if(loading)return;
-    setStatus('');
-    setPasswordSaved(false);
-
-    if(password.length<8){
-      setStatus('Use uma senha com pelo menos 8 caracteres.');
+  async function forgotPassword() {
+    setMessage('');
+    const cleanEmail = email.trim().toLowerCase();
+    if (!cleanEmail) {
+      setMessage('Digite seu e-mail para recuperar a senha.');
       return;
     }
-    if(password!==confirmPassword){
-      setStatus('As senhas não coincidem.');
+    if (!supabase) {
+      setMessage('Recuperação temporariamente indisponível.');
       return;
     }
-    const supabase=supabaseBrowser();
-    if(!supabase){
-      setStatus('Não foi possível iniciar o acesso ao CMS.');
-      return;
-    }
-
     setLoading(true);
-    try{
-      const {error}=await supabase.auth.updateUser({password});
-      if(error){
-        setStatus(error.message);
-        return;
-      }
-      setPasswordSaved(true);
-      setSettingPassword(false);
-      setConfirmPassword('');
-      setStatus('Senha definida. Nos próximos acessos, use seu e-mail e esta senha.');
-    }catch(error){
-      setStatus(error instanceof Error ? error.message : 'Não foi possível definir a senha.');
-    }finally{
+    try {
+      const redirectTo = `${window.location.origin}/auth/callback?next=/reset-password`;
+      const { error } = await supabase.auth.resetPasswordForEmail(cleanEmail, { redirectTo });
+      if (error) throw error;
+      setMessage('Enviamos um link de recuperação para seu e-mail.');
+    } catch (error) {
+      setMessage(friendlyAuthMessage(error instanceof Error ? error.message : 'Não foi possível recuperar sua senha.'));
+    } finally {
       setLoading(false);
     }
   }
 
-  const mainForm=<form onSubmit={submit} className="mt-8 space-y-3">
-    <input
-      type="email"
-      required
-      autoComplete="email"
-      value={email}
-      onChange={e=>setEmail(e.target.value)}
-      placeholder="voce@empresa.com"
-      className="w-full rounded-2xl border border-black/10 bg-white/70 px-4 py-4 text-[#17314a] outline-none placeholder:text-black/30"
-    />
-    <input
-      type="password"
-      required
-      autoComplete="current-password"
-      value={password}
-      onChange={e=>setPassword(e.target.value)}
-      placeholder="Sua senha"
-      className="w-full rounded-2xl border border-black/10 bg-white/70 px-4 py-4 text-[#17314a] outline-none placeholder:text-black/30"
-    />
-    <div className="flex justify-end">
-      <button type="button" onClick={()=>{setRecovering(true);setStatus('')}} className="text-xs font-medium text-[#536b7f] hover:text-[#17314a]">Esqueci minha senha</button>
-    </div>
-    <Button type="submit" disabled={loading} className="flex w-full items-center justify-center gap-2">
-      {loading ? 'Entrando…' : 'Entrar'} <ArrowRight size={16}/>
-    </Button>
-  </form>;
+  return (
+    <main className={styles.page}>
+      <div className={styles.ambient} aria-hidden="true" />
+      <section className={styles.card} aria-label="Acesso à conta">
+        <header className={styles.header}>
+          <h1 aria-label={mode === 'signin' ? 'Bem-vindo' : 'Criar conta'}>{mode === 'signin' ? <>Bem-<span>vindo</span></> : <>Criar <span>conta</span></>}</h1>
+          <p>{mode === 'signin' ? 'Acesse sua conta para continuar' : 'Crie sua conta para começar'}</p>
+        </header>
 
-  const recoveryForm=<form onSubmit={sendRecovery} className="mt-8 space-y-3">
-    <div className="rounded-2xl border border-black/10 bg-white/60 p-4 text-sm leading-6 text-[#536b7f]">Digite o e-mail administrador. Você receberá um link seguro para criar uma nova senha.</div>
-    <input
-      type="email"
-      required
-      autoComplete="email"
-      value={email}
-      onChange={e=>setEmail(e.target.value)}
-      placeholder="voce@empresa.com"
-      className="w-full rounded-2xl border border-black/10 bg-white/70 px-4 py-4 text-[#17314a] outline-none placeholder:text-black/30"
-    />
-    <Button type="submit" disabled={loading} className="flex w-full items-center justify-center gap-2">
-      {loading ? 'Enviando…' : 'Enviar link de redefinição'} <Mail size={16}/>
-    </Button>
-    <button type="button" onClick={()=>{setRecovering(false);setStatus('')}} className="w-full py-2 text-xs text-[#687d8e]">Voltar para entrar</button>
-  </form>;
+        <form className={styles.form} onSubmit={submit}>
+          <label>
+            <span>E-mail</span>
+            <div className={styles.inputShell}>
+              <Mail size={21} strokeWidth={1.6} />
+              <input type="email" autoComplete="email" inputMode="email" placeholder="Digite seu e-mail" value={email} onChange={(event) => setEmail(event.target.value)} required disabled={loading} />
+            </div>
+          </label>
 
-  return <main className="grid min-h-screen place-items-center p-5">
-    <Card className="w-full max-w-md p-7 md:p-9">
-      <Pill><Sparkles size={13}/> OCTA Access</Pill>
-      <h1 className="mt-5 text-4xl font-semibold tracking-[-.045em] text-[#0a2238]">{recovering?'Redefina sua senha.':'Entre no CMS.'}</h1>
-      <p className="mt-3 text-sm leading-6 text-[#536b7f]">{recovering?'Receba um link seguro e crie uma nova senha.':'Acesse com seu e-mail administrador e senha.'}</p>
+          <label>
+            <span>Senha</span>
+            <div className={styles.inputShell}>
+              <LockKeyhole size={21} strokeWidth={1.6} />
+              <input type={showPassword ? 'text' : 'password'} autoComplete={mode === 'signin' ? 'current-password' : 'new-password'} placeholder="Digite sua senha" value={password} onChange={(event) => setPassword(event.target.value)} minLength={6} required disabled={loading} />
+              <button className={styles.eye} type="button" onClick={() => setShowPassword((value) => !value)} aria-label="Mostrar ou ocultar senha" disabled={loading}>
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
+          </label>
 
-      {!settingPassword&&(recovering?recoveryForm:mainForm)}
+          {mode === 'signin' && <button className={styles.forgot} type="button" onClick={forgotPassword} disabled={loading}>Esqueci minha senha</button>}
+          {message && <p className={styles.message} role="status" aria-live="polite">{message}</p>}
 
-      {hasSession&&!recovering&&<div className="mt-5 border-t border-black/10 pt-5">
-        {!settingPassword?<button type="button" onClick={()=>{setSettingPassword(true);setPassword('');setStatus('')}} className="flex w-full items-center justify-center gap-2 rounded-2xl border border-black/10 bg-white/60 px-4 py-3 text-sm font-medium text-[#17314a] hover:bg-white">
-          <KeyRound size={15}/> Definir minha senha
-        </button>:<form onSubmit={definePassword} className="space-y-3">
-          <div className="mb-2 text-sm font-medium text-[#17314a]">Crie sua senha de acesso</div>
-          <input type="password" required minLength={8} autoComplete="new-password" value={password} onChange={e=>setPassword(e.target.value)} placeholder="Nova senha" className="w-full rounded-2xl border border-black/10 bg-white/70 px-4 py-4 text-[#17314a] outline-none placeholder:text-black/30" />
-          <input type="password" required minLength={8} autoComplete="new-password" value={confirmPassword} onChange={e=>setConfirmPassword(e.target.value)} placeholder="Confirmar nova senha" className="w-full rounded-2xl border border-black/10 bg-white/70 px-4 py-4 text-[#17314a] outline-none placeholder:text-black/30" />
-          <Button type="submit" disabled={loading} className="flex w-full items-center justify-center gap-2">{loading?'Salvando…':'Salvar senha'} <CheckCircle2 size={16}/></Button>
-          <button type="button" onClick={()=>{setSettingPassword(false);setPassword('');setConfirmPassword('');setStatus('')}} className="w-full py-2 text-xs text-[#687d8e]">Cancelar</button>
-        </form>}
-      </div>}
+          <button className={styles.primary} type="submit" disabled={loading}>
+            <span>{loading ? 'Aguarde...' : mode === 'signin' ? 'Entrar' : 'Criar conta'}</span>
+            <ArrowRight size={22} strokeWidth={1.6} />
+          </button>
+        </form>
 
-      {status&&<div className={`mt-4 rounded-2xl border px-4 py-3 text-sm leading-5 ${passwordSaved || reset==='success' ? 'border-[#0b7285]/20 bg-[#e7f5f7] text-[#17314a]' : 'border-black/10 bg-white/60 text-[#17314a]'}`}>{status}</div>}
-      <Link href="/" className="mt-7 block text-center text-xs text-[#687d8e] hover:text-[#17314a]">Voltar ao OCTA</Link>
-    </Card>
-  </main>;
+        <div className={styles.divider}><span /> <em>ou continue com</em> <span /></div>
+
+        <button className={styles.google} type="button" onClick={continueWithGoogle} disabled={loading}>
+          <strong aria-hidden="true">G</strong>
+          <span>Continuar com Google</span>
+        </button>
+
+        <p className={styles.switchText}>
+          {mode === 'signin' ? 'Ainda não tem uma conta?' : 'Já tem uma conta?'}{' '}
+          <button type="button" disabled={loading} onClick={() => { setMode(mode === 'signin' ? 'signup' : 'signin'); setMessage(''); }}>
+            {mode === 'signin' ? 'Criar conta' : 'Entrar'}
+          </button>
+        </p>
+      </section>
+    </main>
+  );
 }
