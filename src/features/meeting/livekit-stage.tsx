@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { liveKitUrl } from '@/lib/livekit/config';
 
 type WhiteboardShareDetail={active:boolean;track?:MediaStreamTrack};
+type MeetingChatEvent={id:string;roomId:string;userId:string;userName:string;body:string;createdAt:string};
 type StageProps={room:string;identity:string;name:string;micEnabled?:boolean;cameraEnabled?:boolean;photoUrl?:string|null;fallbackPhotoUrl?:string|null;onActiveSpeaker?:(identity:string|null)=>void};
 
 function CameraStage({cameraEnabled,photoUrl,fallbackPhotoUrl}:{cameraEnabled:boolean;photoUrl?:string|null;fallbackPhotoUrl?:string|null}){
@@ -39,6 +40,12 @@ function RoomBridge({micEnabled,cameraEnabled,onActiveSpeaker}:{micEnabled:boole
   };
   window.addEventListener('octa-whiteboard-share',handler);
   return()=>{window.removeEventListener('octa-whiteboard-share',handler);if(sharedTrack.current){void room.localParticipant.unpublishTrack(sharedTrack.current);sharedTrack.current.stop();sharedTrack.current=null}};
+ },[room]);
+ useEffect(()=>{
+  const send=(event:Event)=>{const detail=(event as CustomEvent<MeetingChatEvent>).detail;if(!detail)return;const payload=new TextEncoder().encode(JSON.stringify(detail));void room.localParticipant.publishData(payload,{reliable:true,topic:'octa-chat'}).catch(()=>undefined)};
+  const receive=(payload:Uint8Array,participant?:{identity?:string;name?:string},_kind?:unknown,topic?:string)=>{if(topic!=='octa-chat')return;try{const parsed=JSON.parse(new TextDecoder().decode(payload)) as MeetingChatEvent;window.dispatchEvent(new CustomEvent('octa-chat-message',{detail:{...parsed,userId:participant?.identity||parsed.userId,userName:participant?.name||parsed.userName}}))}catch{}};
+  window.addEventListener('octa-chat-send',send);room.on(RoomEvent.DataReceived,receive as never);
+  return()=>{window.removeEventListener('octa-chat-send',send);room.off(RoomEvent.DataReceived,receive as never)};
  },[room]);
  return null;
 }
