@@ -15,6 +15,7 @@ function friendlyAuthMessage(message: string) {
   if (value.includes('user already registered')) return 'Este e-mail já possui uma conta.';
   if (value.includes('password should be')) return 'Use uma senha com pelo menos 6 caracteres.';
   if (value.includes('rate limit')) return 'Muitas tentativas. Aguarde um pouco e tente novamente.';
+  if (value.includes('provider is not enabled') || value.includes('unsupported provider')) return 'O acesso com Google ainda não está habilitado no servidor.';
   return message || 'Não foi possível concluir o acesso.';
 }
 
@@ -29,13 +30,13 @@ export default function LoginPage() {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    if (!supabase) return;
-    let active = true;
-    supabase.auth.getSession().then(({ data }) => {
-      if (active && data.session) router.replace('/');
-    }).catch(() => undefined);
-    return () => { active = false; };
-  }, [router, supabase]);
+    const params = new URLSearchParams(window.location.search);
+    const authError = params.get('error');
+    const reset = params.get('reset');
+    if (authError) setMessage(friendlyAuthMessage(authError));
+    else if (reset === 'success') setMessage('Senha redefinida. Entre com sua nova senha.');
+    else if (reset === 'expired') setMessage('O link de redefinição expirou. Solicite um novo.');
+  }, []);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -72,24 +73,6 @@ export default function LoginPage() {
     } catch (error) {
       setMessage(friendlyAuthMessage(error instanceof Error ? error.message : 'Não foi possível entrar.'));
     } finally {
-      setLoading(false);
-    }
-  }
-
-  async function continueWithGoogle() {
-    setMessage('');
-    if (!supabase) {
-      setMessage('Login temporariamente indisponível.');
-      return;
-    }
-    setLoading(true);
-    const redirectTo = `${window.location.origin}/auth/callback?next=/`;
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo },
-    });
-    if (error) {
-      setMessage(friendlyAuthMessage(error.message));
       setLoading(false);
     }
   }
@@ -158,10 +141,10 @@ export default function LoginPage() {
 
         <div className={styles.divider}><span /> <em>ou continue com</em> <span /></div>
 
-        <button className={styles.google} type="button" onClick={continueWithGoogle} disabled={loading}>
+        <a className={styles.google} href="/auth/google">
           <strong aria-hidden="true">G</strong>
           <span>Continuar com Google</span>
-        </button>
+        </a>
 
         <p className={styles.switchText}>
           {mode === 'signin' ? 'Ainda não tem uma conta?' : 'Já tem uma conta?'}{' '}
