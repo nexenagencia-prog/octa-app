@@ -3,10 +3,11 @@ import {describe,expect,it} from 'vitest';
 import {readFileSync} from 'node:fs';
 
 describe('global floating whiteboard navigation',()=>{
-  it('opens Lousa as a tool instead of navigating to /lousa',()=>{
-    const nav=readFileSync('src/components/nav.tsx','utf8');
-    expect(nav).toContain("tool('Lousa',Brush,'whiteboard')");
-    expect(nav).not.toContain("href:'/lousa',label:'Lousa'");
+  it('intercepts the legacy Lousa link and opens the overlay without navigation',()=>{
+    const overlay=readFileSync('src/components/tool-overlay.tsx','utf8');
+    expect(overlay).toContain('a[href="/lousa"]');
+    expect(overlay).toContain('event.preventDefault()');
+    expect(overlay).toContain("openTool('whiteboard')");
   });
 
   it('keeps whiteboard in the global overlay tool model',()=>{
@@ -14,6 +15,6 @@ describe('global floating whiteboard navigation',()=>{
     const overlay=readFileSync('src/components/tool-overlay.tsx','utf8');
     expect(context).toContain("'whiteboard'");
     expect(overlay).toContain("tool==='whiteboard'");
-    expect(overlay).toContain('FloatingWhiteboardCard');
+    expect(overlay).toContain('WhiteboardPanel');
   });
 });
