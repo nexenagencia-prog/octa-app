@@ -18,8 +18,14 @@ describe('isGenerativeAIEnabled',()=>{
     expect(isGenerativeAIEnabled()).toBe(true);
   });
 
-  it('allows explicit free mode to disable generative answers',()=>{
+  it('keeps an existing free flag from blocking a configured provider',()=>{
     process.env.OCTA_AI_MODE='free';
+    process.env.OPENAI_API_KEY='test-key';
+    expect(isGenerativeAIEnabled()).toBe(true);
+  });
+
+  it('allows an explicit disabled flag to turn generative answers off',()=>{
+    process.env.OCTA_AI_MODE='disabled';
     process.env.OPENAI_API_KEY='test-key';
     expect(isGenerativeAIEnabled()).toBe(false);
   });
