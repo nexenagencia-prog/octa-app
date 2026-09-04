@@ -19,6 +19,7 @@ export function GlobalLegacySidebar(){
   useEffect(()=>{
     if(!active)return;
     const apply=(p:any)=>{if(p?.displayName||p?.name)setName(p.displayName||p.name);if(p?.headline)setHeadline(p.headline);if(p?.avatarUrl)setAvatar(p.avatarUrl)};
+    try{const local=localStorage.getItem('octa-profile-local');if(local)apply(JSON.parse(local))}catch{}
     fetch('/api/profile',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(d=>apply(d?.profile)).catch(()=>{});
     const sync=(e:Event)=>apply((e as CustomEvent).detail);
     window.addEventListener('octa-profile:updated',sync);
