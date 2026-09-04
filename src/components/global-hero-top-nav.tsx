@@ -1,4 +1,5 @@
 'use client';
+// deploy-sync: 2026-09-03T23:00-03:00
 import Link from 'next/link';
 import {usePathname,useRouter} from 'next/navigation';
 import {Bell,Search} from 'lucide-react';
